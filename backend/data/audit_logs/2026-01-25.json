@@ -1,0 +1,177 @@
+[
+    {
+        "id": "log_6975ae69e1bc95.86323990",
+        "timestamp": "2026-01-25 05:47:21.000000",
+        "action": "ORDER_CREATE",
+        "level": "info",
+        "user_id": "5",
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/create_order.php",
+        "data": {
+            "order_id": "ORD-1769320040-4831",
+            "total": 50000
+        },
+        "country": null
+    },
+    {
+        "id": "log_6975ae868840d5.01615739",
+        "timestamp": "2026-01-25 05:47:50.000000",
+        "action": "PAYMENT_RECEIVED",
+        "level": "info",
+        "user_id": null,
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/pay_order.php",
+        "data": {
+            "order_id": "ORD-1769320040-4831",
+            "payment_method": "manual"
+        },
+        "country": null
+    },
+    {
+        "id": "log_6975aec2f02893.93053028",
+        "timestamp": "2026-01-25 05:48:50.000000",
+        "action": "ORDER_CREATE",
+        "level": "info",
+        "user_id": "5",
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/create_order.php",
+        "data": {
+            "order_id": "ORD-1769320130-2669",
+            "total": 40000
+        },
+        "country": null
+    },
+    {
+        "id": "log_6975aed1ec9897.46053355",
+        "timestamp": "2026-01-25 05:49:05.000000",
+        "action": "PAYMENT_FAILED",
+        "level": "warning",
+        "user_id": null,
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/pay_order.php",
+        "data": {
+            "order_id": "ORD-1769320130-2669"
+        },
+        "country": null
+    },
+    {
+        "id": "log_6975aef1b85488.78295841",
+        "timestamp": "2026-01-25 05:49:37.000000",
+        "action": "ORDER_CREATE",
+        "level": "info",
+        "user_id": "5",
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/create_order.php",
+        "data": {
+            "order_id": "ORD-1769320177-4610",
+            "total": 53000
+        },
+        "country": null
+    },
+    {
+        "id": "log_6975aef523bc53.16346114",
+        "timestamp": "2026-01-25 05:49:41.000000",
+        "action": "PAYMENT_RECEIVED",
+        "level": "info",
+        "user_id": null,
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/pay_order.php",
+        "data": {
+            "order_id": "ORD-1769320177-4610",
+            "payment_method": "manual"
+        },
+        "country": null
+    },
+    {
+        "id": "log_6975b2f430cf89.04391180",
+        "timestamp": "2026-01-25 06:06:44.000000",
+        "action": "ORDER_CREATE",
+        "level": "info",
+        "user_id": "5",
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit\/605.1.15 (KHTML, like Gecko) Version\/18.5 Mobile\/15E148 Safari\/604.1",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/create_order.php",
+        "data": {
+            "order_id": "ORD-1769321204-1535",
+            "total": 40000
+        },
+        "country": null
+    },
+    {
+        "id": "log_6975b3062f2894.83669953",
+        "timestamp": "2026-01-25 06:07:02.000000",
+        "action": "PAYMENT_RECEIVED",
+        "level": "info",
+        "user_id": null,
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit\/605.1.15 (KHTML, like Gecko) Version\/18.5 Mobile\/15E148 Safari\/604.1",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/pay_order.php",
+        "data": {
+            "order_id": "ORD-1769321204-1535",
+            "payment_method": "manual"
+        },
+        "country": null
+    },
+    {
+        "id": "log_6975b54d0316f8.49350372",
+        "timestamp": "2026-01-25 06:16:45.000000",
+        "action": "ORDER_CREATE",
+        "level": "info",
+        "user_id": "5",
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (X11; Linux aarch64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36 CrKey\/1.54.250320",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/create_order.php",
+        "data": {
+            "order_id": "ORD-1769321804-3388",
+            "total": 53000
+        },
+        "country": null
+    },
+    {
+        "id": "log_6975cdb1ef1a74.06520187",
+        "timestamp": "2026-01-25 08:00:49.000000",
+        "action": "PAYMENT_RECEIVED",
+        "level": "info",
+        "user_id": null,
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (X11; Linux aarch64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36 CrKey\/1.54.250320",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/pay_order.php",
+        "data": {
+            "order_id": "ORD-1769321804-3388",
+            "payment_method": "manual"
+        },
+        "country": null
+    },
+    {
+        "id": "log_6975ce11a0db83.55656625",
+        "timestamp": "2026-01-25 08:02:25.000000",
+        "action": "ORDER_CREATE",
+        "level": "info",
+        "user_id": "5",
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (X11; Linux aarch64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36 CrKey\/1.54.250320",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/create_order.php",
+        "data": {
+            "order_id": "ORD-1769328145-9882",
+            "total": 53000
+        },
+        "country": null
+    }
+]

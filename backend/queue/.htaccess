@@ -1,0 +1,10 @@
+# Protect queue directory - tidak boleh diakses dari web
+<FilesMatch ".*">
+    Deny from all
+</FilesMatch>
+
+# Allow only localhost
+<FilesMatch ".*">
+    Allow from 127.0.0.1
+    Allow from localhost
+</FilesMatch>

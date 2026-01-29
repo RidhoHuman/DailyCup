@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to DailyCup</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
+    <table role="presentation" style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <td style="padding: 40px 0;">
+                <table role="presentation" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <!-- Header with Coffee Background -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%); padding: 40px; text-align: center;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 36px; font-weight: 600;">☕ Welcome to DailyCup!</h1>
+                            <p style="margin: 15px 0 0; color: #f0e5d8; font-size: 18px;">Your journey to premium coffee starts here</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Welcome Message -->
+                    <tr>
+                        <td style="padding: 40px 30px; text-align: center;">
+                            <h2 style="margin: 0 0 15px; color: #333; font-size: 24px;">Hi {{user_name}}! 👋</h2>
+                            <p style="margin: 0 0 20px; color: #666; font-size: 16px; line-height: 1.6;">
+                                We're thrilled to have you join our coffee-loving community! Get ready to discover amazing coffee experiences, exclusive deals, and personalized recommendations.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Features Grid -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <table role="presentation" style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                    <td style="width: 50%; padding: 15px; vertical-align: top;">
+                                        <div style="text-align: center; padding: 20px; background-color: #f9f9f9; border-radius: 8px; height: 100%;">
+                                            <div style="font-size: 48px; margin-bottom: 10px;">🎁</div>
+                                            <h3 style="margin: 0 0 10px; color: #333; font-size: 16px;">Special Offers</h3>
+                                            <p style="margin: 0; color: #666; font-size: 14px;">Get exclusive deals and promotions</p>
+                                        </div>
+                                    </td>
+                                    <td style="width: 50%; padding: 15px; vertical-align: top;">
+                                        <div style="text-align: center; padding: 20px; background-color: #f9f9f9; border-radius: 8px; height: 100%;">
+                                            <div style="font-size: 48px; margin-bottom: 10px;">⚡</div>
+                                            <h3 style="margin: 0 0 10px; color: #333; font-size: 16px;">Fast Delivery</h3>
+                                            <p style="margin: 0; color: #666; font-size: 14px;">Quick pickup or delivery options</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%; padding: 15px; vertical-align: top;">
+                                        <div style="text-align: center; padding: 20px; background-color: #f9f9f9; border-radius: 8px; height: 100%;">
+                                            <div style="font-size: 48px; margin-bottom: 10px;">⭐</div>
+                                            <h3 style="margin: 0 0 10px; color: #333; font-size: 16px;">Premium Quality</h3>
+                                            <p style="margin: 0; color: #666; font-size: 14px;">Handpicked coffee beans</p>
+                                        </div>
+                                    </td>
+                                    <td style="width: 50%; padding: 15px; vertical-align: top;">
+                                        <div style="text-align: center; padding: 20px; background-color: #f9f9f9; border-radius: 8px; height: 100%;">
+                                            <div style="font-size: 48px; margin-bottom: 10px;">🏆</div>
+                                            <h3 style="margin: 0 0 10px; color: #333; font-size: 16px;">Rewards Program</h3>
+                                            <p style="margin: 0; color: #666; font-size: 14px;">Earn points with every purchase</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Account Info -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; border-radius: 4px;">
+                                <p style="margin: 0 0 10px; color: #333; font-weight: 600;">Your Account Details:</p>
+                                <p style="margin: 0; color: #666; font-size: 14px;">
+                                    Email: <strong>{{user_email}}</strong>
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- CTA Buttons -->
+                    <tr>
+                        <td style="padding: 0 30px 30px; text-align: center;">
+                            <a href="{{menu_url}}" style="display: inline-block; margin: 0 10px 10px; padding: 14px 30px; background-color: #8B4513; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">Explore Menu</a>
+                            <a href="{{profile_url}}" style="display: inline-block; margin: 0 10px 10px; padding: 14px 30px; background-color: transparent; color: #8B4513; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px; border: 2px solid #8B4513;">Complete Profile</a>
+                        </td>
+                    </tr>
+                    
+                    <!-- Tips Section -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <div style="background-color: #e8f5e9; padding: 20px; border-radius: 6px;">
+                                <h3 style="margin: 0 0 15px; color: #333; font-size: 18px;">☕ Pro Tips for Your First Order:</h3>
+                                <ul style="margin: 0; padding-left: 20px; color: #666; line-height: 1.8;">
+                                    <li>Try our signature "Espresso Delight" for a bold start</li>
+                                    <li>Add your preferences in your profile for personalized recommendations</li>
+                                    <li>Download our mobile app for exclusive app-only deals</li>
+                                    <li>Refer a friend and get 20% off your next order</li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Social Links -->
+                    <tr>
+                        <td style="padding: 0 30px 30px; text-align: center;">
+                            <p style="margin: 0 0 15px; color: #666; font-size: 14px;">Follow us on social media:</p>
+                            <div>
+                                <a href="#" style="display: inline-block; margin: 0 10px; width: 40px; height: 40px; background-color: #8B4513; border-radius: 50%; color: white; text-decoration: none; line-height: 40px; font-size: 20px;">f</a>
+                                <a href="#" style="display: inline-block; margin: 0 10px; width: 40px; height: 40px; background-color: #8B4513; border-radius: 50%; color: white; text-decoration: none; line-height: 40px; font-size: 20px;">𝕏</a>
+                                <a href="#" style="display: inline-block; margin: 0 10px; width: 40px; height: 40px; background-color: #8B4513; border-radius: 50%; color: white; text-decoration: none; line-height: 40px; font-size: 20px;">📷</a>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 30px; background-color: #f5f5f5; border-top: 1px solid #e0e0e0; text-align: center;">
+                            <p style="margin: 0 0 10px; color: #999; font-size: 14px;">Need help? Contact us at support@dailycup.com</p>
+                            <p style="margin: 0; color: #999; font-size: 12px;">&copy; 2025 DailyCup Coffee Shop. All rights reserved.</p>
+                            <p style="margin: 10px 0 0; color: #999; font-size: 11px;">
+                                <a href="#" style="color: #999; text-decoration: underline;">Unsubscribe</a> | 
+                                <a href="#" style="color: #999; text-decoration: underline;">Privacy Policy</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

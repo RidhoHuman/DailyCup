@@ -1,0 +1,303 @@
+════════════════════════════════════════════════════════════════════════════════
+                    DAILYCUP EMAIL TESTING CHECKLIST
+                        (Print this page)
+════════════════════════════════════════════════════════════════════════════════
+
+SESSION DATE: _______________          TESTER NAME: _____________________________
+
+════════════════════════════════════════════════════════════════════════════════
+PHASE 1: GMAIL ACCOUNT SETUP (⏱️  5 MINUTES)
+════════════════════════════════════════════════════════════════════════════════
+
+STEP 1.1: Enable 2-Step Verification
+  [ ] Go to https://myaccount.google.com/security
+  [ ] Click on "2-Step Verification"
+  [ ] Click "Get Started" (skip if already done)
+  [ ] Follow verification steps
+  [ ] Status: ✓ ENABLED
+  
+STEP 1.2: Generate App Password
+  [ ] Go to https://myaccount.google.com/apppasswords
+  [ ] Select "Mail" from dropdown
+  [ ] Select "Windows Computer" (or your device)
+  [ ] Click "Generate"
+  [ ] COPY the 16-character password
+  [ ] Password copied to clipboard: _________________________________
+  [ ] Paste into Notepad temporarily (before moving to Step 2)
+  [ ] Status: ✓ PASSWORD GENERATED
+
+────────────────────────────────────────────────────────────────────────────────
+PHASE 2: CONFIGURE .ENV FILE (⏱️  2 MINUTES)
+────────────────────────────────────────────────────────────────────────────────
+
+STEP 2.1: Open .env file
+  [ ] File location: c:\laragon\www\DailyCup\webapp\backend\api\.env
+  [ ] Opened in editor (Notepad/VS Code)
+  
+STEP 2.2: Update SMTP Settings
+  [ ] Find line: SMTP_ENABLED=false
+      Change to: SMTP_ENABLED=true
+      Verified: [ ]
+      
+  [ ] Find line: SMTP_USERNAME=your-email@gmail.com
+      Change to: SMTP_USERNAME=_____________________________________
+      Verified: [ ]
+      
+  [ ] Find line: SMTP_PASSWORD=your-app-password
+      Change to: SMTP_PASSWORD=_____________________________________
+      Verified: [ ]
+      
+  [ ] Find line: SMTP_FROM_EMAIL=noreply@dailycup.com
+      Keep as is OR change to: _____________________________________
+      Verified: [ ]
+      
+  [ ] All settings look correct: [ ]
+  
+STEP 2.3: Save File
+  [ ] Press Ctrl+S to save
+  [ ] See "Saved" indicator
+  [ ] Status: ✓ FILE SAVED
+
+────────────────────────────────────────────────────────────────────────────────
+PHASE 3: RUN TEST SCRIPT (⏱️  1 MINUTE)
+────────────────────────────────────────────────────────────────────────────────
+
+STEP 3.1: Open Terminal/PowerShell
+  [ ] Press Win+R (Run dialog)
+  [ ] Type: powershell
+  [ ] Press Enter
+  
+STEP 3.2: Navigate to Tests Directory
+  [ ] Type or paste:
+      cd c:\laragon\www\DailyCup\webapp\backend\tests
+  [ ] Press Enter
+  [ ] Status: ✓ DIRECTORY CHANGED
+
+STEP 3.3: Run Test Script
+  [ ] Type: php test_email.php
+  [ ] Press Enter
+  [ ] Output appears in terminal
+  
+STEP 3.4: Check Output for ✅ Marks
+  
+  Expected Output:
+  ┌─────────────────────────────────────────────────────────┐
+  │ === DailyCup Email Test ===                             │
+  │                                                         │
+  │ 1. Testing Order Confirmation Email...                 │
+  │    ✅ Order confirmation sent!                         │
+  │                                                         │
+  │ 2. Testing Payment Confirmation Email...               │
+  │    ✅ Payment confirmation sent!                       │
+  │                                                         │
+  │ 3. Testing Status Update Email...                      │
+  │    ✅ Status update sent!                              │
+  │                                                         │
+  │ 4. Testing Welcome Email...                            │
+  │    ✅ Welcome email sent!                              │
+  │                                                         │
+  │ === Test Complete ===                                   │
+  └─────────────────────────────────────────────────────────┘
+  
+  Actual Output:
+  
+  [ ] Test 1 (Order Confirmation):     ✅ PASS  [ ]  ❌ FAIL
+  [ ] Test 2 (Payment Confirmation):   ✅ PASS  [ ]  ❌ FAIL
+  [ ] Test 3 (Status Update):          ✅ PASS  [ ]  ❌ FAIL
+  [ ] Test 4 (Welcome Email):          ✅ PASS  [ ]  ❌ FAIL
+  
+  Overall Test Result:  [ ] ALL PASS   [ ] SOME FAILED
+  
+  If FAILED, note error message:
+  ________________________________________________________________________
+  ________________________________________________________________________
+
+  Status: [ ] ✓ TESTS COMPLETE
+
+────────────────────────────────────────────────────────────────────────────────
+PHASE 4: CHECK EMAIL INBOX (⏱️  1 MINUTE)
+────────────────────────────────────────────────────────────────────────────────
+
+STEP 4.1: Open Gmail
+  [ ] Go to: https://mail.google.com
+  [ ] Logged in as: _________________________________________________
+  
+STEP 4.2: Look for DailyCup Emails
+  [ ] Search for emails from: "DailyCup"
+  [ ] Found: [ ] 4 emails  [ ] Fewer emails  [ ] No emails
+  
+STEP 4.3: Verify Each Email
+  
+  EMAIL 1: Order Confirmation
+  [ ] Subject contains: "Order Confirmation"
+  [ ] From: "DailyCup Coffee Shop"
+  [ ] Contains order number (ORD-TEST-...)
+  [ ] Shows items list
+  [ ] Shows total amount
+  [ ] Status: ✅ VERIFIED  [ ]  ❌ MISSING
+  
+  EMAIL 2: Payment Confirmation
+  [ ] Subject contains: "Payment Received"
+  [ ] From: "DailyCup Coffee Shop"
+  [ ] Shows order number
+  [ ] Shows items and total
+  [ ] Shows "amount paid"
+  [ ] Status: ✅ VERIFIED  [ ]  ❌ MISSING
+  
+  EMAIL 3: Order Status Update
+  [ ] Subject contains: "Order Update"
+  [ ] From: "DailyCup Coffee Shop"
+  [ ] Shows order status
+  [ ] Shows progress timeline
+  [ ] Status: ✅ VERIFIED  [ ]  ❌ MISSING
+  
+  EMAIL 4: Welcome Email
+  [ ] Subject contains: "Welcome to DailyCup"
+  [ ] From: "DailyCup Coffee Shop"
+  [ ] Shows welcome message
+  [ ] Shows features/benefits
+  [ ] Status: ✅ VERIFIED  [ ]  ❌ MISSING
+
+STEP 4.4: Check Email Appearance
+  [ ] Email renders with proper formatting
+  [ ] Images load correctly
+  [ ] Links are clickable
+  [ ] Colors look professional
+  [ ] Text is readable
+  [ ] Status: ✅ FORMAT OK  [ ]  ❌ FORMAT ISSUE
+
+STEP 4.5: Check Spam Folder
+  [ ] IF emails not in inbox:
+  [ ] Check "Spam" folder
+  [ ] Check "Promotions" folder
+  [ ] Found in: [ ] Inbox  [ ] Spam  [ ] Promotions  [ ] Not found
+  
+  If in spam folder:
+  [ ] Open email
+  [ ] Click menu (3 dots)
+  [ ] Select "Report not spam"
+  [ ] Status: [ ] ✓ MARKED SAFE
+
+STEP 4.6: Summary
+  [ ] All 4 emails received: YES  [ ]  NO  [ ]
+  [ ] All emails verified: YES  [ ]  NO  [ ]
+  [ ] Email formatting OK: YES  [ ]  NO  [ ]
+  [ ] Status: ✓ EMAIL INBOX VERIFIED
+
+────────────────────────────────────────────────────────────────────────────────
+PHASE 5: TEST REAL ORDER (⏱️  2 MINUTES) [OPTIONAL - FOR DEEPER TESTING]
+────────────────────────────────────────────────────────────────────────────────
+
+STEP 5.1: Create Real Order
+  
+  Via Frontend:
+  [ ] Go to http://localhost:3000
+  [ ] Add items to cart
+  [ ] Checkout with test email
+  [ ] Complete order
+  
+  OR Via API (PowerShell):
+  [ ] Run API test command
+  
+STEP 5.2: Verify Order Confirmation Email
+  [ ] Go back to Gmail
+  [ ] Wait 5 seconds (refresh if needed)
+  [ ] New order confirmation email arrived
+  [ ] Email contains order details
+  [ ] Status: ✓ ORDER EMAIL VERIFIED
+
+STEP 5.3: Simulate Payment
+  
+  Via Frontend:
+  [ ] Click "Pay Now" button
+  [ ] Complete payment flow
+  
+  OR Via API:
+  [ ] Run payment confirmation command
+  
+STEP 5.4: Verify Payment Confirmation Email
+  [ ] Go back to Gmail
+  [ ] Wait 5 seconds (refresh if needed)
+  [ ] New payment confirmation email arrived
+  [ ] Email shows "Payment Received"
+  [ ] Status: ✓ PAYMENT EMAIL VERIFIED
+
+════════════════════════════════════════════════════════════════════════════════
+FINAL SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+
+✅ PHASE 1 - Gmail Setup:                    [ ] COMPLETE
+✅ PHASE 2 - Configure .env:                 [ ] COMPLETE
+✅ PHASE 3 - Run Test Script:                [ ] COMPLETE  (All tests passed)
+✅ PHASE 4 - Check Email Inbox:              [ ] COMPLETE  (All 4 emails verified)
+✅ PHASE 5 - Test Real Order (Optional):     [ ] COMPLETE
+
+OVERALL STATUS:
+
+    ALL PHASES COMPLETE:           [ ] YES    [ ] NO
+    
+    EMAIL SYSTEM READY:             [ ] YES    [ ] NO
+    
+    TESTED BY: ________________________________
+    
+    DATE: _____________________________
+    
+    TIME TAKEN: ________________________
+
+════════════════════════════════════════════════════════════════════════════════
+TROUBLESHOOTING QUICK FIXES
+════════════════════════════════════════════════════════════════════════════════
+
+If tests FAILED, use these fixes in order:
+
+❌ ISSUE: "Failed to send email"
+   FIX: [ ] Check SMTP_ENABLED=true in .env
+        [ ] Check SMTP password spelling (no extra spaces)
+        [ ] Verify 2-Step Verification enabled on Gmail
+
+❌ ISSUE: "Connection timeout"
+   FIX: [ ] Try SMTP_PORT=465 with SMTP_ENCRYPTION=ssl (instead of 587/tls)
+        [ ] Check internet connection
+        [ ] Check firewall not blocking port 587
+
+❌ ISSUE: Emails not in inbox
+   FIX: [ ] Check Spam folder
+        [ ] Check Promotions folder
+        [ ] Wait 30 seconds and refresh Gmail
+        [ ] Check error logs
+
+❌ ISSUE: "Authentication failed"
+   FIX: [ ] Regenerate App Password from Gmail
+        [ ] Copy password exactly (including spaces)
+        [ ] Verify username is correct Gmail address
+
+════════════════════════════════════════════════════════════════════════════════
+NEXT STEPS
+════════════════════════════════════════════════════════════════════════════════
+
+After successful completion of all 5 phases:
+
+1. [ ] Document the test results (this checklist)
+2. [ ] Commit .env changes (if using version control)
+3. [ ] Test with production data (if applicable)
+4. [ ] Monitor email delivery for 1 week
+5. [ ] Proceed to Phase 11 remaining tasks:
+       - [ ] Admin Analytics Dashboard
+       - [ ] Inventory Management System
+
+════════════════════════════════════════════════════════════════════════════════
+NOTES & OBSERVATIONS
+════════════════════════════════════════════════════════════════════════════════
+
+_____________________________________________________________________________
+
+_____________________________________________________________________________
+
+_____________________________________________________________________________
+
+_____________________________________________________________________________
+
+
+════════════════════════════════════════════════════════════════════════════════
+                        🎉 Email System Ready!
+════════════════════════════════════════════════════════════════════════════════

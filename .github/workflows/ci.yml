@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Build Next.js
+        run: npm run build
+        working-directory: frontend
+
+      - name: Start Next.js (background)
+        run: npx next start -p 3001 &
+        working-directory: frontend
+
+      - name: Wait for HTTP
+        run: npx wait-on http://127.0.0.1:3001 --timeout 120000
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+        working-directory: frontend
+
+      - name: Run Playwright tests
+        run: npx playwright test --config=e2e/playwright.config.ts --reporter=github
+        working-directory: frontend
+
+      - name: Upload Playwright artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: frontend/test-results
