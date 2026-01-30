@@ -15,7 +15,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://api.dailycup.com/api/:path*"
+      "destination": "https://dailycup-api.rf.gd/api/:path*"
     }
   ],
   "headers": [
