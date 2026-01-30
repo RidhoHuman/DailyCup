@@ -24,15 +24,16 @@ function handleCors() {
     $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
 
     // Check if origin is allowed
-    if (in_array($origin, $allowed_origins)) {
+    if ($origin && in_array($origin, $allowed_origins)) {
+        // Allow this specific origin and allow credentials
         header('Access-Control-Allow-Origin: ' . $origin);
+        header('Access-Control-Allow-Credentials: true');
     } else {
-        // Default to localhost:3001 for development (Next.js default when 3000 is busy)
-        header('Access-Control-Allow-Origin: http://localhost:3001');
+        // For hosts where Origin may be omitted or not forwarded (some free hosts / proxies),
+        // allow any origin for testing. In production, prefer listing allowed origins explicitly.
+        header('Access-Control-Allow-Origin: *');
+        // Do NOT set Access-Control-Allow-Credentials when using '*'
     }
-
-    // Allow credentials (cookies, auth headers)
-    header('Access-Control-Allow-Credentials: true');
     
     // Allowed methods
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS, PATCH');
