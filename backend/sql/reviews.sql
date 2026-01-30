@@ -41,19 +41,56 @@ CREATE TABLE IF NOT EXISTS review_helpful (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Create view for product ratings summary
-CREATE OR REPLACE VIEW product_ratings_summary AS
-SELECT 
-    product_id,
-    COUNT(*) as total_reviews,
-    ROUND(AVG(rating), 1) as average_rating,
-    SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END) as five_star,
-    SUM(CASE WHEN rating = 4 THEN 1 ELSE 0 END) as four_star,
-    SUM(CASE WHEN rating = 3 THEN 1 ELSE 0 END) as three_star,
-    SUM(CASE WHEN rating = 2 THEN 1 ELSE 0 END) as two_star,
-    SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END) as one_star
-FROM product_reviews
-WHERE status = 'approved'
-GROUP BY product_id;
+-- NOTE: CREATE VIEW is not permitted on some free hosts (e.g., InfinityFree).
+-- The original view is intentionally omitted to avoid import errors.
+-- Products API uses an inline aggregated subquery instead, see backend/api/products.php.
+
+-- Optional: If your MySQL user *does* support CREATE VIEW, you can manually run the following in phpMyAdmin:
+-- CREATE OR REPLACE VIEW product_ratings_summary AS
+-- SELECT 
+--     product_id,
+--     COUNT(*) as total_reviews,
+--     ROUND(AVG(rating), 1) as average_rating,
+--     SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END) as five_star,
+--     SUM(CASE WHEN rating = 4 THEN 1 ELSE 0 END) as four_star,
+--     SUM(CASE WHEN rating = 3 THEN 1 ELSE 0 END) as three_star,
+--     SUM(CASE WHEN rating = 2 THEN 1 ELSE 0 END) as two_star,
+--     SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END) as one_star
+-- FROM product_reviews
+-- WHERE status = 'approved'
+-- GROUP BY product_id;
+
+-- Alternative (works on all hosts): create a physical summary table and populate it via a script or scheduled job.
+-- Example to create summary table:
+-- CREATE TABLE IF NOT EXISTS product_ratings_summary (
+--   product_id INT PRIMARY KEY,
+--   total_reviews INT DEFAULT 0,
+--   average_rating DECIMAL(3,1) DEFAULT NULL,
+--   five_star INT DEFAULT 0,
+--   four_star INT DEFAULT 0,
+--   three_star INT DEFAULT 0,
+--   two_star INT DEFAULT 0,
+--   one_star INT DEFAULT 0
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- To populate (run manually or via update script):
+-- INSERT INTO product_ratings_summary (product_id, total_reviews, average_rating, five_star, four_star, three_star, two_star, one_star)
+-- SELECT product_id, COUNT(*), ROUND(AVG(rating),1),
+--     SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END),
+--     SUM(CASE WHEN rating = 4 THEN 1 ELSE 0 END),
+--     SUM(CASE WHEN rating = 3 THEN 1 ELSE 0 END),
+--     SUM(CASE WHEN rating = 2 THEN 1 ELSE 0 END),
+--     SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END)
+-- FROM product_reviews WHERE status = 'approved' GROUP BY product_id
+-- ON DUPLICATE KEY UPDATE
+--   total_reviews = VALUES(total_reviews),
+--   average_rating = VALUES(average_rating),
+--   five_star = VALUES(five_star),
+--   four_star = VALUES(four_star),
+--   three_star = VALUES(three_star),
+--   two_star = VALUES(two_star),
+--   one_star = VALUES(one_star);
+
 
 -- Insert sample reviews for testing (OPTIONAL - Update user_id with actual user IDs)
 -- INSERT INTO product_reviews (product_id, user_id, rating, review_title, review_text, verified_purchase, status) VALUES
