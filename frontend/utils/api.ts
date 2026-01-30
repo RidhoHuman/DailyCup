@@ -73,9 +73,22 @@ export interface Order {
   xendit_notification?: { external_id?: string; status?: string };
 }
 
+// Helper to build headers (include ngrok header if using ngrok)
+function buildFetchOptions(): RequestInit {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json'
+  };
+
+  if (API_BASE_URL.includes('ngrok-free.app')) {
+    headers['ngrok-skip-browser-warning'] = 'true';
+  }
+
+  return { headers };
+}
+
 export async function fetchCategories(): Promise<Category[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/categories.php`);
+    const response = await fetch(`${API_BASE_URL}/categories.php`, buildFetchOptions());
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -103,7 +116,7 @@ export async function fetchCategories(): Promise<Category[]> {
 
 export async function fetchProducts(): Promise<Product[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/products.php`);
+    const response = await fetch(`${API_BASE_URL}/products.php`, buildFetchOptions());
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

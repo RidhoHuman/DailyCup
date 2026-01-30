@@ -14,6 +14,9 @@ function handleCors() {
         'http://127.0.0.1:3001',
         'http://localhost',
         'http://127.0.0.1',
+        'https://dailycup.vercel.app',
+        'https://a21636405cf4.ngrok-free.app',
+        'https://6005270bff1d.ngrok-free.app',
         'https://e3fccf16677f.ngrok-free.app'
     ];
 
@@ -34,8 +37,11 @@ function handleCors() {
     // Allowed methods
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS, PATCH');
     
-    // Allowed headers - be generous here
-    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, Origin, Cache-Control, Pragma');
+    // Allowed headers - include ngrok skip header so ngrok returns JSON instead of warning HTML
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, Origin, Cache-Control, Pragma, ngrok-skip-browser-warning');
+
+    // Vary by Origin to avoid caching cross-origin responses
+    header('Vary: Origin');
     
     // Cache preflight for 1 hour
     header('Access-Control-Max-Age: 3600');

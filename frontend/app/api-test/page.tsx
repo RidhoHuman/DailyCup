@@ -48,7 +48,9 @@ export default function ApiTestPage() {
     setError(null);
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'Not set';
-      const response = await fetch(`${apiUrl}/products.php`);
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if ((apiUrl || '').includes('ngrok-free.app')) headers['ngrok-skip-browser-warning'] = 'true';
+      const response = await fetch(`${apiUrl}/products.php`, { headers });
       const data = await response.json();
       setResult({ 
         endpoint: 'Direct Fetch', 

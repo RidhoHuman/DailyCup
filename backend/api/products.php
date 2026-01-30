@@ -4,9 +4,10 @@
  * 
  * Returns list of active products with variants.
  * Implements rate limiting.
- * 
- * NOTE: CORS handled by .htaccess
  */
+
+// Ensure CORS headers are set for cross-origin requests (ngrok / Vercel)
+require_once __DIR__ . '/cors.php';
 
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/rate_limiter.php';
