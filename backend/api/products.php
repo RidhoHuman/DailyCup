@@ -39,18 +39,18 @@ try {
                         p.is_featured,
                         p.stock,
                         c.name as category,
-                        prs.average_rating,
-                        prs.total_reviews
+                        (
+                          SELECT ROUND(AVG(rating),1)
+                          FROM product_reviews pr
+                          WHERE pr.product_id = p.id AND pr.status = 'approved'
+                        ) AS average_rating,
+                        (
+                          SELECT COUNT(*)
+                          FROM product_reviews pr
+                          WHERE pr.product_id = p.id AND pr.status = 'approved'
+                        ) AS total_reviews
                     FROM products p
                     LEFT JOIN categories c ON p.category_id = c.id
-                    LEFT JOIN (
-                        SELECT product_id,
-                               ROUND(AVG(rating),1) AS average_rating,
-                               COUNT(*) AS total_reviews
-                        FROM product_reviews
-                        WHERE status = 'approved'
-                        GROUP BY product_id
-                    ) prs ON p.id = prs.product_id
                     WHERE p.id = ? AND p.is_active = 1
                 ");
                 $stmt->execute([$_GET['id']]);
@@ -81,8 +81,16 @@ try {
                         p.is_featured,
                         p.stock,
                         c.name as category,
-                        prs.average_rating,
-                        prs.total_reviews,
+                        (
+                          SELECT ROUND(AVG(rating),1)
+                          FROM product_reviews pr
+                          WHERE pr.product_id = p.id AND pr.status = 'approved'
+                        ) AS average_rating,
+                        (
+                          SELECT COUNT(*)
+                          FROM product_reviews pr
+                          WHERE pr.product_id = p.id AND pr.status = 'approved'
+                        ) AS total_reviews,
                         GROUP_CONCAT(
                             CONCAT(
                                 pv.variant_type, ':', pv.variant_value, ':', pv.price_adjustment
@@ -91,14 +99,6 @@ try {
                     FROM products p
                     LEFT JOIN categories c ON p.category_id = c.id
                     LEFT JOIN product_variants pv ON p.id = pv.product_id
-                    LEFT JOIN (
-                        SELECT product_id,
-                               ROUND(AVG(rating),1) AS average_rating,
-                               COUNT(*) AS total_reviews
-                        FROM product_reviews
-                        WHERE status = 'approved'
-                        GROUP BY product_id
-                    ) prs ON p.id = prs.product_id
                     WHERE p.is_active = 1
                     GROUP BY p.id
                     ORDER BY p.is_featured DESC, p.id
