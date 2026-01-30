@@ -43,7 +43,14 @@ try {
                         prs.total_reviews
                     FROM products p
                     LEFT JOIN categories c ON p.category_id = c.id
-                    LEFT JOIN product_ratings_summary prs ON p.id = prs.product_id
+                    LEFT JOIN (
+                        SELECT product_id,
+                               ROUND(AVG(rating),1) AS average_rating,
+                               COUNT(*) AS total_reviews
+                        FROM product_reviews
+                        WHERE status = 'approved'
+                        GROUP BY product_id
+                    ) prs ON p.id = prs.product_id
                     WHERE p.id = ? AND p.is_active = 1
                 ");
                 $stmt->execute([$_GET['id']]);
@@ -84,7 +91,14 @@ try {
                     FROM products p
                     LEFT JOIN categories c ON p.category_id = c.id
                     LEFT JOIN product_variants pv ON p.id = pv.product_id
-                    LEFT JOIN product_ratings_summary prs ON p.id = prs.product_id
+                    LEFT JOIN (
+                        SELECT product_id,
+                               ROUND(AVG(rating),1) AS average_rating,
+                               COUNT(*) AS total_reviews
+                        FROM product_reviews
+                        WHERE status = 'approved'
+                        GROUP BY product_id
+                    ) prs ON p.id = prs.product_id
                     WHERE p.is_active = 1
                     GROUP BY p.id
                     ORDER BY p.is_featured DESC, p.id
