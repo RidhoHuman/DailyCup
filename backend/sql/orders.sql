@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `order_items` (
     `subtotal` DECIMAL(12,2) NOT NULL,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     INDEX `idx_order_id` (`order_id`),
-    INDEX `idx_product_id` (`product_id`),
-    FOREIGN KEY (`order_id`) REFERENCES `orders`(`order_id`) ON DELETE CASCADE,
-    FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE SET NULL
+    INDEX `idx_product_id` (`product_id`)
+    -- Note: foreign key on order_id (VARCHAR) removed for compatibility with some hosts (e.g., InfinityFree)
+    -- To enforce referential integrity, consider referencing orders.id (INT) or add application-level checks
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
