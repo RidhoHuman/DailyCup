@@ -5,8 +5,10 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["sin1"],
-  "env": {   
-  },
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://api.dailycup.com/api",
+    "NEXT_PUBLIC_APP_NAME": "DailyCup"
+  }
   "build": {
     "env": {
       "NEXT_TELEMETRY_DISABLED": "1"

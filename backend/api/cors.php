@@ -15,8 +15,9 @@ function handleCors() {
         'http://localhost',
         'http://127.0.0.1',
         'https://dailycup.com',
-        'https://www.dailycup.com',
+        'https://api.dailycup.com',
         'https://dailycup.vercel.app',
+        // Keep ngrok entries for development/testing
         'https://a21636405cf4.ngrok-free.app',
         'https://6005270bff1d.ngrok-free.app',
         'https://e3fccf16677f.ngrok-free.app'
