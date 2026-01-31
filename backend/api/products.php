@@ -13,6 +13,7 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/rate_limiter.php';
 
 header('Content-Type: application/json');
+header('X-Debug-CORS-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? 'no-origin'));
 
 // Rate limiting
 $clientIP = RateLimiter::getClientIP();
