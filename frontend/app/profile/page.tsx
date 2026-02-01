@@ -1,23 +1,74 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
+import { useAuthStore } from "@/lib/stores/auth-store";
+import { api as apiClient } from "@/lib/api-client";
 
 export default function ProfilePage() {
+  const router = useRouter();
+  const { user: authUser, token, isAuthenticated, updateUser } = useAuthStore();
   const [activeTab, setActiveTab] = useState("profile");
-  const [showDemoBanner, setShowDemoBanner] = useState(true);
+  const [showDemoBanner, setShowDemoBanner] = useState(false);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
-  // Mock user data
+  // User data from API
   const [user, setUser] = useState({
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phone: "+62 812-3456-7890",
-    address: "Jl. Sudirman No. 123, Jakarta",
-    loyaltyPoints: 250,
-    joinDate: "January 2024",
-    profilePicture: null as string | null
+    name: authUser?.name || "",
+    email: authUser?.email || "",
+    phone: authUser?.phone || "",
+    address: authUser?.address || "",
+    loyaltyPoints: authUser?.loyaltyPoints || 0,
+    joinDate: authUser?.joinDate || "",
+    profilePicture: authUser?.profilePicture || null
   });
+
+  // Fetch user profile from API on mount
+  useEffect(() => {
+    if (!isAuthenticated || !token) {
+      router.push('/login');
+      return;
+    }
+
+    const fetchProfile = async () => {
+      try {
+        setIsLoadingProfile(true);
+        const response = await apiClient.get<{success: boolean; user: any}>('/me.php');
+        
+        if (response.success && response.user) {
+          const userData = {
+            name: response.user.name || "",
+            email: response.user.email || "",
+            phone: response.user.phone || "",
+            address: response.user.address || "",
+            loyaltyPoints: response.user.loyaltyPoints || 0,
+            joinDate: response.user.joinDate || "",
+            profilePicture: response.user.profilePicture || null
+          };
+          setUser(userData);
+          setFormData(userData);
+          
+          // Update auth store with fresh data
+          updateUser({
+            name: response.user.name,
+            email: response.user.email,
+            phone: response.user.phone,
+            address: response.user.address,
+            loyaltyPoints: response.user.loyaltyPoints,
+            profilePicture: response.user.profilePicture
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+      } finally {
+        setIsLoadingProfile(false);
+      }
+    };
+
+    fetchProfile();
+  }, [isAuthenticated, token, router, updateUser]);
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(user);
@@ -55,14 +106,26 @@ export default function ProfilePage() {
     
     setIsSaving(true);
     try {
-      // TODO: Replace with actual API call
+      // TODO: Implement profile update API endpoint
+      // For now, just update local state
       console.log("Saving profile:", formData);
       
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Update user data
-      setUser({...formData, profilePicture: previewUrl});
+      const updatedUser = {...formData, profilePicture: previewUrl};
+      setUser(updatedUser);
+      
+      // Update auth store
+      updateUser({
+        name: updatedUser.name,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        address: updatedUser.address,
+        profilePicture: updatedUser.profilePicture || undefined
+      });
+      
       setIsEditing(false);
       setSelectedFile(null);
       setPreviewUrl(null);
@@ -105,34 +168,15 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-[#f6efe9]">
       <Header />
 
-      {/* Demo Banner */}
-      {showDemoBanner && (
-        <div className="bg-amber-100 border-l-4 border-amber-500 p-4 mx-4 mt-4 rounded-r-lg">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <i className="bi bi-info-circle text-amber-600 text-xl"></i>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-amber-800 font-medium">
-                <strong>Mode Demo</strong> - Data profil ini hanya untuk demonstrasi UI/UX.
-              </p>
-              <p className="text-sm text-amber-700 mt-1">
-                Perubahan yang Anda buat tidak akan tersimpan ke database. Sistem authentication akan diimplementasikan pada fase berikutnya.
-              </p>
-            </div>
-            <div className="ml-auto">
-              <button 
-                onClick={() => setShowDemoBanner(false)}
-                className="text-amber-600 hover:text-amber-800 text-sm font-medium"
-              >
-                <i className="bi bi-x text-lg"></i>
-              </button>
-            </div>
+      {isLoadingProfile ? (
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#a97456]"></div>
+            <p className="mt-4 text-gray-600">Loading profile...</p>
           </div>
         </div>
-      )}
-
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      ) : (
+        <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           {/* Header */}
           <div className="bg-[#a97456] text-white p-6">
@@ -433,7 +477,8 @@ export default function ProfilePage() {
             )}
           </div>
         </div>
-      </div>
+        </div>
+      )}
     </div>
   );
 }
