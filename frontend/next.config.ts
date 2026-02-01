@@ -69,12 +69,12 @@ const nextConfig: NextConfig = {
   },
 
   // Rewrites for API proxy
-  // Using HTTPS via Cloudflare SSL
+  // Using HTTP temporarily until SSL is installed (will update to HTTPS)
   async rewrites() {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://api.dailycup.com/:path*',
+        destination: 'http://api.dailycup.com/:path*',
       },
     ]
   },
