@@ -6,7 +6,7 @@
   "framework": "nextjs",
   "regions": ["sin1"],
   "env": {
-    "NEXT_PUBLIC_API_URL": "http://api.dailycup.com",
+    "NEXT_PUBLIC_API_URL": "https://api.dailycup.com",
     "NEXT_PUBLIC_APP_NAME": "DailyCup"
   },
   "build": {
