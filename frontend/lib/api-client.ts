@@ -10,7 +10,10 @@
  */
 
 // Get API URL from environment variable
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/DailyCup/webapp/backend/api';
+// In production, use Next.js API proxy to bypass CORS/SSL issues
+const API_BASE_URL = typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
+  ? '/api' // Use Next.js API proxy in production
+  : process.env.NEXT_PUBLIC_API_URL || 'http://localhost/DailyCup/webapp/backend/api';
 
 // Custom error class for API errors
 export class APIError extends Error {
