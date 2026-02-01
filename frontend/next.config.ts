@@ -69,11 +69,12 @@ const nextConfig: NextConfig = {
   },
 
   // Rewrites for API proxy
+  // Using HTTP temporarily until SSL certificate is properly installed
   async rewrites() {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://api.dailycup.com/:path*',
+        destination: 'http://api.dailycup.com/:path*',
       },
     ]
   },
