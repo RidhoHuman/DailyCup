@@ -1,24 +1,42 @@
 <?php
 // Database configuration for DailyCup backend API
-// Load .env file if exists (for production hosting)
-$envPath = __DIR__ . '/../api/.env';
-if (file_exists($envPath)) {
-    $env = parse_ini_file($envPath);
-    define('DB_HOST', $env['DB_HOST'] ?? 'localhost');
-    define('DB_NAME', $env['DB_NAME'] ?? 'dailycup_db');
-    define('DB_USER', $env['DB_USER'] ?? 'root');
-    define('DB_PASS', $env['DB_PASS'] ?? '');
-    define('APP_URL', rtrim($env['APP_URL'] ?? '', '/'));
-    define('APP_NAME', $env['APP_NAME'] ?? 'DailyCup');
-} else {
-    // Fallback for local development
-    define('DB_HOST', 'localhost');
-    define('DB_NAME', 'dailycup_db');
-    define('DB_USER', 'root');
-    define('DB_PASS', '');
-    define('APP_URL', 'http://localhost');
-    define('APP_NAME', 'DailyCup');
+// Prefer environment variables, then check common .env locations
+$dbHost = getenv('DB_HOST') ?: null;
+$dbName = getenv('DB_NAME') ?: null;
+$dbUser = getenv('DB_USER') ?: null;
+$dbPass = getenv('DB_PASS') ?: null;
+$appUrl = getenv('APP_URL') ?: null;
+$appName = getenv('APP_NAME') ?: null;
+
+if (!$dbHost || !$dbUser) {
+    $candidateFiles = [
+        __DIR__ . '/../api/.env',
+        __DIR__ . '/../.env',
+        __DIR__ . '/../../.env',
+        '/home/' . (getenv('USER') ?: '') . '/.env'
+    ];
+
+    foreach ($candidateFiles as $f) {
+        if (file_exists($f)) {
+            $env = parse_ini_file($f);
+            $dbHost = $dbHost ?: ($env['DB_HOST'] ?? null);
+            $dbName = $dbName ?: ($env['DB_NAME'] ?? null);
+            $dbUser = $dbUser ?: ($env['DB_USER'] ?? null);
+            $dbPass = $dbPass ?: ($env['DB_PASS'] ?? null);
+            $appUrl = $appUrl ?: ($env['APP_URL'] ?? null);
+            $appName = $appName ?: ($env['APP_NAME'] ?? null);
+            break;
+        }
+    }
 }
+
+// Final defaults
+define('DB_HOST', $dbHost ?: 'localhost');
+define('DB_NAME', $dbName ?: 'dailycup_db');
+define('DB_USER', $dbUser ?: 'root');
+define('DB_PASS', $dbPass ?: '');
+define('APP_URL', rtrim($appUrl ?: '', '/'));
+define('APP_NAME', $appName ?: 'DailyCup');
 
 try {
     $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS);

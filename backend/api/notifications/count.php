@@ -6,7 +6,10 @@
  * Returns just the unread count for polling
  */
 
-require_once __DIR__ . '/../config.php';
+// CORS must be first
+require_once __DIR__ . '/../cors.php';
+
+// require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../jwt.php';
 
 header('Content-Type: application/json');

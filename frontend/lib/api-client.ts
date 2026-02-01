@@ -9,11 +9,12 @@
  * - Request/Response interceptors
  */
 
-// Get API URL from environment variable
-// In production, use Next.js API proxy to bypass CORS/SSL issues
-const API_BASE_URL = typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
-  ? '/api' // Use Next.js API proxy in production
-  : process.env.NEXT_PUBLIC_API_URL || 'http://localhost/DailyCup/webapp/backend/api';
+// Use Next.js rewrites to proxy API calls
+// In production, /api/* is rewritten to https://api.dailycup.com/*
+// In development, calls go directly to backend
+const API_BASE_URL = process.env.NODE_ENV === 'production'
+  ? '/api' // Use Next.js rewrites in production
+  : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost/DailyCup/webapp/backend/api');
 
 // Custom error class for API errors
 export class APIError extends Error {

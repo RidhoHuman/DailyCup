@@ -7,10 +7,10 @@
  * Requires: Authorization: Bearer <token>
  */
 
-// CORS handled by .htaccess
+// CORS must be first
+require_once __DIR__ . '/cors.php';
 
-require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/jwt.php';
+// require_once __DIR__ . '/config.php';
 
 header('Content-Type: application/json');
 
@@ -21,16 +21,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
+require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/jwt.php';
+
 // Require authentication
 $authUser = JWT::requireAuth();
-
-require_once '../config/database.php';
 
 try {
     // Get full user data
     $stmt = $pdo->prepare("
         SELECT id, name, email, phone, address, role, 
-               loyalty_points, profile_image, created_at
+               loyalty_points, profile_picture, created_at
         FROM users 
         WHERE id = ? AND is_active = 1
     ");
@@ -52,7 +53,7 @@ try {
         'address' => $user['address'],
         'role' => $user['role'],
         'loyaltyPoints' => (int) ($user['loyalty_points'] ?? 0),
-        'profilePicture' => $user['profile_image'],
+        'profilePicture' => $user['profile_picture'],
         'joinDate' => $user['created_at']
     ];
 

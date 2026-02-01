@@ -7,18 +7,18 @@
  * Body: { name: string, email: string, password: string, phone?: string }
  */
 
-// CORS handled by .htaccess
+// CORS must be first
+require_once __DIR__ . '/cors.php';
 
-require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/jwt.php';
+// require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/input_sanitizer.php';
-require_once __DIR__ . '/rate_limiter.php';
+// require_once __DIR__ . '/rate_limiter.php';
 
 header('Content-Type: application/json');
 
-// Rate limiting
-$clientIP = RateLimiter::getClientIP();
-RateLimiter::enforce($clientIP, 'default');
+// Rate limiting - temporarily disabled for debugging
+// $clientIP = RateLimiter::getClientIP();
+// RateLimiter::enforce($clientIP, 'default');
 
 // Only accept POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -27,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-require_once '../config/database.php';
+require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/jwt.php';
 
 try {
     // Get JSON input

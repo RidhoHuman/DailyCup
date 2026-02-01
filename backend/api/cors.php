@@ -8,19 +8,19 @@
 function handleCors() {
     // Define allowed origins
     $allowed_origins = [
-        'http://localhost:3000',
-        'http://localhost:3001',
-        'http://127.0.0.1:3000',
-        'http://127.0.0.1:3001',
-        'http://localhost',
-        'http://127.0.0.1',
+        //'http://localhost:3000',
+        //'http://localhost:3001',
+        //'http://127.0.0.1:3000',
+        //'http://127.0.0.1:3001',
+        //'http://localhost',
+        //'http://127.0.0.1',
         'https://dailycup.com',
         'https://api.dailycup.com',
         'https://dailycup.vercel.app',
         // Keep ngrok entries for development/testing
-        'https://a21636405cf4.ngrok-free.app',
-        'https://6005270bff1d.ngrok-free.app',
-        'https://e3fccf16677f.ngrok-free.app'
+        //'https://a21636405cf4.ngrok-free.app',
+        //'https://6005270bff1d.ngrok-free.app',
+        //'https://e3fccf16677f.ngrok-free.app'
     ];
 
     // Get origin from request header

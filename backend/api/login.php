@@ -7,18 +7,19 @@
  * Body: { email: string, password: string }
  */
 
-// CORS handled by .htaccess
+// CORS must be first
+require_once __DIR__ . '/cors.php';
 
-require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/jwt.php';
+// require_once __DIR__ . '/config.php';
+// require_once __DIR__ . '/jwt.php';
 require_once __DIR__ . '/input_sanitizer.php';
-require_once __DIR__ . '/rate_limiter.php';
+// require_once __DIR__ . '/rate_limiter.php';
 
 header('Content-Type: application/json');
 
-// Rate limiting - stricter for login attempts
-$clientIP = RateLimiter::getClientIP();
-RateLimiter::enforce($clientIP, 'default');
+// Rate limiting - temporarily disabled for debugging
+// $clientIP = RateLimiter::getClientIP();
+// RateLimiter::enforce($clientIP, 'default');
 
 // Only accept POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -27,7 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-require_once '../config/database.php';
+require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/jwt.php';
 
 try {
     // Get JSON input
@@ -52,7 +54,7 @@ try {
     // Find user by email
     $stmt = $pdo->prepare("
         SELECT id, name, email, password, phone, address, role, 
-               loyalty_points, profile_image, created_at
+               loyalty_points, profile_picture, created_at
         FROM users 
         WHERE email = ? AND is_active = 1
     ");
@@ -89,7 +91,7 @@ try {
         'address' => $user['address'],
         'role' => $user['role'],
         'loyaltyPoints' => (int) ($user['loyalty_points'] ?? 0),
-        'profilePicture' => $user['profile_image'],
+        'profilePicture' => $user['profile_picture'],
         'joinDate' => $user['created_at']
     ];
 

@@ -68,12 +68,12 @@ const nextConfig: NextConfig = {
     ]
   },
 
-  // Rewrites for API proxy (optional)
+  // Rewrites for API proxy
   async rewrites() {
     return [
       {
         source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`,
+        destination: 'https://api.dailycup.com/:path*',
       },
     ]
   },

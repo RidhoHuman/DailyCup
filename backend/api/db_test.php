@@ -53,10 +53,18 @@ if ($res && $row = $res->fetch_assoc()) {
     $result['ok'] = true;
     $result['details'][] = "DB connected (host={$dbHost}, db={$dbName})";
     $result['tables'] = [];
-    $tablesRes = $mysqli->query("SHOW TABLES LIMIT 10");
-    if ($tablesRes) {
-        while ($r = $tablesRes->fetch_row()) $result['tables'][] = $r[0];
+    // Use information_schema to list tables (portable across MariaDB/MySQL versions)
+    try {
+        $safeDb = $mysqli->real_escape_string($dbName);
+        $tablesRes = $mysqli->query("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = '" . $safeDb . "' LIMIT 10");
+        if ($tablesRes) {
+            while ($r = $tablesRes->fetch_row()) $result['tables'][] = $r[0];
+        }
+    } catch (\Throwable $e) {
+        // Ignore non-critical errors when listing tables
+        // They will not break the health check
     }
+
     echo json_encode($result, JSON_PRETTY_PRINT);
 } else {
     http_response_code(500);

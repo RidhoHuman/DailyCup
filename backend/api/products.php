@@ -9,17 +9,17 @@
 // Ensure CORS headers are set for cross-origin requests (ngrok / Vercel)
 require_once __DIR__ . '/cors.php';
 
-require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/rate_limiter.php';
+// require_once __DIR__ . '/config.php';
+// require_once __DIR__ . '/rate_limiter.php';
 
 header('Content-Type: application/json');
 header('X-Debug-CORS-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? 'no-origin'));
 
-// Rate limiting
-$clientIP = RateLimiter::getClientIP();
-RateLimiter::enforce($clientIP, 'default');
+// Rate limiting - temporarily disabled for debugging
+// $clientIP = RateLimiter::getClientIP();
+// RateLimiter::enforce($clientIP, 'default');
 
-require_once '../config/database.php';
+require_once __DIR__ . '/config/database.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
