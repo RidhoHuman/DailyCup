@@ -8,49 +8,51 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.dailycup.com';
 
-// Disable certificate validation for development (self-signed certs)
-if (process.env.NODE_ENV === 'development') {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-}
+export const runtime = 'nodejs'; // Use Node.js runtime, not Edge
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: { params: Promise<{ path: string[] }> }
 ) {
+  const params = await context.params;
   return proxyRequest(request, params.path, 'GET');
 }
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: { params: Promise<{ path: string[] }> }
 ) {
+  const params = await context.params;
   return proxyRequest(request, params.path, 'POST');
 }
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: { params: Promise<{ path: string[] }> }
 ) {
+  const params = await context.params;
   return proxyRequest(request, params.path, 'PUT');
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: { params: Promise<{ path: string[] }> }
 ) {
+  const params = await context.params;
   return proxyRequest(request, params.path, 'DELETE');
 }
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: { params: Promise<{ path: string[] }> }
 ) {
+  const params = await context.params;
   return proxyRequest(request, params.path, 'PATCH');
 }
 
 export async function OPTIONS(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: { params: Promise<{ path: string[] }> }
 ) {
   return new NextResponse(null, {
     status: 204,
@@ -98,15 +100,12 @@ async function proxyRequest(
       }
     }
 
-    // Make request to backend with SSL verification disabled
+    // Make request to backend
+    // Note: Vercel's fetch will accept the SSL cert from api.dailycup.com
     const response = await fetch(fullUrl, {
       method,
       headers,
       body,
-      // @ts-ignore - Node.js fetch extension
-      agent: process.env.NODE_ENV === 'production' 
-        ? undefined 
-        : new (require('https').Agent)({ rejectUnauthorized: false }),
     });
 
     // Get response data
