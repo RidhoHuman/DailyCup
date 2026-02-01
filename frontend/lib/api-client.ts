@@ -10,10 +10,9 @@
  */
 
 // Use Next.js rewrites to proxy API calls
-// In production, /api/* is rewritten to https://api.dailycup.com/*
-// In development, calls go directly to backend
-const API_BASE_URL = process.env.NODE_ENV === 'production'
-  ? '/api' // Use Next.js rewrites in production
+// Always use /api prefix for client-side calls (rewrites handle routing)
+const API_BASE_URL = typeof window !== 'undefined' 
+  ? '/api' // Client-side: always use Next.js rewrites
   : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost/DailyCup/webapp/backend/api');
 
 // Custom error class for API errors
