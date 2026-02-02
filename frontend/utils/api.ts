@@ -79,8 +79,9 @@ function buildFetchOptions(): RequestInit {
     'Content-Type': 'application/json'
   };
 
-  if (API_BASE_URL.includes('ngrok-free.app')) {
-    headers['ngrok-skip-browser-warning'] = 'true';
+  // Add ngrok bypass header if using any ngrok domain
+  if (API_BASE_URL.includes('ngrok-free.app') || API_BASE_URL.includes('ngrok-free.dev') || API_BASE_URL.includes('.ngrok.io')) {
+    headers['ngrok-skip-browser-warning'] = '69420';
   }
 
   return { headers };

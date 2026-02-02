@@ -77,6 +77,7 @@ async function apiRequest<T = unknown>(
   const requestHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'ngrok-skip-browser-warning': '69420', // Bypass ngrok browser warning
     ...headers,
   };
 

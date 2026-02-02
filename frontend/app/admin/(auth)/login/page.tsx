@@ -19,12 +19,16 @@ export default function AdminLoginPage() {
     setError('');
 
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/DailyCup/webapp/backend/api';
+      let apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/DailyCup/webapp/backend/api';
       
-      const response = await fetch(`${API_BASE_URL}/login.php`, {
+      // FIX: Remove duplicate https:// if exists (common mistake in env vars)
+      apiUrl = apiUrl.replace(/^(https?:\/\/)(https?:?\/\/)+/i, '$1');
+      
+      const response = await fetch(`${apiUrl}/login.php`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': '69420' // Bypass ngrok browser warning
         },
         body: JSON.stringify({ email, password })
       });

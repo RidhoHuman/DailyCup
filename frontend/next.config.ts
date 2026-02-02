@@ -70,11 +70,20 @@ const nextConfig: NextConfig = {
 
   // Rewrites for API proxy
   // Using ngrok tunnel to local Laragon backend
+  // Ngrok serves from Laragon root, so path is relative to www folder
   async rewrites() {
+    let apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/DailyCup/webapp/backend/api';
+    
+    // FIX: Remove duplicate https:// if exists (common mistake in env vars)
+    // Converts "https://https//..." to "https://..."
+    apiUrl = apiUrl.replace(/^(https?:\/\/)(https?:?\/\/)+/i, '$1');
+    
+    console.log('[Next.js] API Rewrite URL:', apiUrl);
+    
     return [
       {
         source: '/api/:path*',
-        destination: 'https://decagonal-subpolygonally-brecken.ngrok-free.dev/DailyCup/webapp/backend/api/:path*',
+        destination: `${apiUrl}/:path*`,
       },
     ]
   },
