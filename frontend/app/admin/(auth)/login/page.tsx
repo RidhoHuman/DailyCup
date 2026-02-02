@@ -19,7 +19,7 @@ export default function AdminLoginPage() {
     setError('');
 
     try {
-      let apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/DailyCup/webapp/backend/api';
+      let apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://decagonal-subpolygonally-brecken.ngrok-free.dev/DailyCup/webapp/backend/api';
       
       // FIX: Remove duplicate https:// if exists (common mistake in env vars)
       apiUrl = apiUrl.replace(/^(https?:\/\/)(https?:?\/\/)+/i, '$1');

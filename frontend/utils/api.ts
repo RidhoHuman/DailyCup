@@ -1,6 +1,6 @@
 // API utilities for DailyCup frontend
 // Using centralized API URL from environment variable
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.dailycup.com/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://decagonal-subpolygonally-brecken.ngrok-free.dev/DailyCup/webapp/backend/api";
 
 // Feature flag for mock data (useful during development)
 const USE_MOCK_DATA = process.env.NEXT_PUBLIC_ENABLE_MOCK_DATA === 'true';
