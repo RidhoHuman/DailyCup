@@ -7,12 +7,12 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'api.dailycup.com',
-        pathname: '/uploads/**',
+        hostname: 'decagonal-subpolygonally-brecken.ngrok-free.dev',
+        pathname: '/DailyCup/webapp/backend/uploads/**',
       },
       {
         protocol: 'https',
-        hostname: 'api.dailycup.com',
+        hostname: 'decagonal-subpolygonally-brecken.ngrok-free.dev',
         pathname: '/**',
       },
 
@@ -69,12 +69,12 @@ const nextConfig: NextConfig = {
   },
 
   // Rewrites for API proxy
-  // Using HTTPS via Cloudflare SSL
+  // Using ngrok tunnel to local Laragon backend
   async rewrites() {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://api.dailycup.com/:path*',
+        destination: 'https://decagonal-subpolygonally-brecken.ngrok-free.dev/DailyCup/webapp/backend/api/:path*',
       },
     ]
   },
