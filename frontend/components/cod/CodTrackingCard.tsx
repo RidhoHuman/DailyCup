@@ -108,7 +108,7 @@ export default function CodTrackingCard({ orderId, isAdmin = false }: CodTrackin
         action: 'update_status',
         status: newStatus,
         notes
-      });
+      }) as { success: boolean; message?: string };
 
       if (response.success) {
         await loadTracking(); // Reload tracking info
@@ -126,7 +126,7 @@ export default function CodTrackingCard({ orderId, isAdmin = false }: CodTrackin
         action: 'confirm_payment',
         payment_amount: paymentAmount,
         receiver_name: receiverName
-      });
+      }) as { success: boolean; message?: string };
 
       if (response.success) {
         await loadTracking();
