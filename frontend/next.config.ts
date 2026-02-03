@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next'
 
+// Updated: February 3, 2026 - Latest deployment with all fixes
 const nextConfig: NextConfig = {
   // Image optimization
   images: {
