@@ -46,5 +46,21 @@
             "total": 50000
         },
         "country": null
+    },
+    {
+        "id": "log_69822a6200b0d4.88091743",
+        "timestamp": "2026-02-03 17:03:30.000000",
+        "action": "ORDER_CREATE",
+        "level": "info",
+        "user_id": "5",
+        "ip": "125.166.0.67",
+        "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/create_order.php",
+        "data": {
+            "order_id": "ORD-1770138209-6791",
+            "total": 50000
+        },
+        "country": null
     }
 ]

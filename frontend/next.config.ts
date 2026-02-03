@@ -1,9 +1,10 @@
 import type { NextConfig } from 'next'
 
-// Updated: February 3, 2026 - Latest deployment with all fixes
+// Updated: February 4, 2026 - Force deployment trigger
 const nextConfig: NextConfig = {
   // Image optimization
   images: {
+
     unoptimized: true, // Disable optimization to fix JFIF 400 errors on Vercel
     remotePatterns: [
       {
