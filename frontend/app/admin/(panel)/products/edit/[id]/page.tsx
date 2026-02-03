@@ -60,9 +60,9 @@ export default function EditProductPage() {
   const fetchProduct = async () => {
     try {
       setFetching(true);
-      const response = await api.get<{ success: boolean; data: Product }>(`/products.php?id=${productId}`);
-      if (response.success) {
-        const product = response.data;
+      const response = await api.get<{ success: boolean; product: Product }>(`/products.php?id=${productId}`, { requiresAuth: true });
+      if (response.success && response.product) {
+        const product = response.product;
         setFormData({
           name: product.name,
           description: product.description || "",
@@ -94,7 +94,7 @@ export default function EditProductPage() {
         category_id: parseInt(formData.category_id),
         stock: parseInt(formData.stock),
         is_featured: formData.is_featured ? 1 : 0,
-      });
+      }, { requiresAuth: true });
       
       if (response.success) {
         alert("Product updated successfully!");
