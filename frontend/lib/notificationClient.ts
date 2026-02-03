@@ -21,7 +21,8 @@ export class NotificationClient {
 
     this.isConnecting = true;
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/DailyCup/webapp/backend/api';
-    const url = `${apiUrl}/notifications/stream.php?token=${encodeURIComponent(token)}`;
+    // Add ngrok bypass as query param since EventSource doesn't support custom headers
+    const url = `${apiUrl}/notifications/stream.php?token=${encodeURIComponent(token)}&ngrok-skip-browser-warning=69420`;
 
     console.log('[SSE] Connecting to:', url);
 

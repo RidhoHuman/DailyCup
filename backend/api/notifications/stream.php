@@ -8,10 +8,7 @@ header('X-Accel-Buffering: no'); // Disable nginx buffering
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../jwt.php';
 
-// CORS headers
-header("Access-Control-Allow-Origin: http://localhost:3000");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+// CORS handled by .htaccess globally
 
 // Disable output buffering
 if (ob_get_level()) ob_end_clean();
@@ -36,17 +33,20 @@ if (!$token) {
     exit;
 }
 
-try {
-    $userData = validateToken($token);
-    $userId = $userData['user_id'];
-} catch (Exception $e) {
-    sendSSE(null, 'error', ['message' => 'Invalid token: ' . $e->getMessage()]);
+// Verify JWT token
+$userData = JWT::verify($token);
+if (!$userData || !isset($userData['user_id'])) {
+    sendSSE(null, 'error', ['message' => 'Invalid or expired token']);
     exit;
 }
+$userId = $userData['user_id'];
 
-// Get database connection
-$database = new Database();
-$db = $database->getConnection();
+// Use $pdo from database.php (already connected)
+if (!isset($pdo)) {
+    sendSSE(null, 'error', ['message' => 'Database connection not available']);
+    exit;
+}
+$db = $pdo;
 
 // Send initial connection success message
 sendSSE(time(), 'connected', [
