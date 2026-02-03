@@ -7,7 +7,8 @@
  * Saves orders to MySQL database.
  */
 
-// CORS handled by .htaccess
+// CORS must be first
+require_once __DIR__ . '/cors.php';
 
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/rate_limiter.php';
@@ -222,6 +223,27 @@ try {
     
     // Use order number as the public ID
     $orderId = $orderNumber;
+
+    // Create COD tracking if payment method is COD
+    if ($paymentMethod === 'cod') {
+        try {
+            $codStmt = $pdo->prepare("
+                INSERT INTO cod_tracking (order_id, status, notes) 
+                VALUES (?, 'pending', 'Menunggu konfirmasi admin')
+            ");
+            $codStmt->execute([$orderNumber]);
+            
+            // Log initial status
+            $historyStmt = $pdo->prepare("
+                INSERT INTO cod_status_history (order_id, status, notes) 
+                VALUES (?, 'pending', 'Order dibuat - menunggu konfirmasi')
+            ");
+            $historyStmt->execute([$orderNumber]);
+        } catch (PDOException $e) {
+            error_log("COD tracking creation error: " . $e->getMessage());
+            // Don't fail the order if tracking creation fails
+        }
+    }
 
     // Also save to JSON file as backup (for payment webhook compatibility)
     $storeDir = __DIR__ . '/../data';

@@ -18,8 +18,9 @@ interface FlashSaleProduct {
 interface FlashSaleBannerProps {
   title?: string;
   endTime: Date | string;
-    products: FlashSaleProduct[];
+  products: FlashSaleProduct[];
   onProductClick?: (productId: string) => void;
+  onViewAll?: () => void;
   className?: string;
 }
 
@@ -33,6 +34,7 @@ export function FlashSaleBanner({
   endTime,
   products,
   onProductClick,
+  onViewAll,
   className,
 }: FlashSaleBannerProps) {
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0, isExpired: false });
@@ -89,24 +91,36 @@ export function FlashSaleBanner({
         <h2 className="text-xl font-bold text-white">{title}</h2>
         
         {/* Countdown */}
-        <div className="flex items-center gap-1">
-          <span className="text-white/80 text-sm mr-2">Ends in</span>
-          {[
-            { value: timeLeft.hours, label: 'H' },
-            { value: timeLeft.minutes, label: 'M' },
-            { value: timeLeft.seconds, label: 'S' },
-          ].map((item, index) => (
-            <div key={index} className="flex items-center">
-              <div className="bg-white/20 backdrop-blur rounded px-2 py-1">
-                <span className="text-white font-mono font-bold text-lg">
-                  {String(item.value).padStart(2, '0')}
-                </span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1">
+            <span className="text-white/80 text-sm mr-2">Ends in</span>
+            {[
+              { value: timeLeft.hours, label: 'H' },
+              { value: timeLeft.minutes, label: 'M' },
+              { value: timeLeft.seconds, label: 'S' },
+            ].map((item, index) => (
+              <div key={index} className="flex items-center">
+                <div className="bg-white/20 backdrop-blur rounded px-2 py-1">
+                  <span className="text-white font-mono font-bold text-lg">
+                    {String(item.value).padStart(2, '0')}
+                  </span>
+                </div>
+                {index < 2 && (
+                  <span className="text-white font-bold mx-0.5">:</span>
+                )}
               </div>
-              {index < 2 && (
-                <span className="text-white font-bold mx-0.5">:</span>
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
+
+          {/* View All Button */}
+          {onViewAll && (
+            <button
+              onClick={onViewAll}
+              className="bg-white/20 hover:bg-white/30 backdrop-blur text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap"
+            >
+              Lihat Semua
+            </button>
+          )}
         </div>
       </div>
 

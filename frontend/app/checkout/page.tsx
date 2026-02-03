@@ -38,7 +38,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { user } = useAuthStore();
   
-  const [selectedPayment, setSelectedPayment] = useState<PaymentMethodType | null>('transfer_bca');
+  const [selectedPayment, setSelectedPayment] = useState<PaymentMethodType | null>('xendit');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

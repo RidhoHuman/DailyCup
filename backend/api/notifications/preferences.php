@@ -4,7 +4,7 @@
  * Manage user notification settings
  */
 
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../jwt.php';
 require_once __DIR__ . '/../cors.php';
 
@@ -27,18 +27,22 @@ if (!$token) {
     exit;
 }
 
-try {
-    $decoded = validateJWT($token);
-    $userId = $decoded->user_id;
-} catch (Exception $e) {
+// Verify JWT token using JWT::verify()
+$decoded = JWT::verify($token);
+if (!$decoded || !isset($decoded['user_id'])) {
     http_response_code(401);
-    echo json_encode(['error' => 'Invalid token: ' . $e->getMessage()]);
+    echo json_encode(['error' => 'Invalid or expired token']);
     exit;
 }
+$userId = $decoded['user_id'];
 
-// Connect to database
-$database = new Database();
-$db = $database->getConnection();
+// Use $pdo from database.php (already connected)
+if (!isset($pdo)) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Database connection not available']);
+    exit;
+}
+$db = $pdo; // Alias for compatibility with existing code
 
 // Handle different methods
 switch ($method) {

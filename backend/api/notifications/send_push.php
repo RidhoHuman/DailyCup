@@ -5,7 +5,7 @@
  * Requires: composer require minishlink/web-push
  */
 
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../jwt.php';
 require_once __DIR__ . '/../cors.php';
 

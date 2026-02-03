@@ -9,7 +9,7 @@
 // CORS must be first
 require_once __DIR__ . '/../cors.php';
 
-// require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../jwt.php';
 
 header('Content-Type: application/json');
@@ -37,17 +37,10 @@ if (!$userId) {
     exit;
 }
 
-// Database connection
-try {
-    $pdo = new PDO(
-        'mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_NAME') . ';charset=utf8mb4',
-        getenv('DB_USER'),
-        getenv('DB_PASS'),
-        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-    );
-} catch (PDOException $e) {
+// Use $pdo from database.php (already connected with proper defaults)
+if (!isset($pdo)) {
     http_response_code(500);
-    echo json_encode(['error' => 'Database connection failed', 'count' => 0]);
+    echo json_encode(['error' => 'Database connection not available', 'count' => 0]);
     exit;
 }
 

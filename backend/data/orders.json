@@ -1115,5 +1115,74 @@
         "status": "pending",
         "created_at": "2026-01-26T16:15:56+00:00",
         "ip_address": "::1"
+    },
+    "ORD-1770094130-4905": {
+        "id": "ORD-1770094130-4905",
+        "items": [
+            {
+                "id": "1",
+                "name": "Espresso",
+                "price": 25000,
+                "quantity": 1
+            }
+        ],
+        "total": 40000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. Kontol no 78, JK0203, JK02, JK"
+        },
+        "status": "pending",
+        "created_at": "2026-02-03T04:48:51+00:00",
+        "ip_address": "2400:9800:9b0:2845:961:f7c:ab79:78d1"
+    },
+    "ORD-1770110033-4476": {
+        "id": "ORD-1770110033-4476",
+        "items": [
+            {
+                "id": "1",
+                "name": "espresso",
+                "price": 35000,
+                "quantity": 1
+            },
+            {
+                "id": "2",
+                "name": "Cappuccino",
+                "price": 37000,
+                "quantity": 1
+            }
+        ],
+        "total": 87000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. Tumenggung no 90, JK0202, JK02, JK"
+        },
+        "status": "pending",
+        "created_at": "2026-02-03T09:13:53+00:00",
+        "ip_address": "140.213.40.25"
+    },
+    "ORD-1770111925-3420": {
+        "id": "ORD-1770111925-3420",
+        "items": [
+            {
+                "id": "2",
+                "name": "Cappuccino",
+                "price": 35000,
+                "quantity": 1
+            }
+        ],
+        "total": 50000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "98294892184928",
+            "address": "safdsdagdshdf, Df01, JK03, JK"
+        },
+        "status": "pending",
+        "created_at": "2026-02-03T09:45:25+00:00",
+        "ip_address": "158.140.172.27"
     }
 }

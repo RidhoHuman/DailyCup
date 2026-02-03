@@ -6,6 +6,8 @@ import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import UpdatePrompt from "@/components/UpdatePrompt";
 import "./globals.css";
 
+// Force deployment trigger
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "600"],

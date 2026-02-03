@@ -147,7 +147,8 @@ self.addEventListener('fetch', (event) => {
         .then((response) => {
           const responseClone = response.clone();
           
-          if (response.ok) {
+          // Only cache GET requests - POST/PUT/DELETE cannot be cached
+          if (response.ok && request.method === 'GET') {
             caches.open(CACHE_NAMES.api).then((cache) => {
               cache.put(request, responseClone);
             });
@@ -156,16 +157,32 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(() => {
-          return caches.match(request).then((cachedResponse) => {
-            return cachedResponse || new Response(
-              JSON.stringify({ 
-                success: false, 
-                error: 'Offline - using cached data',
-                offline: true 
-              }),
-              { headers: { 'Content-Type': 'application/json' } }
-            );
-          });
+          // Only return cached response for GET requests
+          if (request.method === 'GET') {
+            return caches.match(request).then((cachedResponse) => {
+              return cachedResponse || new Response(
+                JSON.stringify({ 
+                  success: false, 
+                  error: 'Offline - using cached data',
+                  offline: true 
+                }),
+                { headers: { 'Content-Type': 'application/json' } }
+              );
+            });
+          }
+          
+          // For non-GET requests (POST/PUT/DELETE), return offline error
+          return new Response(
+            JSON.stringify({ 
+              success: false, 
+              error: 'Network unavailable - cannot complete request',
+              offline: true 
+            }),
+            { 
+              status: 503,
+              headers: { 'Content-Type': 'application/json' } 
+            }
+          );
         })
     );
     return;

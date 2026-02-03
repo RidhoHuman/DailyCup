@@ -1,6 +1,6 @@
 'use client';
 
-export type PaymentMethodType = 'transfer_bca' | 'transfer_mandiri' | 'gopay' | 'cod';
+export type PaymentMethodType = 'xendit' | 'cod';
 
 interface PaymentMethodSelectorProps {
   selected: PaymentMethodType | null;
@@ -11,28 +11,13 @@ export default function PaymentMethodSelector({ selected, onSelect }: PaymentMet
   
   const methods = [
     {
-      id: 'transfer_bca',
-      title: 'BCA Virtual Account',
-      description: 'Cek otomatis, tanpa konfirmasi manual',
-      icon: 'bi-bank',
+      id: 'xendit',
+      title: 'Online Payment (Xendit)',
+      description: 'Bank Transfer, E-Wallet, QRIS, Credit Card, dll.',
+      icon: 'bi-credit-card-2-front',
       color: 'text-blue-600',
-      tag: 'Automatic'
-    },
-    {
-      id: 'transfer_mandiri',
-      title: 'Mandiri Virtual Account',
-      description: 'Cek otomatis, tanpa konfirmasi manual',
-      icon: 'bi-bank2',
-      color: 'text-indigo-600',
-      tag: 'Automatic'
-    },
-    {
-      id: 'gopay',
-      title: 'GoPay / QRIS',
-      description: 'Scan QR Code untuk membayar',
-      icon: 'bi-qr-code-scan',
-      color: 'text-green-600',
-      tag: 'Instant'
+      tag: 'Automatic',
+      subtitle: 'BCA, Mandiri, BNI, GoPay, OVO, Dana, QRIS, dan lainnya'
     },
     {
       id: 'cod',
@@ -40,7 +25,8 @@ export default function PaymentMethodSelector({ selected, onSelect }: PaymentMet
       description: 'Bayar tunai saat kurir sampai',
       icon: 'bi-cash-coin',
       color: 'text-[#a97456]',
-      tag: 'Manual'
+      tag: 'Manual',
+      subtitle: 'Tersedia untuk area tertentu'
     }
   ];
 
@@ -89,6 +75,9 @@ export default function PaymentMethodSelector({ selected, onSelect }: PaymentMet
                 )}
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400">{method.description}</p>
+              {method.subtitle && (
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{method.subtitle}</p>
+              )}
             </div>
           </div>
         );

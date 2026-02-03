@@ -221,6 +221,7 @@ export default function Home() {
           <FlashSaleBanner 
              endTime={flashSaleEndTime}
              products={flashSaleProducts}
+             onViewAll={() => window.location.href = '/menu?featured=true'}
           />
         )}
       </div>

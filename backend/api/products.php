@@ -19,7 +19,7 @@ header('X-Debug-CORS-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? 'no-origin'));
 // $clientIP = RateLimiter::getClientIP();
 // RateLimiter::enforce($clientIP, 'default');
 
-require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/../config/database.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 

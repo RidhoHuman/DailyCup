@@ -7,28 +7,23 @@
  * Body: { email: string, password: string }
  */
 
-// CORS must be first
+// CORS must be first - use centralized CORS handler
 require_once __DIR__ . '/cors.php';
 
-// require_once __DIR__ . '/config.php';
-// require_once __DIR__ . '/jwt.php';
+// CORS handler already exits for OPTIONS, so code below only runs for actual requests
+
 require_once __DIR__ . '/input_sanitizer.php';
-// require_once __DIR__ . '/rate_limiter.php';
 
 header('Content-Type: application/json');
 
-// Rate limiting - temporarily disabled for debugging
-// $clientIP = RateLimiter::getClientIP();
-// RateLimiter::enforce($clientIP, 'default');
-
-// Only accept POST
+// Only accept POST (OPTIONS already handled by cors.php)
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['error' => 'Method not allowed']);
     exit;
 }
 
-require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/jwt.php';
 
 try {
@@ -51,10 +46,10 @@ try {
         exit;
     }
 
-    // Find user by email
+    // Find user by email (removed profile_picture as it may not exist in all schemas)
     $stmt = $pdo->prepare("
         SELECT id, name, email, password, phone, address, role, 
-               loyalty_points, profile_picture, created_at
+               loyalty_points, created_at
         FROM users 
         WHERE email = ? AND is_active = 1
     ");
@@ -87,11 +82,11 @@ try {
         'id' => (int) $user['id'],
         'name' => $user['name'],
         'email' => $user['email'],
-        'phone' => $user['phone'],
-        'address' => $user['address'],
+        'phone' => $user['phone'] ?? '',
+        'address' => $user['address'] ?? '',
         'role' => $user['role'],
         'loyaltyPoints' => (int) ($user['loyalty_points'] ?? 0),
-        'profilePicture' => $user['profile_picture'],
+        'profilePicture' => null, // Not in database yet
         'joinDate' => $user['created_at']
     ];
 
@@ -105,9 +100,9 @@ try {
 } catch (PDOException $e) {
     error_log("Login error: " . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['error' => 'Database error']);
+    echo json_encode(['error' => 'Database error', 'details' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine()]);
 } catch (Exception $e) {
     error_log("Login error: " . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['error' => 'Server error']);
+    echo json_encode(['error' => 'Server error', 'details' => $e->getMessage()]);
 }

@@ -40,6 +40,7 @@ export default function MenuClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("name");
   const [showFilters, setShowFilters] = useState(false);
+  const [showFeaturedOnly, setShowFeaturedOnly] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -64,6 +65,8 @@ export default function MenuClient() {
   // Handle URL query parameters for category filtering
   useEffect(() => {
     const categoryParam = searchParams.get('category');
+    const featuredParam = searchParams.get('featured');
+    
     if (categoryParam && categories.length > 0) {
       // Find category by name (case insensitive)
       const category = categories.find(cat => 
@@ -73,11 +76,20 @@ export default function MenuClient() {
         setSelectedCategory(category.id);
       }
     }
+
+    if (featuredParam === 'true') {
+      setShowFeaturedOnly(true);
+    }
   }, [searchParams, categories]);
 
   // Filter and sort products
   useEffect(() => {
     let filtered = products;
+
+    // Featured filter
+    if (showFeaturedOnly) {
+      filtered = filtered.filter(product => product.is_featured);
+    }
 
     // Category filter
     if (selectedCategory) {
@@ -115,7 +127,7 @@ export default function MenuClient() {
     });
 
     setFilteredProducts(filtered);
-  }, [products, selectedCategory, searchQuery, sortBy, categories]);
+  }, [products, selectedCategory, searchQuery, sortBy, categories, showFeaturedOnly]);
 
   if (loading) {
     return (
@@ -146,10 +158,26 @@ export default function MenuClient() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Our Menu</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            {showFeaturedOnly ? '⚡ Flash Sale Products' : 'Our Menu'}
+          </h1>
           <p className="text-gray-600">
-            Discover our delicious selection of coffee, drinks, and treats
+            {showFeaturedOnly 
+              ? 'Exclusive deals and featured items on sale'
+              : 'Discover our delicious selection of coffee, drinks, and treats'
+            }
           </p>
+          {showFeaturedOnly && (
+            <button
+              onClick={() => {
+                setShowFeaturedOnly(false);
+                window.history.pushState({}, '', '/menu');
+              }}
+              className="mt-2 text-sm text-[#a97456] hover:text-[#8f6249] font-medium"
+            >
+              ← Back to all products
+            </button>
+          )}
         </div>
 
         {/* Search and Filters */}
