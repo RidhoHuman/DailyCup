@@ -60,9 +60,13 @@ export default function EditProductPage() {
   const fetchProduct = async () => {
     try {
       setFetching(true);
+      console.log('[Edit Product] Fetching product ID:', productId);
       const response = await api.get<{ success: boolean; product: Product }>(`/products.php?id=${productId}`, { requiresAuth: true });
+      console.log('[Edit Product] API Response:', response);
+      
       if (response.success && response.product) {
         const product = response.product;
+        console.log('[Edit Product] Product data:', product);
         setFormData({
           name: product.name,
           description: product.description || "",
@@ -72,9 +76,13 @@ export default function EditProductPage() {
           is_featured: product.is_featured,
           image: null,
         });
+      } else {
+        console.error('[Edit Product] Invalid response structure:', response);
+        alert('Failed to load product: Invalid response from server');
+        router.push('/admin/products');
       }
     } catch (error) {
-      console.error('Error fetching product:', error);
+      console.error('[Edit Product] Error fetching product:', error);
       alert('Failed to load product');
       router.push('/admin/products');
     } finally {

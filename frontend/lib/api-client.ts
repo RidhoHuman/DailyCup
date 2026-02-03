@@ -36,9 +36,11 @@ function getAuthToken(): string | null {
     const authData = localStorage.getItem('dailycup-auth');
     if (authData) {
       const parsed = JSON.parse(authData);
-      return parsed?.state?.token || null;
+      // Zustand persist stores data in { state: { ... } } structure
+      return parsed?.state?.token || parsed?.token || null;
     }
-  } catch {
+  } catch (error) {
+    console.error('Error reading auth token:', error);
     return null;
   }
   return null;
