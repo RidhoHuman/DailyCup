@@ -101,13 +101,13 @@ export default function AddToCartModal({
   const calculateTotalPrice = (): number => {
     if (!product) return 0;
 
-    let total = product.base_price;
+    let total: number = product.base_price || 0;
 
     // Add price adjustments from selected modifiers
     modifiers.forEach(modifier => {
       const selectedValue = selectedModifiers[modifier.modifier_type];
       const selectedOption = modifier.options.find(opt => opt.option_value === selectedValue);
-      if (selectedOption) {
+      if (selectedOption && selectedOption.price_adjustment) {
         total += selectedOption.price_adjustment;
       }
     });
