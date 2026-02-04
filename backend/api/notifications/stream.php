@@ -82,14 +82,12 @@ while (true) {
 
     // Check for new notifications
     try {
+        // Query only columns that exist in user_notifications table
         $query = "SELECT 
                     id,
                     type,
                     title,
                     message,
-                    data,
-                    icon,
-                    action_url,
                     is_read,
                     created_at
                 FROM user_notifications 
@@ -107,9 +105,11 @@ while (true) {
 
         if (!empty($notifications)) {
             foreach ($notifications as $notification) {
-                // Decode JSON data field
-                $notification['data'] = json_decode($notification['data'], true);
-
+                // Add default values for missing columns (temporary fix until DB migration)
+                $notification['data'] = null;
+                $notification['icon'] = 'bell';
+                $notification['action_url'] = null;
+                
                 // Send notification event
                 sendSSE(
                     $notification['id'],

@@ -62,5 +62,37 @@
             "total": 50000
         },
         "country": null
+    },
+    {
+        "id": "log_6982ede234abe1.49665083",
+        "timestamp": "2026-02-04 06:57:38.000000",
+        "action": "ORDER_CREATE",
+        "level": "info",
+        "user_id": "5",
+        "ip": "158.140.172.27",
+        "user_agent": "Mozilla\/5.0 (X11; Linux aarch64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36 CrKey\/1.54.250320",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/create_order.php",
+        "data": {
+            "order_id": "ORD-1770188257-7902",
+            "total": 53000
+        },
+        "country": null
+    },
+    {
+        "id": "log_6982ee001486a1.13970177",
+        "timestamp": "2026-02-04 06:58:08.000000",
+        "action": "PAYMENT_RECEIVED",
+        "level": "info",
+        "user_id": null,
+        "ip": "158.140.172.33",
+        "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/pay_order.php",
+        "data": {
+            "order_id": "ORD-1770188257-7902",
+            "payment_method": "manual"
+        },
+        "country": null
     }
 ]

@@ -60,7 +60,7 @@ export default function NotificationSettings() {
     const fetchPreferences = async () => {
         try {
             setLoading(true);
-            const response = await api.get('/notifications/preferences.php') as PreferencesResponse;
+            const response = await api.get('/notifications/preferences.php', { requiresAuth: true }) as PreferencesResponse;
 
             if (response.data.success) {
                 setPreferences(response.data.preferences);
@@ -94,7 +94,7 @@ export default function NotificationSettings() {
 
             setPreferences(updatedPreferences);
 
-            await api.put('/notifications/preferences.php', { [field]: value });
+            await api.put('/notifications/preferences.php', { [field]: value }, { requiresAuth: true });
 
             toast.success('Pengaturan disimpan');
         } catch (error) {

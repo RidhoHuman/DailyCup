@@ -60,8 +60,8 @@ export default function NotificationProvider({ children }: { children: React.Rea
         return;
       }
 
-      // Check user preferences
-      const prefResponse = await api.get<PreferenceResponse>('/notifications/preferences.php');
+      // Check user preferences (requires authentication)
+      const prefResponse = await api.get<PreferenceResponse>('/notifications/preferences.php', { requiresAuth: true });
       const preferences = prefResponse.data?.preferences;
       
       // Only auto-subscribe if user has push enabled in preferences

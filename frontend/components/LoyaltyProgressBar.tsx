@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { formatPoints, getLoyaltyTier } from '@/utils/loyalty-points';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuthStore } from '@/lib/stores/auth-store';
 import api from '@/lib/api-client';
 
 export default function LoyaltyProgressBar() {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const [points, setPoints] = useState(0);
   const [totalEarned, setTotalEarned] = useState(0);
   const [loading, setLoading] = useState(true);

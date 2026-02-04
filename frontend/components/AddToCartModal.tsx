@@ -164,7 +164,7 @@ export default function AddToCartModal({
               <h3 className="text-xl font-semibold text-gray-900">{product.name}</h3>
               <p className="text-sm text-gray-600 mt-1">{product.description}</p>
               <p className="text-lg font-bold text-[#a97456] mt-2">
-                Rp {product.base_price.toLocaleString('id-ID')}
+                Rp {(product.base_price || 0).toLocaleString('id-ID')}
               </p>
             </div>
           </div>
