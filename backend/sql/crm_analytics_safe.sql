@@ -1,4 +1,4 @@
--- CRM Analytics: RFM (Recency, Frequency, Monetary) Segmentation
+-- CRM Analytics: RFM (Recency, Frequency, Monetary) Segmentation - SAFE VERSION
 -- This view helps identify customer segments for targeted marketing
 
 -- Customer RFM Analysis View
@@ -89,6 +89,19 @@ LEFT JOIN orders o ON u.id = o.user_id AND o.payment_status = 'paid'
 WHERE u.role = 'customer'
 GROUP BY u.id, u.name, u.email, u.phone, u.loyalty_points, u.created_at;
 
--- Index for faster queries
--- Note: If index already exists, this will show an error which can be safely ignored
-CREATE INDEX idx_orders_user_payment ON orders(user_id, payment_status, created_at);
+-- Safe index creation with check
+SET @dbname = DATABASE();
+SET @tablename = 'orders';
+SET @indexname = 'idx_orders_user_payment';
+
+SET @preparedStatement = (SELECT IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS
+    WHERE (table_name = @tablename)
+      AND (table_schema = @dbname)
+      AND (index_name = @indexname)) > 0,
+  "SELECT 'Index idx_orders_user_payment already exists' AS message;",
+  "CREATE INDEX idx_orders_user_payment ON orders(user_id, payment_status, created_at);"
+));
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
