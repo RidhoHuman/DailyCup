@@ -82,15 +82,19 @@ while (true) {
 
     // Check for new notifications
     try {
-        // Query only columns that exist in user_notifications table
+        // Query from notifications table with all necessary columns
         $query = "SELECT 
                     id,
                     type,
                     title,
                     message,
+                    data,
+                    icon,
+                    action_url,
                     is_read,
+                    read_at,
                     created_at
-                FROM user_notifications 
+                FROM notifications 
                 WHERE user_id = :user_id 
                 AND id > :last_id
                 ORDER BY id ASC
@@ -105,10 +109,12 @@ while (true) {
 
         if (!empty($notifications)) {
             foreach ($notifications as $notification) {
-                // Add default values for missing columns (temporary fix until DB migration)
-                $notification['data'] = null;
-                $notification['icon'] = 'bell';
-                $notification['action_url'] = null;
+                // Parse JSON data if present
+                if (!empty($notification['data'])) {
+                    $notification['data'] = json_decode($notification['data'], true) ?? [];
+                } else {
+                    $notification['data'] = [];
+                }
                 
                 // Send notification event
                 sendSSE(
@@ -162,7 +168,7 @@ while (true) {
         // Send unread count periodically
         if ($keepAliveCounter % 4 == 0) { // Every ~20 seconds (4 * 5s)
             $countQuery = "SELECT COUNT(*) as count 
-                          FROM user_notifications 
+                          FROM notifications 
                           WHERE user_id = :user_id AND is_read = 0";
             $countStmt = $db->prepare($countQuery);
             $countStmt->bindParam(':user_id', $userId);

@@ -94,5 +94,21 @@
             "payment_method": "manual"
         },
         "country": null
+    },
+    {
+        "id": "log_69830b2167e758.70324551",
+        "timestamp": "2026-02-04 09:02:25.000000",
+        "action": "ORDER_CREATE",
+        "level": "info",
+        "user_id": "5",
+        "ip": "158.140.172.23",
+        "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/create_order.php",
+        "data": {
+            "order_id": "ORD-1770195745-4174",
+            "total": 50000
+        },
+        "country": null
     }
 ]

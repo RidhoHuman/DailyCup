@@ -7,14 +7,41 @@
 
 USE dailycup_db;
 
--- Add category-based column to happy_hour_schedules
-ALTER TABLE happy_hour_schedules 
-ADD COLUMN apply_to_category VARCHAR(50) NULL COMMENT 'If set, apply discount to all products in this category (e.g., "Coffee")' 
-AFTER discount_percentage;
+-- Add category-based column to happy_hour_schedules (only if not exists)
+SET @dbname = DATABASE();
+SET @tablename = 'happy_hour_schedules';
+SET @columnname = 'apply_to_category';
+SET @preparedStatement = (SELECT IF(
+  (
+    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE 
+      TABLE_SCHEMA = @dbname
+      AND TABLE_NAME = @tablename
+      AND COLUMN_NAME = @columnname
+  ) > 0,
+  'SELECT ''Column already exists'' AS status;',
+  'ALTER TABLE happy_hour_schedules ADD COLUMN apply_to_category VARCHAR(50) NULL COMMENT ''If set, apply discount to all products in this category (e.g., "Coffee")'' AFTER discount_percentage;'
+));
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
 
--- Add index for faster category lookups
-ALTER TABLE happy_hour_schedules 
-ADD INDEX idx_category (apply_to_category);
+-- Add index for faster category lookups (only if not exists)
+SET @indexname = 'idx_category';
+SET @preparedStatement2 = (SELECT IF(
+  (
+    SELECT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS
+    WHERE 
+      TABLE_SCHEMA = @dbname
+      AND TABLE_NAME = @tablename
+      AND INDEX_NAME = @indexname
+  ) > 0,
+  'SELECT ''Index already exists'' AS status;',
+  'ALTER TABLE happy_hour_schedules ADD INDEX idx_category (apply_to_category);'
+));
+PREPARE indexIfNotExists FROM @preparedStatement2;
+EXECUTE indexIfNotExists;
+DEALLOCATE PREPARE indexIfNotExists;
 
 -- Update existing schedules to use Coffee category instead of manual selection
 -- Get the Coffee category ID first

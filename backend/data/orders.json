@@ -1310,5 +1310,26 @@
         "status": "pending",
         "created_at": "2026-02-04T06:57:38+00:00",
         "ip_address": "158.140.172.27"
+    },
+    "ORD-1770195745-4174": {
+        "id": "ORD-1770195745-4174",
+        "items": [
+            {
+                "id": "2",
+                "name": "Cappuccino",
+                "price": 35000,
+                "quantity": 1
+            }
+        ],
+        "total": 50000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "xfdhgfxhfxh, Df02, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-04T09:02:25+00:00",
+        "ip_address": "158.140.172.23"
     }
 }

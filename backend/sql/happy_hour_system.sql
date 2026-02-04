@@ -98,6 +98,10 @@ COMMENT='Transaction analytics for Happy Hour promotions';
 -- ============================================
 -- Sample Data for Testing
 -- ============================================
+-- Clean existing sample data to avoid duplicates
+DELETE FROM happy_hour_products WHERE happy_hour_id IN (1, 2, 3);
+DELETE FROM happy_hour_schedules WHERE id IN (1, 2, 3);
+
 -- Insert default Happy Hour schedules
 INSERT INTO happy_hour_schedules 
 (name, start_time, end_time, days_of_week, discount_percentage, is_active) 
@@ -128,11 +132,11 @@ VALUES
 );
 
 -- Assign products to Morning Rush (first 3 coffee products)
-INSERT INTO happy_hour_products (happy_hour_id, product_id)
+INSERT IGNORE INTO happy_hour_products (happy_hour_id, product_id)
 SELECT 1, id FROM products WHERE category_id IN (SELECT id FROM categories WHERE name LIKE '%Coffee%') LIMIT 3;
 
 -- Assign products to Afternoon Break (different coffee products)
-INSERT INTO happy_hour_products (happy_hour_id, product_id)
+INSERT IGNORE INTO happy_hour_products (happy_hour_id, product_id)
 SELECT 2, id FROM products WHERE category_id IN (SELECT id FROM categories WHERE name LIKE '%Coffee%') LIMIT 2 OFFSET 1;
 
 -- ============================================

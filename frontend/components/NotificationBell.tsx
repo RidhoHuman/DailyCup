@@ -2,13 +2,35 @@
 
 import { useEffect, useState } from 'react';
 import { Bell, X, Check, Package, CreditCard, Gift, Info, Trash2 } from 'lucide-react';
-import { useNotificationStore, Notification } from '@/lib/stores/notification-store';
+import { useNotificationStore, Notification, fetchNotifications } from '@/lib/stores/notification-store';
 import { formatDistanceToNow } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
 
 export default function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
-  const { notifications, unreadCount, isConnected, markAsRead, markAllAsRead, removeNotification } = useNotificationStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const { notifications, unreadCount, isConnected, markAsRead, markAllAsRead, removeNotification, setNotifications } = useNotificationStore();
+
+  // Fetch notifications when dropdown is opened
+  useEffect(() => {
+    if (isOpen && notifications.length === 0) {
+      loadNotifications();
+    }
+  }, [isOpen]);
+
+  const loadNotifications = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetchNotifications(20, 0, false);
+      if (response && response.data && response.data.notifications) {
+        setNotifications(response.data.notifications);
+      }
+    } catch (error) {
+      console.error('Failed to load notifications:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -91,7 +113,12 @@ export default function NotificationBell() {
 
             {/* Notification List */}
             <div className="overflow-y-auto flex-1">
-              {visibleNotifications.length === 0 ? (
+              {isLoading ? (
+                <div className="p-8 text-center text-gray-500">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"></div>
+                  <p className="text-sm">Loading notifications...</p>
+                </div>
+              ) : visibleNotifications.length === 0 ? (
                 <div className="p-8 text-center text-gray-500">
                   <Bell className="w-12 h-12 mx-auto mb-3 opacity-50" />
                   <p className="font-medium">No notifications yet</p>

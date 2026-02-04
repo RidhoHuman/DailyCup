@@ -64,18 +64,30 @@ export default function AddToCartButton({
   const isAddToCartDisabled = () => {
     if (product.stock === 0) return true;
     const requiredVariants = Object.keys(product.variants || {});
-    console.log('isAddToCartDisabled for', product.name, ': requiredVariants=', requiredVariants, 'selectedVariants=', selectedVariants);
     if (requiredVariants.length === 0) return false; // No variants required
     return requiredVariants.some(variant => !selectedVariants[variant]);
+  };
+
+  const getButtonText = () => {
+    if (product.stock === 0) return 'Sold Out';
+    const requiredVariants = Object.keys(product.variants || {});
+    if (requiredVariants.length > 0 && requiredVariants.some(v => !selectedVariants[v])) {
+      return 'Select Options';
+    }
+    return 'Add to Cart';
   };
 
   return (
     <button
       onClick={handleAddToCart}
       disabled={isAddToCartDisabled()}
-      className={`bg-[#a97456] text-white px-4 py-2 w-full rounded-lg font-semibold hover:bg-[#8a5a3d] transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed ${className}`}
+      className={`${
+        product.stock === 0 
+          ? 'bg-gray-400 cursor-not-allowed' 
+          : 'bg-[#a97456] hover:bg-[#8a5a3d]'
+      } text-white px-4 py-2 w-full rounded-lg font-semibold transition-colors disabled:opacity-70 disabled:cursor-not-allowed ${className}`}
     >
-      Add to Cart
+      {getButtonText()}
     </button>
   );
 }
