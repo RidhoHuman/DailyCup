@@ -1,24 +1,69 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../../components/Header";
+import { useAuthStore } from "@/lib/stores/auth-store";
+import api from "@/lib/api-client";
 
 interface Order {
   id: string;
+  order_id?: string;
   date: string;
-  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
+  created_at?: string;
+  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled" | "paid" | "failed";
   total: number;
+  total_amount?: number;
   items: Array<{
     name: string;
+    product_name?: string;
     quantity: number;
     price: number;
   }>;
 }
 
 export default function OrdersPage() {
+  const { isAuthenticated } = useAuthStore();
   const [filter, setFilter] = useState("all");
-  const [showDemoBanner, setShowDemoBanner] = useState(true);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (!isAuthenticated) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await api.get<{ data: { orders: any[] } }>('/orders/user_orders.php', { requiresAuth: true });
+        
+        if (response.data && response.data.orders) {
+          // Transform API response to match our interface
+          const transformedOrders: Order[] = response.data.orders.map((order: any) => ({
+            id: order.order_id || order.id,
+            date: order.created_at || order.date,
+            status: order.status,
+            total: parseFloat(order.total_amount || order.total || 0),
+            items: order.items || []
+          }));
+          
+          setOrders(transformedOrders);
+        }
+      } catch (err: any) {
+        console.error('Failed to fetch orders:', err);
+        setError(err.message || 'Failed to load orders');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [isAuthenticated]);
 
   const handleReorder = (orderId: string) => {
     // TODO: Implement reorder functionality
@@ -34,40 +79,7 @@ export default function OrdersPage() {
     }
   };
 
-  // Mock orders data
-  const [orders] = useState<Order[]>([
-    {
-      id: "ORD-99881",
-      date: "2026-01-22",
-      status: "processing",
-      total: 130000,
-      items: [
-        { name: "Caramel Macchiato", quantity: 2, price: 45000 },
-        { name: "Croissant Butter", quantity: 1, price: 25000 }
-      ]
-    },
-    {
-      id: "ORD-001",
-      date: "2024-01-15",
-      status: "delivered",
-      total: 75000,
-      items: [
-        { name: "Espresso", quantity: 2, price: 25000 },
-        { name: "Cappuccino", quantity: 1, price: 35000 }
-      ]
-    },
-    {
-      id: "ORD-002",
-      date: "2024-01-10",
-      status: "shipped",
-      total: 45000,
-      items: [
-        { name: "Latte", quantity: 1, price: 38000 },
-        { name: "Croissant", quantity: 1, price: 7000 }
-      ]
-    }
-  ]);
-
+  // Mock orders data - REMOVED, now using real API
   const getStatusColor = (status: Order["status"]) => {
     switch (status) {
       case "pending": return "bg-yellow-100 text-yellow-800";
@@ -84,33 +96,52 @@ export default function OrdersPage() {
     return order.status === filter;
   });
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#f6efe9]">
+        <Header />
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="bg-white rounded-lg p-6 h-32"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#f6efe9]">
+        <Header />
+        <div className="max-w-6xl mx-auto px-4 py-8 text-center">
+          <i className="bi bi-lock text-6xl text-gray-400 mb-4"></i>
+          <h2 className="text-2xl font-bold mb-2">Login Required</h2>
+          <p className="text-gray-600 mb-6">Please login to view your order history</p>
+          <Link href="/login" className="bg-[#a97456] text-white px-6 py-3 rounded-lg hover:bg-[#8a5a3d]">
+            Login Now
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#f6efe9]">
       <Header />
 
-      {/* Demo Banner */}
-      {showDemoBanner && (
-        <div className="bg-amber-100 border-l-4 border-amber-500 p-4 mx-4 mt-4 rounded-r-lg">
+      {/* Error Banner */}
+      {error && (
+        <div className="bg-red-100 border-l-4 border-red-500 p-4 mx-4 mt-4 rounded-r-lg">
           <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <i className="bi bi-info-circle text-amber-600 text-xl"></i>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-amber-800 font-medium">
-                <strong>Mode Demo</strong> - Riwayat pesanan ini menggunakan data simulasi.
-              </p>
-              <p className="text-sm text-amber-700 mt-1">
-                Sistem order tracking dan database akan diintegrasikan pada fase checkout & payment.
-              </p>
-            </div>
-            <div className="ml-auto">
-              <button 
-                onClick={() => setShowDemoBanner(false)}
-                className="text-amber-600 hover:text-amber-800 text-sm font-medium"
-              >
-                <i className="bi bi-x text-lg"></i>
-              </button>
-            </div>
+            <i className="bi bi-exclamation-triangle text-red-600 text-xl mr-3"></i>
+            <p className="text-sm text-red-800">{error}</p>
           </div>
         </div>
       )}
