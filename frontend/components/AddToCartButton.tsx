@@ -3,10 +3,23 @@
 import { useCart } from "../contexts/CartContext";
 import { Product } from "../utils/api";
 
+export interface HappyHourDiscount {
+  schedule_id: number;
+  schedule_name: string;
+  discount_percentage: number;
+  start_time: string;
+  end_time: string;
+  final_price: number;
+  original_price: number;
+  savings: number;
+  applied_via: 'category' | 'manual';
+}
+
 export interface AddToCartButtonProps {
   product: Product;
   selectedVariants?: Record<string, string>;
   finalPrice?: number;
+  happyHourDiscount?: HappyHourDiscount;
   className?: string;
 }
 
@@ -14,6 +27,7 @@ export default function AddToCartButton({
   product,
   selectedVariants = {},
   finalPrice,
+  happyHourDiscount,
   className = "",
 }: AddToCartButtonProps) {
   const { addItem } = useCart();
@@ -31,8 +45,20 @@ export default function AddToCartButton({
       return;
     }
 
+    // Create cart item with Happy Hour metadata
+    const cartItemData = {
+      ...product,
+      happyHour: happyHourDiscount ? {
+        scheduleName: happyHourDiscount.schedule_name,
+        discountPercentage: happyHourDiscount.discount_percentage,
+        originalPrice: happyHourDiscount.original_price,
+        discountedPrice: happyHourDiscount.final_price,
+        savings: happyHourDiscount.savings,
+      } : undefined
+    };
+
     // Pass selectedVariants to cart context; price is computed in reducer
-    addItem(product, selectedVariants, 1);
+    addItem(cartItemData, selectedVariants, 1);
   };
 
   const isAddToCartDisabled = () => {

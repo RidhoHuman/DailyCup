@@ -8,12 +8,16 @@ import AddToCartButton from './AddToCartButton';
 import { WishlistButton } from './wishlist/wishlist-button';
 import StarRating from './StarRating';
 import { SocialShare } from './SocialShare';
+import { useHappyHour } from '@/lib/hooks/useHappyHour';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  // Check for active Happy Hour discount
+  const { discount: happyHourDiscount, hasDiscount } = useHappyHour(product.id);
+
   // State to hold selected variants
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>(() => {
     const initialVariants: Record<string, string> = {};
@@ -28,8 +32,32 @@ export default function ProductCard({ product }: ProductCardProps) {
     return initialVariants;
   });
 
-  // Calculate the final price based on selected variants
+  // Calculate the final price based on selected variants and Happy Hour
   const finalPrice = useMemo(() => {
+    let price = product.price || product.base_price || 0;
+    
+    // Add variant adjustments
+    if (product.variants) {
+      Object.entries(selectedVariants).forEach(([variantType, value]) => {
+        const variantOptions = product.variants?.[variantType];
+        const variant = variantOptions?.find(v => v.value === value);
+        if (variant) {
+          price += variant.price_adjustment;
+        }
+      });
+    }
+    
+    // Apply Happy Hour discount if active
+    if (hasDiscount && happyHourDiscount) {
+      const discountAmount = Math.round(price * (happyHourDiscount.discount_percentage / 100));
+      price = price - discountAmount;
+    }
+    
+    return price;
+  }, [product, selectedVariants, hasDiscount, happyHourDiscount]);
+
+  // Original price (before Happy Hour discount)
+  const originalPrice = useMemo(() => {
     let price = product.price || product.base_price || 0;
     if (product.variants) {
       Object.entries(selectedVariants).forEach(([variantType, value]) => {
@@ -84,8 +112,23 @@ export default function ProductCard({ product }: ProductCardProps) {
             <i className="bi bi-cup text-4xl text-[#a97456]"></i>
           </div>
         )}
-        {product.is_featured && (
+        
+        {/* Happy Hour Badge */}
+        {hasDiscount && happyHourDiscount && (
+          <div className="absolute top-2 right-2 bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg animate-pulse flex items-center gap-1">
+            <span>⏰</span>
+            <span>{happyHourDiscount.discount_percentage}% OFF</span>
+          </div>
+        )}
+        
+        {/* Featured Badge (move below Happy Hour if both exist) */}
+        {product.is_featured && !hasDiscount && (
           <div className="absolute top-2 right-2 bg-[#a97456] text-white px-2 py-1 rounded-full text-xs font-semibold">
+            Featured
+          </div>
+        )}
+        {product.is_featured && hasDiscount && (
+          <div className="absolute top-12 right-2 bg-[#a97456] text-white px-2 py-1 rounded-full text-xs font-semibold">
             Featured
           </div>
         )}
@@ -144,17 +187,41 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         <div className="mt-auto">
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-1">
-              <span className="text-lg font-bold text-[#a97456]">
-                Rp {finalPrice.toLocaleString()}
-              </span>
+            <div className="flex flex-col gap-1">
+              {/* Happy Hour Price Display */}
+              {hasDiscount && happyHourDiscount ? (
+                <>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500 line-through">
+                      Rp {originalPrice.toLocaleString()}
+                    </span>
+                    <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded font-semibold">
+                      -{happyHourDiscount.discount_percentage}%
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-bold text-orange-600">
+                      Rp {finalPrice.toLocaleString()}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      s/d {happyHourDiscount.end_time}
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <span className="text-lg font-bold text-[#a97456]">
+                  Rp {finalPrice.toLocaleString()}
+                </span>
+              )}
+              
+              {/* Stock Badges */}
               {product.stock <= 5 && product.stock > 0 && (
-                <span className="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded">
+                <span className="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded w-fit">
                   Low stock
                 </span>
               )}
               {product.stock === 0 && (
-                <span className="text-xs text-red-600 bg-red-100 px-2 py-1 rounded">
+                <span className="text-xs text-red-600 bg-red-100 px-2 py-1 rounded w-fit">
                   Out of stock
                 </span>
               )}
@@ -165,6 +232,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             product={product}
             selectedVariants={selectedVariants}
             finalPrice={finalPrice}
+            happyHourDiscount={hasDiscount && happyHourDiscount ? happyHourDiscount : undefined}
             className={`w-full ${product.stock === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
           />
         </div>
