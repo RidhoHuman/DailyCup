@@ -103,7 +103,7 @@ export default function CodTrackingCard({ orderId, isAdmin = false }: CodTrackin
 
   const updateStatus = async (newStatus: string, notes?: string) => {
     try {
-      const response = await apiClient.post('/cod_tracking.php', {
+      const response = await apiClient.post<{ success: boolean; message?: string }>('/cod_tracking.php', {
         order_id: orderId,
         action: 'update_status',
         status: newStatus,
@@ -121,7 +121,7 @@ export default function CodTrackingCard({ orderId, isAdmin = false }: CodTrackin
 
   const confirmPayment = async (paymentAmount?: number, receiverName?: string) => {
     try {
-      const response = await apiClient.post('/cod_tracking.php', {
+      const response = await apiClient.post<{ success: boolean; message?: string }>('/cod_tracking.php', {
         order_id: orderId,
         action: 'confirm_payment',
         payment_amount: paymentAmount,

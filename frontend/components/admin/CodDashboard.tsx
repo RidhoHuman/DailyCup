@@ -16,6 +16,12 @@ interface CodOrder {
   created_at: string;
 }
 
+interface OrdersResponse {
+  success: boolean;
+  orders?: CodOrder[];
+  message?: string;
+}
+
 export default function CodDashboard() {
   const [orders, setOrders] = useState<CodOrder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +36,7 @@ export default function CodDashboard() {
     try {
       setLoading(true);
       // Fetch all COD orders
-      const response = await apiClient.get('/orders.php?payment_method=cod');
+      const response = await apiClient.get<OrdersResponse>('/orders.php?payment_method=cod');
       
       if (response.success && response.orders) {
         setOrders(response.orders);
