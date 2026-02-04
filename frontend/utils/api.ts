@@ -319,11 +319,20 @@ export async function payOrder(orderId: string, action: 'paid' | 'failed') {
 
 export async function fetchOrder(orderId: string) {
   try {
+    const fetchOptions = buildFetchOptions();
     const res = await fetchWithTimeout(`${API_BASE_URL}/get_order.php?orderId=${encodeURIComponent(orderId)}`, {
+      ...fetchOptions,
       timeout: 10000 // 10s timeout untuk fetch order
     });
-    if (!res.ok) throw new Error('Failed to fetch order');
-    return res.json();
+    
+    if (!res.ok) {
+      console.error(`fetchOrder HTTP error: ${res.status} ${res.statusText}`);
+      throw new Error(`Failed to fetch order: ${res.statusText}`);
+    }
+    
+    const data = await res.json();
+    console.log('fetchOrder response:', data);
+    return data;
   } catch (err) {
     console.error('fetchOrder error, falling back to mock:', err);
     // Mock order object matching the interface
