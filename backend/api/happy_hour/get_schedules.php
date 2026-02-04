@@ -52,41 +52,65 @@ if (!$user || $user['role'] !== 'admin') {
 }
 
 try {
-    // Get all schedules
+    // Get all schedules with category info
     $query = "SELECT 
-                id,
-                name,
-                start_time,
-                end_time,
-                days_of_week,
-                discount_percentage,
-                is_active,
-                created_at,
-                updated_at
-            FROM happy_hour_schedules
-            ORDER BY is_active DESC, start_time ASC";
+                hhs.id,
+                hhs.name,
+                hhs.start_time,
+                hhs.end_time,
+                hhs.days_of_week,
+                hhs.discount_percentage,
+                hhs.apply_to_category,
+                hhs.is_active,
+                hhs.created_at,
+                hhs.updated_at
+            FROM happy_hour_schedules hhs
+            ORDER BY hhs.is_active DESC, hhs.start_time ASC";
     
     $stmt = $pdo->query($query);
     $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    // For each schedule, get assigned products
+    // For each schedule, get assigned products (either via category or manual)
     foreach ($schedules as &$schedule) {
-        $productsQuery = "SELECT 
-                            p.id,
-                            p.name,
-                            p.base_price,
-                            p.image,
-                            c.name AS category_name
-                        FROM products p
-                        INNER JOIN happy_hour_products hhp ON p.id = hhp.product_id
-                        LEFT JOIN categories c ON p.category_id = c.id
-                        WHERE hhp.happy_hour_id = :schedule_id
-                        ORDER BY p.name ASC";
+        $products = [];
         
-        $productsStmt = $pdo->prepare($productsQuery);
-        $productsStmt->bindParam(':schedule_id', $schedule['id']);
-        $productsStmt->execute();
-        $products = $productsStmt->fetchAll(PDO::FETCH_ASSOC);
+        // If category-based, get all products from that category
+        if (!empty($schedule['apply_to_category'])) {
+            $productsQuery = "SELECT 
+                                p.id,
+                                p.name,
+                                p.base_price,
+                                p.image,
+                                c.name AS category_name
+                            FROM products p
+                            INNER JOIN categories c ON p.category_id = c.id
+                            WHERE c.name = :category_name
+                            ORDER BY p.name ASC";
+            
+            $productsStmt = $pdo->prepare($productsQuery);
+            $productsStmt->bindParam(':category_name', $schedule['apply_to_category']);
+            $productsStmt->execute();
+            $products = $productsStmt->fetchAll(PDO::FETCH_ASSOC);
+            
+        } else {
+            // Manual selection from happy_hour_products table
+            $productsQuery = "SELECT 
+                                p.id,
+                                p.name,
+                                p.base_price,
+                                p.image,
+                                c.name AS category_name
+                            FROM products p
+                            INNER JOIN happy_hour_products hhp ON p.id = hhp.product_id
+                            LEFT JOIN categories c ON p.category_id = c.id
+                            WHERE hhp.happy_hour_id = :schedule_id
+                            ORDER BY p.name ASC";
+            
+            $productsStmt = $pdo->prepare($productsQuery);
+            $productsStmt->bindParam(':schedule_id', $schedule['id']);
+            $productsStmt->execute();
+            $products = $productsStmt->fetchAll(PDO::FETCH_ASSOC);
+        }
         
         // Format products
         $schedule['products'] = array_map(function($product) use ($schedule) {

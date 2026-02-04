@@ -13,6 +13,7 @@ interface HappyHourSchedule {
   end_time: string;
   days_of_week: string[];
   discount_percentage: number;
+  apply_to_category: string | null;
   is_active: boolean;
   product_count: number;
   products: HappyHourProduct[];
@@ -53,6 +54,7 @@ export default function HappyHourManagementPage() {
     end_time: '',
     days_of_week: [] as string[],
     discount_percentage: 20,
+    apply_to_category: 'Coffee', // Default to Coffee category
     product_ids: [] as number[],
     is_active: true
   });
@@ -101,6 +103,7 @@ export default function HappyHourManagementPage() {
       end_time: '',
       days_of_week: [],
       discount_percentage: 20,
+      apply_to_category: 'Coffee',
       product_ids: [],
       is_active: true
     });
@@ -115,6 +118,7 @@ export default function HappyHourManagementPage() {
       end_time: schedule.end_time,
       days_of_week: schedule.days_of_week,
       discount_percentage: schedule.discount_percentage,
+      apply_to_category: schedule.apply_to_category || 'Coffee',
       product_ids: schedule.products.map(p => p.id),
       is_active: schedule.is_active
     });
@@ -133,10 +137,8 @@ export default function HappyHourManagementPage() {
       return;
     }
     
-    if (formData.product_ids.length === 0) {
-      alert('Pilih minimal 1 produk');
-      return;
-    }
+    // Category-based: No need to check product_ids
+    // Category is automatically applied to all products in that category
 
     try {
       const payload = {
@@ -265,6 +267,11 @@ export default function HappyHourManagementPage() {
                     <p className="text-3xl font-bold text-orange-600">
                       {schedule.discount_percentage}%
                     </p>
+                    {schedule.apply_to_category && (
+                      <p className="text-xs text-orange-700 mt-2 font-semibold">
+                        ☕ Kategori: {schedule.apply_to_category}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -435,38 +442,56 @@ export default function HappyHourManagementPage() {
                 </div>
               </div>
 
-              {/* Products */}
-              <div>
+              {/* Category Selector (New!) */}
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
                 <label className="block text-sm font-semibold text-gray-900 mb-3">
-                  Pilih Produk * ({formData.product_ids.length} dipilih)
+                  ☕ Kategori Produk *
                 </label>
-                <div className="border-2 border-gray-300 rounded-lg p-4 max-h-64 overflow-y-auto">
-                  <div className="grid grid-cols-1 gap-2">
-                    {allProducts.map(product => (
-                      <label
-                        key={product.id}
-                        className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={formData.product_ids.includes(product.id)}
-                          onChange={() => toggleProduct(product.id)}
-                          className="w-5 h-5 text-[#a97456] rounded focus:ring-[#a97456]"
-                        />
-                        <div className="w-12 h-12 bg-gray-200 rounded overflow-hidden flex-shrink-0">
-                          {product.image && (
-                            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-                          )}
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-medium text-gray-900">{product.name}</p>
-                          <p className="text-sm text-gray-500">
-                            {product.category_name} • Rp {product.base_price.toLocaleString('id-ID')}
-                          </p>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
+                <p className="text-xs text-gray-600 mb-3">
+                  Diskon akan otomatis diterapkan ke <strong>semua produk</strong> dalam kategori yang dipilih
+                </p>
+                <div className="grid grid-cols-3 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, apply_to_category: 'Coffee' })}
+                    className={`px-4 py-3 rounded-lg font-medium transition-all ${
+                      formData.apply_to_category === 'Coffee'
+                        ? 'bg-[#a97456] text-white shadow-lg scale-105'
+                        : 'bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-300'
+                    }`}
+                  >
+                    ☕ Coffee
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, apply_to_category: 'Non-Coffee' })}
+                    className={`px-4 py-3 rounded-lg font-medium transition-all ${
+                      formData.apply_to_category === 'Non-Coffee'
+                        ? 'bg-[#a97456] text-white shadow-lg scale-105'
+                        : 'bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-300'
+                    }`}
+                  >
+                    🥤 Non-Coffee
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, apply_to_category: 'Snacks' })}
+                    className={`px-4 py-3 rounded-lg font-medium transition-all ${
+                      formData.apply_to_category === 'Snacks'
+                        ? 'bg-[#a97456] text-white shadow-lg scale-105'
+                        : 'bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-300'
+                    }`}
+                  >
+                    🍪 Snacks
+                  </button>
+                </div>
+                <div className="mt-3 p-3 bg-white rounded border border-blue-200">
+                  <p className="text-sm text-gray-700">
+                    <strong>Kategori dipilih:</strong> <span className="text-[#a97456] font-bold">{formData.apply_to_category}</span>
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    💡 <strong>Rekomendasi:</strong> Gunakan kategori <strong>Coffee</strong> untuk Happy Hour agar efisien
+                  </p>
                 </div>
               </div>
 

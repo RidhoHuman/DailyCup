@@ -68,13 +68,23 @@ $input = json_decode(file_get_contents('php://input'), true);
 
 if ($method === 'POST' || $method === 'PUT') {
     // Validate required fields
-    $required = ['name', 'start_time', 'end_time', 'days_of_week', 'discount_percentage', 'product_ids'];
+    $required = ['name', 'start_time', 'end_time', 'days_of_week', 'discount_percentage'];
     foreach ($required as $field) {
         if (!isset($input[$field])) {
             http_response_code(400);
             echo json_encode(['error' => "Field '$field' is required"]);
             exit;
         }
+    }
+    
+    // Must have either category OR product_ids (not both empty)
+    $hasCategory = !empty($input['apply_to_category']);
+    $hasProducts = !empty($input['product_ids']);
+    
+    if (!$hasCategory && !$hasProducts) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Must select either a category or specific products']);
+        exit;
     }
     
     // Validate discount percentage
@@ -108,11 +118,11 @@ if ($method === 'POST' || $method === 'PUT') {
         $pdo->beginTransaction();
         
         if ($method === 'POST') {
-            // Create new schedule
+            // Create new schedule (with category support)
             $insertQuery = "INSERT INTO happy_hour_schedules 
-                            (name, start_time, end_time, days_of_week, discount_percentage, is_active, created_by)
+                            (name, start_time, end_time, days_of_week, discount_percentage, apply_to_category, is_active, created_by)
                             VALUES 
-                            (:name, :start_time, :end_time, :days_of_week, :discount_percentage, :is_active, :created_by)";
+                            (:name, :start_time, :end_time, :days_of_week, :discount_percentage, :apply_to_category, :is_active, :created_by)";
             
             $stmt = $pdo->prepare($insertQuery);
             $stmt->bindParam(':name', $input['name']);
@@ -120,6 +130,7 @@ if ($method === 'POST' || $method === 'PUT') {
             $stmt->bindParam(':end_time', $endTime);
             $stmt->bindValue(':days_of_week', json_encode($input['days_of_week']));
             $stmt->bindParam(':discount_percentage', $input['discount_percentage']);
+            $stmt->bindValue(':apply_to_category', isset($input['apply_to_category']) ? $input['apply_to_category'] : null);
             $stmt->bindValue(':is_active', isset($input['is_active']) ? (int)$input['is_active'] : 1);
             $stmt->bindParam(':created_by', $userId);
             $stmt->execute();
@@ -127,7 +138,7 @@ if ($method === 'POST' || $method === 'PUT') {
             $scheduleId = $pdo->lastInsertId();
             
         } else {
-            // Update existing schedule
+            // Update existing schedule (with category support)
             if (!isset($input['id'])) {
                 http_response_code(400);
                 echo json_encode(['error' => 'Schedule ID is required for update']);
@@ -140,6 +151,7 @@ if ($method === 'POST' || $method === 'PUT') {
                                end_time = :end_time,
                                days_of_week = :days_of_week,
                                discount_percentage = :discount_percentage,
+                               apply_to_category = :apply_to_category,
                                is_active = :is_active
                            WHERE id = :id";
             
@@ -149,21 +161,22 @@ if ($method === 'POST' || $method === 'PUT') {
             $stmt->bindParam(':end_time', $endTime);
             $stmt->bindValue(':days_of_week', json_encode($input['days_of_week']));
             $stmt->bindParam(':discount_percentage', $input['discount_percentage']);
+            $stmt->bindValue(':apply_to_category', isset($input['apply_to_category']) ? $input['apply_to_category'] : null);
             $stmt->bindValue(':is_active', isset($input['is_active']) ? (int)$input['is_active'] : 1);
             $stmt->bindParam(':id', $input['id']);
             $stmt->execute();
             
             $scheduleId = $input['id'];
             
-            // Delete existing product assignments
+            // Delete existing product assignments (if switching from manual to category)
             $deleteQuery = "DELETE FROM happy_hour_products WHERE happy_hour_id = :schedule_id";
             $deleteStmt = $pdo->prepare($deleteQuery);
             $deleteStmt->bindParam(':schedule_id', $scheduleId);
             $deleteStmt->execute();
         }
         
-        // Insert product assignments
-        if (!empty($input['product_ids'])) {
+        // Insert product assignments ONLY if manual selection (not category-based)
+        if (empty($input['apply_to_category']) && !empty($input['product_ids'])) {
             $productQuery = "INSERT INTO happy_hour_products (happy_hour_id, product_id) VALUES (:schedule_id, :product_id)";
             $productStmt = $pdo->prepare($productQuery);
             

@@ -34,24 +34,57 @@ if (!$productId) {
 }
 
 try {
-    // Query active Happy Hour schedules for this product at current time
+    // First, get product details including category
+    $productQuery = "SELECT 
+                        p.id, 
+                        p.name, 
+                        p.base_price,
+                        c.name AS category_name
+                    FROM products p
+                    LEFT JOIN categories c ON p.category_id = c.id
+                    WHERE p.id = :product_id";
+    
+    $productStmt = $pdo->prepare($productQuery);
+    $productStmt->bindParam(':product_id', $productId, PDO::PARAM_INT);
+    $productStmt->execute();
+    $product = $productStmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$product) {
+        http_response_code(404);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Product not found'
+        ]);
+        exit;
+    }
+    
+    // Query active Happy Hour schedules - CATEGORY-BASED LOGIC
+    // Check if product's category matches any active Happy Hour
     $query = "SELECT 
                 hhs.id,
                 hhs.name,
                 hhs.start_time,
                 hhs.end_time,
                 hhs.discount_percentage,
-                hhs.days_of_week
+                hhs.days_of_week,
+                hhs.apply_to_category
             FROM happy_hour_schedules hhs
-            INNER JOIN happy_hour_products hhp ON hhs.id = hhp.happy_hour_id
-            WHERE hhp.product_id = :product_id
-            AND hhs.is_active = 1
+            WHERE hhs.is_active = 1
             AND :current_time BETWEEN hhs.start_time AND hhs.end_time
+            AND (
+                hhs.apply_to_category = :category_name
+                OR hhs.id IN (
+                    SELECT happy_hour_id 
+                    FROM happy_hour_products 
+                    WHERE product_id = :product_id
+                )
+            )
             LIMIT 1";
     
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':product_id', $productId, PDO::PARAM_INT);
     $stmt->bindParam(':current_time', $currentTime, PDO::PARAM_STR);
+    $stmt->bindParam(':category_name', $product['category_name'], PDO::PARAM_STR);
     $stmt->execute();
     
     $schedule = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -77,22 +110,6 @@ try {
         exit;
     }
     
-    // Get product price
-    $productQuery = "SELECT id, name, base_price FROM products WHERE id = :product_id";
-    $productStmt = $pdo->prepare($productQuery);
-    $productStmt->bindParam(':product_id', $productId, PDO::PARAM_INT);
-    $productStmt->execute();
-    $product = $productStmt->fetch(PDO::FETCH_ASSOC);
-    
-    if (!$product) {
-        http_response_code(404);
-        echo json_encode([
-            'success' => false,
-            'error' => 'Product not found'
-        ]);
-        exit;
-    }
-    
     // Calculate discount
     $originalPrice = (float)$product['base_price'];
     $discountPercentage = (float)$schedule['discount_percentage'];
@@ -112,11 +129,14 @@ try {
             'original_price' => $originalPrice,
             'discount_amount' => $discountAmount,
             'final_price' => $finalPrice,
-            'savings' => $discountAmount
+            'savings' => $discountAmount,
+            'applied_via' => $schedule['apply_to_category'] ? 'category' : 'manual',
+            'category' => $product['category_name']
         ],
         'product' => [
             'id' => (int)$product['id'],
-            'name' => $product['name']
+            'name' => $product['name'],
+            'category' => $product['category_name']
         ]
     ]);
     
