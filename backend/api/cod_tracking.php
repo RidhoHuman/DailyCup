@@ -31,6 +31,40 @@ $path = parse_url($uri, PHP_URL_PATH);
 
 // GET /cod_tracking.php - Get COD tracking info
 if ($method === 'GET') {
+    // Admin can get all COD orders
+    if (isset($_GET['all']) && $_GET['all'] == '1' && $userRole === 'admin') {
+        try {
+            $stmt = $pdo->prepare("
+                SELECT 
+                    ct.*,
+                    o.order_number,
+                    o.customer_name,
+                    o.customer_phone,
+                    o.customer_address,
+                    o.total,
+                    o.status as order_status
+                FROM cod_tracking ct
+                JOIN orders o ON ct.order_id = o.order_number
+                WHERE o.payment_method = 'cod'
+                ORDER BY ct.created_at DESC
+            ");
+            $stmt->execute();
+            $allOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            echo json_encode([
+                'success' => true,
+                'data' => $allOrders,
+                'total' => count($allOrders)
+            ]);
+            exit;
+        } catch (PDOException $e) {
+            error_log("COD Tracking Error: " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Database error']);
+            exit;
+        }
+    }
+    
     $orderId = $_GET['order_id'] ?? null;
     
     if (!$orderId) {
@@ -331,8 +365,69 @@ if ($method === 'POST') {
             echo json_encode(['success' => true, 'message' => 'Payment confirmed']);
             
         } else {
-            // General update
-            $stmt = $pdo->prepare("
+            // General update (assign courier, etc)
+            $fields = [];
+            $values = [];
+            
+            if (isset($input['courier_name'])) {
+                $fields[] = 'courier_name = ?';
+                $values[] = $input['courier_name'];
+            }
+            if (isset($input['courier_phone'])) {
+                $fields[] = 'courier_phone = ?';
+                $values[] = $input['courier_phone'];
+            }
+            if (isset($input['tracking_number'])) {
+                $fields[] = 'tracking_number = ?';
+                $values[] = $input['tracking_number'];
+            }
+            if (isset($input['notes'])) {
+                $fields[] = 'notes = ?';
+                $values[] = $input['notes'];
+            }
+            if (isset($input['admin_notes'])) {
+                $fields[] = 'admin_notes = ?';
+                $values[] = $input['admin_notes'];
+            }
+            
+            if (empty($fields)) {
+                $pdo->rollBack();
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'No fields to update']);
+                exit;
+            }
+            
+            // Check if tracking exists, create if not
+            $checkStmt = $pdo->prepare("SELECT id FROM cod_tracking WHERE order_id = ?");
+            $checkStmt->execute([$orderId]);
+            if (!$checkStmt->fetch()) {
+                // Create new tracking entry
+                $createStmt = $pdo->prepare("INSERT INTO cod_tracking (order_id) VALUES (?)");
+                $createStmt->execute([$orderId]);
+            }
+            
+            $values[] = $orderId;
+            $sql = "UPDATE cod_tracking SET " . implode(', ', $fields) . " WHERE order_id = ?";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($values);
+            
+            // Log if courier assigned
+            if (isset($input['courier_name'])) {
+                $historyStmt = $pdo->prepare("
+                    INSERT INTO cod_status_history (order_id, status, changed_by_user_id, notes)
+                    VALUES (?, ?, ?, ?)
+                ");
+                $historyStmt->execute([
+                    $orderId,
+                    'confirmed',
+                    $userId,
+                    'Courier assigned: ' . $input['courier_name']
+                ]);
+            }
+            
+            $pdo->commit();
+            echo json_encode(['success' => true, 'message' => 'COD tracking updated']);
+        }
                 UPDATE cod_tracking 
                 SET 
                     courier_name = ?,
