@@ -2,10 +2,11 @@
 -- Tracks customer points earned and redeemed
 
 -- Add loyalty_points field to users table
+-- Note: If columns already exist, you can ignore the error or run each ALTER separately
 ALTER TABLE `users` 
-ADD COLUMN IF NOT EXISTS `loyalty_points` INT DEFAULT 0 COMMENT 'Current loyalty points balance',
-ADD COLUMN IF NOT EXISTS `total_points_earned` INT DEFAULT 0 COMMENT 'Lifetime points earned',
-ADD COLUMN IF NOT EXISTS `total_points_redeemed` INT DEFAULT 0 COMMENT 'Lifetime points redeemed',
+ADD COLUMN `loyalty_points` INT DEFAULT 0 COMMENT 'Current loyalty points balance',
+ADD COLUMN `total_points_earned` INT DEFAULT 0 COMMENT 'Lifetime points earned',
+ADD COLUMN `total_points_redeemed` INT DEFAULT 0 COMMENT 'Lifetime points redeemed',
 ADD INDEX `idx_loyalty_points` (`loyalty_points`);
 
 -- Loyalty Points Transaction History
@@ -29,10 +30,11 @@ CREATE TABLE IF NOT EXISTS `loyalty_transactions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Add discount_from_points to orders table
+-- Note: If columns already exist, you can ignore the error or run each ALTER separately
 ALTER TABLE `orders`
-ADD COLUMN IF NOT EXISTS `points_used` INT DEFAULT 0 COMMENT 'Points redeemed for this order',
-ADD COLUMN IF NOT EXISTS `points_earned` INT DEFAULT 0 COMMENT 'Points earned from this order',
-ADD COLUMN IF NOT EXISTS `discount_from_points` DECIMAL(12,2) DEFAULT 0.00 COMMENT 'Discount amount from points redemption';
+ADD COLUMN `points_used` INT DEFAULT 0 COMMENT 'Points redeemed for this order',
+ADD COLUMN `points_earned` INT DEFAULT 0 COMMENT 'Points earned from this order',
+ADD COLUMN `discount_from_points` DECIMAL(12,2) DEFAULT 0.00 COMMENT 'Discount amount from points redemption';
 
 -- Loyalty Point Rules (for configuration)
 CREATE TABLE IF NOT EXISTS `loyalty_rules` (
