@@ -131,11 +131,40 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Restaurant",
               "name": "DailyCup",
-              "description": "Premium coffee delivery service",
-              "url": "https://dailycup.com",
-              "logo": "https://dailycup.com/assets/image/cup.png",
+              "description": "Premium coffee delivery service offering artisan espresso, specialty drinks, and quality beverages delivered to your door",
+              "url": process.env.NEXT_PUBLIC_APP_URL || "https://dailycup.com",
+              "logo": `${process.env.NEXT_PUBLIC_APP_URL || "https://dailycup.com"}/assets/image/cup.png`,
+              "image": `${process.env.NEXT_PUBLIC_APP_URL || "https://dailycup.com"}/assets/image/og-image.jpg`,
               "servesCuisine": "Coffee & Beverages",
-              "priceRange": "$$"
+              "priceRange": "$$",
+              "telephone": "+62-812-3456-7890",
+              "email": "support@dailycup.com",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Jl. Kopi Nusantara No. 123",
+                "addressLocality": "Jakarta Selatan",
+                "addressRegion": "DKI Jakarta",
+                "postalCode": "12345",
+                "addressCountry": "ID"
+              },
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                  "opens": "07:00",
+                  "closes": "22:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": ["Saturday", "Sunday"],
+                  "opens": "08:00",
+                  "closes": "23:00"
+                }
+              ],
+              "sameAs": [
+                "https://www.instagram.com/dailycup.id",
+                "https://www.facebook.com/dailycup.id"
+              ]
             })
           }}
         />

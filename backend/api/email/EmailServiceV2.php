@@ -36,7 +36,10 @@ class EmailServiceV2 {
     public static function init() {
         self::$fromEmail = getenv('SMTP_FROM_EMAIL') ?: 'noreply@dailycup.com';
         self::$fromName = getenv('SMTP_FROM_NAME') ?: 'DailyCup Coffee Shop';
-        self::$appUrl = getenv('APP_URL') ?: 'http://localhost:3000';
+        self::$appUrl = getenv('APP_URL') ?: '';
+        if (empty(self::$appUrl)) {
+            error_log('ERROR: APP_URL environment variable not set');
+        }
         self::$enabled = getenv('SMTP_ENABLED') === 'true' || getenv('SMTP_ENABLED') === '1';
     }
     
