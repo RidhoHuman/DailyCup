@@ -16,16 +16,16 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: |
-          cd webapp/frontend
+          cd frontend
           npm ci
           npx playwright install --with-deps
       - name: Worker sanity check
         run: |
-          php backend/scripts/worker_sanity.php
+          php webapp/backend/scripts/worker_sanity.php
 
       - name: Run Playwright tests
         run: |
-          cd webapp/frontend
+          cd frontend
           npm run test:e2e
         env:
           NEXT_PUBLIC_API_URL: http://localhost/DailyCup/webapp/backend/api
