@@ -326,7 +326,7 @@ export default function HappyHourAnalyticsPage() {
                   legend: { display: false },
                   tooltip: {
                     callbacks: {
-                      label: (context) => formatCurrency(context.parsed.y),
+                      label: (context) => formatCurrency(Number(context.parsed.y ?? 0)),
                     },
                   },
                 },
