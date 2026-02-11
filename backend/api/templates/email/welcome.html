@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to DailyCup!</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f0ec;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f0ec; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #a97456 0%, #8a5a3a 100%); padding: 40px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: bold;">☕ Welcome to DailyCup!</h1>
+                            <p style="color: rgba(255,255,255,0.9); margin: 15px 0 0 0; font-size: 16px;">Your journey to amazing coffee starts here</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Welcome Message -->
+                    <tr>
+                        <td style="padding: 40px 30px 20px; text-align: center;">
+                            <h2 style="color: #333; margin: 0 0 15px; font-size: 24px;">Hello, {{user_name}}! 👋</h2>
+                            <p style="color: #666; margin: 0; font-size: 16px; line-height: 1.6;">
+                                Thank you for joining the DailyCup family! We're excited to serve you the finest coffee experience.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Features Grid -->
+                    <tr>
+                        <td style="padding: 20px 30px;">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td style="width: 50%; padding: 10px;">
+                                        <div style="background-color: #fff3e0; border-radius: 12px; padding: 20px; text-align: center;">
+                                            <span style="font-size: 32px;">🎁</span>
+                                            <h4 style="color: #e65100; margin: 10px 0 5px; font-size: 14px;">Welcome Bonus</h4>
+                                            <p style="color: #666; margin: 0; font-size: 12px;">Get 10% off your first order!</p>
+                                        </div>
+                                    </td>
+                                    <td style="width: 50%; padding: 10px;">
+                                        <div style="background-color: #e8f5e9; border-radius: 12px; padding: 20px; text-align: center;">
+                                            <span style="font-size: 32px;">⭐</span>
+                                            <h4 style="color: #2e7d32; margin: 10px 0 5px; font-size: 14px;">Loyalty Points</h4>
+                                            <p style="color: #666; margin: 0; font-size: 12px;">Earn points with every purchase!</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%; padding: 10px;">
+                                        <div style="background-color: #e3f2fd; border-radius: 12px; padding: 20px; text-align: center;">
+                                            <span style="font-size: 32px;">🚀</span>
+                                            <h4 style="color: #1565c0; margin: 10px 0 5px; font-size: 14px;">Fast Delivery</h4>
+                                            <p style="color: #666; margin: 0; font-size: 12px;">Fresh coffee at your door!</p>
+                                        </div>
+                                    </td>
+                                    <td style="width: 50%; padding: 10px;">
+                                        <div style="background-color: #fce4ec; border-radius: 12px; padding: 20px; text-align: center;">
+                                            <span style="font-size: 32px;">💝</span>
+                                            <h4 style="color: #c2185b; margin: 10px 0 5px; font-size: 14px;">Special Offers</h4>
+                                            <p style="color: #666; margin: 0; font-size: 12px;">Exclusive member deals!</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Account Info -->
+                    <tr>
+                        <td style="padding: 20px 30px;">
+                            <div style="background-color: #faf8f5; border-radius: 12px; padding: 20px;">
+                                <h3 style="color: #333; margin: 0 0 15px; font-size: 16px;">Your Account Details</h3>
+                                <table width="100%">
+                                    <tr>
+                                        <td style="color: #888; font-size: 14px; padding: 8px 0;">Email</td>
+                                        <td style="color: #333; font-size: 14px; text-align: right;">{{user_email}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #888; font-size: 14px; padding: 8px 0;">Member Since</td>
+                                        <td style="color: #333; font-size: 14px; text-align: right;">Today! 🎉</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- CTA Buttons -->
+                    <tr>
+                        <td style="padding: 20px 30px 40px; text-align: center;">
+                            <a href="{{menu_url}}" style="display: inline-block; background-color: #a97456; color: #ffffff; text-decoration: none; padding: 15px 30px; border-radius: 30px; font-weight: bold; font-size: 16px; margin: 5px;">Browse Menu</a>
+                            <a href="{{profile_url}}" style="display: inline-block; background-color: transparent; color: #a97456; text-decoration: none; padding: 15px 30px; border-radius: 30px; font-weight: bold; font-size: 16px; border: 2px solid #a97456; margin: 5px;">Complete Profile</a>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f5f5f5; padding: 25px 30px; text-align: center;">
+                            <p style="color: #888; margin: 0 0 10px; font-size: 13px;">Need help getting started?</p>
+                            <p style="color: #a97456; margin: 0; font-size: 13px;">Contact us at support@dailycup.com</p>
+                            <p style="color: #aaa; margin: 20px 0 0; font-size: 11px;">© 2026 DailyCup. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

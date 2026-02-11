@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Delivered! - DailyCup</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f0ec;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f0ec; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%); padding: 30px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold;">☕ DailyCup</h1>
+                            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 14px;">Your Daily Coffee Companion</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Success Icon -->
+                    <tr>
+                        <td style="padding: 40px 30px 20px; text-align: center;">
+                            <div style="width: 100px; height: 100px; background-color: #e8f5e9; border-radius: 50%; margin: 0 auto;">
+                                <span style="font-size: 50px; line-height: 100px;">🎉</span>
+                            </div>
+                            <h2 style="color: #2e7d32; margin: 20px 0 10px; font-size: 26px;">Order Delivered!</h2>
+                            <p style="color: #666; margin: 0; font-size: 16px;">Hi {{customer_name}}, your order has been delivered successfully!</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Completion Badge -->
+                    <tr>
+                        <td style="padding: 0 30px;">
+                            <table width="100%" style="background-color: #e8f5e9; border-radius: 12px; border: 2px solid #4caf50;">
+                                <tr>
+                                    <td style="padding: 25px; text-align: center;">
+                                        <p style="color: #2e7d32; margin: 0; font-size: 18px; font-weight: bold;">✓ ORDER COMPLETED</p>
+                                        <p style="color: #666; margin: 10px 0 0; font-size: 14px;">Delivered on {{delivery_date}}</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Order Summary -->
+                    <tr>
+                        <td style="padding: 30px;">
+                            <div style="background-color: #faf8f5; border-radius: 12px; padding: 20px;">
+                                <table width="100%">
+                                    <tr>
+                                        <td style="color: #888; font-size: 14px; padding: 8px 0;">Order Number</td>
+                                        <td style="color: #333; font-size: 14px; font-weight: bold; text-align: right;">{{order_number}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #888; font-size: 14px; padding: 8px 0;">Total Paid</td>
+                                        <td style="color: #333; font-size: 14px; font-weight: bold; text-align: right;">{{total}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #888; font-size: 14px; padding: 8px 0;">Points Earned</td>
+                                        <td style="color: #ff9800; font-size: 14px; font-weight: bold; text-align: right;">+{{points_earned}} points ⭐</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Review Request -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <div style="background-color: #fff8e1; border-radius: 12px; padding: 25px; text-align: center; border: 2px dashed #ffc107;">
+                                <span style="font-size: 40px;">⭐</span>
+                                <h3 style="color: #f57f17; margin: 15px 0 10px; font-size: 18px;">How was your coffee?</h3>
+                                <p style="color: #666; margin: 0 0 20px; font-size: 14px;">Your feedback helps us serve you better!</p>
+                                <a href="{{review_url}}" style="display: inline-block; background-color: #ffc107; color: #333; text-decoration: none; padding: 12px 30px; border-radius: 25px; font-weight: bold; font-size: 14px;">Write a Review</a>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Reorder CTA -->
+                    <tr>
+                        <td style="padding: 0 30px 40px; text-align: center;">
+                            <p style="color: #666; margin: 0 0 15px; font-size: 14px;">Craving more coffee? ☕</p>
+                            <a href="{{reorder_url}}" style="display: inline-block; background-color: #a97456; color: #ffffff; text-decoration: none; padding: 15px 40px; border-radius: 30px; font-weight: bold; font-size: 16px;">Order Again</a>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f5f5f5; padding: 25px 30px; text-align: center;">
+                            <p style="color: #888; margin: 0 0 10px; font-size: 13px;">Thank you for choosing DailyCup!</p>
+                            <p style="color: #a97456; margin: 0; font-size: 13px;">See you again soon! ☕💝</p>
+                            <p style="color: #aaa; margin: 20px 0 0; font-size: 11px;">© 2026 DailyCup. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

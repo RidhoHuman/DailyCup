@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Confirmation - DailyCup</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f0ec;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f0ec; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #a97456 0%, #8a5a3a 100%); padding: 30px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold;">☕ DailyCup</h1>
+                            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 14px;">Your Daily Coffee Companion</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Success Icon -->
+                    <tr>
+                        <td style="padding: 40px 30px 20px; text-align: center;">
+                            <div style="width: 80px; height: 80px; background-color: #e8f5e9; border-radius: 50%; margin: 0 auto;">
+                                <span style="font-size: 40px; line-height: 80px;">💳</span>
+                            </div>
+                            <h2 style="color: #2e7d32; margin: 20px 0 10px; font-size: 24px;">Payment Received!</h2>
+                            <p style="color: #666; margin: 0; font-size: 16px;">Thank you, {{customer_name}}! Your payment has been confirmed.</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Payment Info -->
+                    <tr>
+                        <td style="padding: 0 30px;">
+                            <table width="100%" style="background-color: #e8f5e9; border-radius: 12px; border: 2px solid #4caf50;">
+                                <tr>
+                                    <td style="padding: 25px; text-align: center;">
+                                        <p style="color: #2e7d32; margin: 0 0 5px; font-size: 14px; font-weight: bold;">PAYMENT SUCCESSFUL</p>
+                                        <p style="color: #1b5e20; margin: 0; font-size: 32px; font-weight: bold;">{{total_paid}}</p>
+                                        <p style="color: #666; margin: 10px 0 0; font-size: 13px;">via {{payment_method}}</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Order Details -->
+                    <tr>
+                        <td style="padding: 30px;">
+                            <table width="100%" style="background-color: #faf8f5; border-radius: 12px;">
+                                <tr>
+                                    <td style="padding: 20px;">
+                                        <h3 style="color: #333; margin: 0 0 15px; font-size: 16px;">Order Details</h3>
+                                        <table width="100%">
+                                            <tr>
+                                                <td style="color: #888; font-size: 14px; padding: 8px 0;">Order Number</td>
+                                                <td style="color: #333; font-size: 14px; font-weight: bold; text-align: right;">{{order_number}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #888; font-size: 14px; padding: 8px 0;">Payment Date</td>
+                                                <td style="color: #333; font-size: 14px; text-align: right;">{{payment_date}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #888; font-size: 14px; padding: 8px 0;">Status</td>
+                                                <td style="text-align: right;">
+                                                    <span style="background-color: #4caf50; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">PAID</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Order Items -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <h3 style="color: #333; margin: 0 0 15px; font-size: 16px;">Items Purchased</h3>
+                            <table width="100%" style="border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background-color: #f5f5f5;">
+                                        <th style="padding: 12px; text-align: left; color: #666; font-size: 13px;">Item</th>
+                                        <th style="padding: 12px; text-align: center; color: #666; font-size: 13px;">Qty</th>
+                                        <th style="padding: 12px; text-align: right; color: #666; font-size: 13px;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{items_html}}
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Next Steps -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <div style="background-color: #fff3e0; border-radius: 12px; padding: 20px; border-left: 4px solid #ff9800;">
+                                <h4 style="color: #e65100; margin: 0 0 10px; font-size: 14px;">🚀 What's Next?</h4>
+                                <p style="color: #666; margin: 0; font-size: 14px; line-height: 1.6;">
+                                    We're preparing your order now! You'll receive another email when your order is ready for pickup or out for delivery.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- CTA Button -->
+                    <tr>
+                        <td style="padding: 0 30px 40px; text-align: center;">
+                            <a href="{{order_url}}" style="display: inline-block; background-color: #a97456; color: #ffffff; text-decoration: none; padding: 15px 40px; border-radius: 30px; font-weight: bold; font-size: 16px;">Track Your Order</a>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f5f5f5; padding: 25px 30px; text-align: center;">
+                            <p style="color: #888; margin: 0 0 10px; font-size: 13px;">Questions about your order?</p>
+                            <p style="color: #a97456; margin: 0; font-size: 13px;">Contact us at support@dailycup.com</p>
+                            <p style="color: #aaa; margin: 20px 0 0; font-size: 11px;">© 2026 DailyCup. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

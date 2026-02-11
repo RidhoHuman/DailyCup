@@ -1,0 +1,10 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow admin routes
+Disallow: /admin
+Disallow: /dashboard
+
+# Sitemap
+Sitemap: https://dailycup.com/sitemap.xml
