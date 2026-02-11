@@ -301,7 +301,7 @@ export default function HappyHourAnalyticsPage() {
               <h3 className="text-white/80 text-sm font-medium mb-1">Return on Investment (ROI)</h3>
               <p className="text-4xl font-bold">{calculateROI()}%</p>
               <p className="text-white/80 text-sm mt-2">
-                For every Rp 1,000 discount, you earn Rp {(parseFloat(calculateROI()) * 10).toFixed(0)}
+                For every Rp 1,000 discount, you earn Rp {(parseFloat(String(calculateROI())) * 10).toFixed(0)}
               </p>
             </div>
             <div className="bg-white/20 p-4 rounded-full">
