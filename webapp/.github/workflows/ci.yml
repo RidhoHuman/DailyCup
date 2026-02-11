@@ -1,0 +1,119 @@
+﻿name: CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: dailycup_ci
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    env:
+      DB_HOST: 127.0.0.1
+      DB_NAME: dailycup_ci
+      DB_USER: root
+      DB_PASSWORD: root
+      JWT_SECRET: 'ci-jwt-secret'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Build Next.js
+        run: npm run build
+        working-directory: frontend
+
+      # PHP tools & tests
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mysqli, pdo_mysql, curl, mbstring
+          ini-values: date.timezone=UTC
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: PHP lint
+        run: |
+          set -e
+          echo "Checking PHP syntax for project files..."
+          find webapp -name '*.php' -not -path '*/vendor/*' -print0 | xargs -0 -n1 php -l
+
+      - name: Wait for MySQL to be ready
+        run: |
+          for i in {1..30}; do mysql -h127.0.0.1 -uroot -proot -e "SELECT 1" && break || sleep 2; done
+
+      - name: Create CI database
+        run: |
+          mysql -h127.0.0.1 -uroot -proot -e "CREATE DATABASE IF NOT EXISTS dailycup_ci CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+      - name: Apply migrations
+        run: php webapp/backend/scripts/apply_migrations.php
+
+      - name: Start PHP built-in server (backend) in background
+        run: |
+          php -S 127.0.0.1:8000 -t webapp/backend > /tmp/php-server.log 2>&1 &
+          for i in {1..30}; do curl -sS 127.0.0.1:8000/ || sleep 2; done
+
+      - name: Start Next.js (background)
+        run: |
+          npx next start -p 3001 &
+        working-directory: frontend
+
+      - name: Wait for Next.js
+        run: |
+          for i in {1..30}; do curl -sS http://127.0.0.1:3001/ || sleep 2; done
+
+      - name: Generate CI admin token
+        id: gen_token
+        run: |
+          TOKEN=$(php webapp/backend/scripts/generate_ci_admin_token.php)
+          echo "token=$TOKEN" >> $GITHUB_OUTPUT
+
+      - name: Run PHP smoke tests
+        env:
+          BACKEND_URL: 'http://127.0.0.1:8000'
+          CI: 'true'
+          BACKEND_AUTH_TOKEN: ${{ steps.gen_token.outputs.token }}
+        run: |
+          php webapp/backend/scripts/test_refresh_incremental.php || true
+          php webapp/backend/scripts/smoke_test_mvp.php
+          php webapp/backend/scripts/test_broadcast.php
+
+      - name: Run frontend lint
+        run: npm run lint
+        working-directory: frontend

@@ -1,0 +1,15 @@
+[Unit]
+Description=DailyCup Analytics Materialized Refresh (one-shot)
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/path/to/DailyCup/webapp
+ExecStart=/usr/bin/php backend/scripts/analytics_refresh_wrapper.php 7
+User=www-data
+Group=www-data
+StandardOutput=append:/var/log/dailycup/analytics_refresh.log
+StandardError=append:/var/log/dailycup/analytics_refresh.log
+
+[Install]
+WantedBy=multi-user.target

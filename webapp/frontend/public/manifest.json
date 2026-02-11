@@ -1,0 +1,47 @@
+{
+  "name": "DailyCup - Premium Coffee Delivery",
+  "short_name": "DailyCup",
+  "description": "Order premium coffee delivered fresh to your door. Browse our selection of artisan coffee, specialty drinks, and brewing equipment.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#a15e3f",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/assets/image/cup.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/image/cup.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["food", "shopping", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "Browse Menu",
+      "short_name": "Menu",
+      "description": "View our coffee menu",
+      "url": "/menu"
+    },
+    {
+      "name": "My Orders",
+      "short_name": "Orders",
+      "description": "View your order history",
+      "url": "/orders"
+    },
+    {
+      "name": "Cart",
+      "short_name": "Cart",
+      "description": "View your shopping cart",
+      "url": "/cart"
+    }
+  ],
+  "prefer_related_applications": false
+}

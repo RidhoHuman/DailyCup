@@ -1,0 +1,341 @@
+[
+    {
+        "id": "log_698c83df328468.59529039",
+        "timestamp": "2026-02-11 13:27:59.000000",
+        "action": "AUDITLOG_ROTATION",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "days_kept": 90,
+            "files_deleted": 0
+        },
+        "country": null
+    },
+    {
+        "id": "log_698c87e41c59f2.98277644",
+        "timestamp": "2026-02-11 13:45:08.000000",
+        "action": "SECURITY_ALERT",
+        "level": "critical",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "type": "MANUAL_TEST",
+            "note": "triggered via CLI by user test"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698c891ae53a40.98164133",
+        "timestamp": "2026-02-11 13:50:18.000000",
+        "action": "SECURITY_ALERT",
+        "level": "critical",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "type": "MANUAL_SMTP_TEST",
+            "note": "smtp test via phpmailer"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698c8ff2e06a96.40033816",
+        "timestamp": "2026-02-11 14:19:30.000000",
+        "action": "API_ERROR",
+        "level": "error",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "endpoint": "refresh_analytics_materialized",
+            "error": "There is no active transaction",
+            "status_code": 500
+        },
+        "country": null
+    },
+    {
+        "id": "log_698c906f174a09.21048965",
+        "timestamp": "2026-02-11 14:21:35.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "updated_at": "2026-02-11 14:21:35"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cab5fc31fc9.89952218",
+        "timestamp": "2026-02-11 16:16:31.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH_INCREMENTAL",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "days": 3,
+            "from": "2026-02-08",
+            "updated_at": "2026-02-11 16:16:31"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cab8b62f438.17644707",
+        "timestamp": "2026-02-11 16:17:15.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH_INCREMENTAL",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "days": 7,
+            "from": "2026-02-04",
+            "updated_at": "2026-02-11 16:17:15"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cabe9669d72.78829067",
+        "timestamp": "2026-02-11 16:18:49.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH_INCREMENTAL",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "days": 2,
+            "from": "2026-02-09",
+            "updated_at": "2026-02-11 16:18:49"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cabe96d6ea8.98996482",
+        "timestamp": "2026-02-11 16:18:49.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "days": 2,
+            "updated_at": "2026-02-11 16:18:49"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cad3fac6739.71417065",
+        "timestamp": "2026-02-11 16:24:31.000000",
+        "action": "SECURITY_ALERT",
+        "level": "critical",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "type": "ANALYTICS_REFRESH_TEST",
+            "note": "Manual test: analytics alert via CLI"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cb0457b9840.60233403",
+        "timestamp": "2026-02-11 16:37:25.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH_INCREMENTAL",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "days": 1,
+            "from": "2026-02-10",
+            "updated_at": "2026-02-11 16:37:25"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cb5c142d950.62205400",
+        "timestamp": "2026-02-11 17:00:49.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH_INCREMENTAL",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "days": 1,
+            "from": "2026-02-10",
+            "updated_at": "2026-02-11 17:00:49"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cb6f4347c73.18481475",
+        "timestamp": "2026-02-11 17:05:56.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH_INCREMENTAL",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "days": 3,
+            "from": "2026-02-08",
+            "updated_at": "2026-02-11 17:05:56"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cc10d4995c9.57267047",
+        "timestamp": "2026-02-11 17:49:01.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH_INCREMENTAL",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "days": 1,
+            "from": "2026-02-10",
+            "updated_at": "2026-02-11 17:49:01"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cc7e7d01a97.16279567",
+        "timestamp": "2026-02-11 18:18:15.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH_INCREMENTAL",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "days": 1,
+            "from": "2026-02-10",
+            "updated_at": "2026-02-11 18:18:15"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cc87bc62d19.70418368",
+        "timestamp": "2026-02-11 18:20:43.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH_INCREMENTAL",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "days": 1,
+            "from": "2026-02-10",
+            "updated_at": "2026-02-11 18:20:43"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cc8b5dfabf5.10396663",
+        "timestamp": "2026-02-11 18:21:41.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH_INCREMENTAL",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "days": 1,
+            "from": "2026-02-10",
+            "updated_at": "2026-02-11 18:21:41"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cc8b6352010.63719405",
+        "timestamp": "2026-02-11 18:21:42.000000",
+        "action": "BROADCAST_SENT",
+        "level": "info",
+        "user_id": "dev",
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "POST",
+        "request_uri": "\/api\/admin\/broadcast.php?action=send&dev_bypass=1",
+        "data": {
+            "template": "reminder",
+            "provider": "mock",
+            "sent": 2,
+            "failed": 6,
+            "segment": "new",
+            "user_count": 8
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cc8f0775782.32463434",
+        "timestamp": "2026-02-11 18:22:40.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH_INCREMENTAL",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "days": 1,
+            "from": "2026-02-10",
+            "updated_at": "2026-02-11 18:22:40"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698cc8f0b88556.75692405",
+        "timestamp": "2026-02-11 18:22:40.000000",
+        "action": "BROADCAST_SENT",
+        "level": "info",
+        "user_id": "dev",
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "POST",
+        "request_uri": "\/api\/admin\/broadcast.php?action=send&dev_bypass=1",
+        "data": {
+            "template": "reminder",
+            "provider": "mock",
+            "sent": 2,
+            "failed": 6,
+            "segment": "new",
+            "user_count": 8
+        },
+        "country": null
+    }
+]

@@ -1,0 +1,9 @@
+[Unit]
+Description=DailyCup Analytics Refresh Healthcheck hourly
+
+[Timer]
+OnCalendar=hourly
+Persistent=true
+
+[Install]
+WantedBy=timers.target

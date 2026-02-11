@@ -1,0 +1,830 @@
+{
+    "ORD-1770217344-3688": {
+        "id": "ORD-1770217344-3688",
+        "items": [
+            {
+                "id": "3",
+                "name": "Latte",
+                "price": 38000,
+                "quantity": 2
+            }
+        ],
+        "total": 91000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "809898987898",
+            "address": "jkhjkjhkhjhlkk, Df01, JK03, JK"
+        },
+        "status": "pending",
+        "created_at": "2026-02-04T15:02:24+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770217542-4503": {
+        "id": "ORD-1770217542-4503",
+        "items": [
+            {
+                "id": "2",
+                "name": "Cappuccino",
+                "price": 35000,
+                "quantity": 2
+            }
+        ],
+        "total": 85000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "asdfasfasg, Df01, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-04T15:05:42+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770379190-4182": {
+        "id": "ORD-1770379190-4182",
+        "items": [
+            {
+                "id": "1",
+                "name": "espresso",
+                "price": 30000,
+                "quantity": 1
+            }
+        ],
+        "total": 30000,
+        "customer": {
+            "name": "Test User",
+            "email": "customer_test@dailycup.com",
+            "phone": "08123456789",
+            "address": "Test Address 123"
+        },
+        "status": "pending",
+        "created_at": "2026-02-06T11:59:50+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770379240-9506": {
+        "id": "ORD-1770379240-9506",
+        "items": [
+            {
+                "id": "1",
+                "name": "espresso",
+                "price": 30000,
+                "quantity": 1
+            }
+        ],
+        "total": 30000,
+        "customer": {
+            "name": "Test User",
+            "email": "customer_test@dailycup.com",
+            "phone": "08123456789",
+            "address": "Test Address 123"
+        },
+        "status": "pending",
+        "created_at": "2026-02-06T12:00:40+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770379434-4365": {
+        "id": "ORD-1770379434-4365",
+        "items": [
+            {
+                "id": "1",
+                "name": "espresso",
+                "price": 30000,
+                "quantity": 1
+            }
+        ],
+        "total": 30000,
+        "customer": {
+            "name": "Test User",
+            "email": "customer_test@dailycup.com",
+            "phone": "08123456789",
+            "address": "Test Address 123"
+        },
+        "status": "pending",
+        "created_at": "2026-02-06T12:03:54+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770379540-1110": {
+        "id": "ORD-1770379540-1110",
+        "items": [
+            {
+                "id": "1",
+                "name": "espresso",
+                "price": 30000,
+                "quantity": 1
+            }
+        ],
+        "total": 30000,
+        "customer": {
+            "name": "Test User",
+            "email": "customer_test@dailycup.com",
+            "phone": "08123456789",
+            "address": "Test Address 123"
+        },
+        "status": "pending",
+        "created_at": "2026-02-06T12:05:40+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770392575-5298": {
+        "id": "ORD-1770392575-5298",
+        "items": [
+            {
+                "id": "6",
+                "name": "Matcha Latte",
+                "price": 42000,
+                "quantity": 1
+            }
+        ],
+        "total": 42000,
+        "customer": {
+            "name": "aria",
+            "email": "ariashop87@gmail.com",
+            "phone": "0987549404",
+            "address": ""
+        },
+        "status": "pending",
+        "created_at": "2026-02-06T15:42:55+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770446347-8417": {
+        "id": "ORD-1770446347-8417",
+        "items": [
+            {
+                "id": "8",
+                "name": "Fresh Orange Juice",
+                "price": 28000,
+                "quantity": 1
+            }
+        ],
+        "total": 28000,
+        "customer": {
+            "name": "budi",
+            "email": "guest-1770446347645@dailycup.local",
+            "phone": "0000000000",
+            "address": ""
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T06:39:07+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770451392-7254": {
+        "id": "ORD-1770451392-7254",
+        "items": [
+            {
+                "id": "4",
+                "name": "Americano",
+                "price": 30000,
+                "quantity": 1
+            }
+        ],
+        "total": 30000,
+        "customer": {
+            "name": "feby",
+            "email": "guest-1770451392679@dailycup.local",
+            "phone": "0000000000",
+            "address": ""
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T08:03:12+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770455386-2415": {
+        "id": "ORD-1770455386-2415",
+        "items": [
+            {
+                "id": "4",
+                "name": "Americano",
+                "price": 30000,
+                "quantity": 1
+            },
+            {
+                "id": "5",
+                "name": "Mocha",
+                "price": 40000,
+                "quantity": 1
+            }
+        ],
+        "total": 70000,
+        "customer": {
+            "name": "koki",
+            "email": "guest-1770455386724@dailycup.local",
+            "phone": "0000000000",
+            "address": ""
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T09:09:46+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770455473-1473": {
+        "id": "ORD-1770455473-1473",
+        "items": [
+            {
+                "id": "8",
+                "name": "Fresh Orange Juice",
+                "price": 28000,
+                "quantity": 1
+            }
+        ],
+        "total": 28000,
+        "customer": {
+            "name": "brevy",
+            "email": "guest-1770455473009@dailycup.local",
+            "phone": "0000000000",
+            "address": ""
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T09:11:13+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770456634-2921": {
+        "id": "ORD-1770456634-2921",
+        "items": [
+            {
+                "id": "4",
+                "name": "Americano",
+                "price": 30000,
+                "quantity": 1
+            }
+        ],
+        "total": 30000,
+        "customer": {
+            "name": "bubu",
+            "email": "guest-1770456634916@dailycup.local",
+            "phone": "0000000000",
+            "address": ""
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T09:30:34+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770466000-5746": {
+        "id": "ORD-1770466000-5746",
+        "items": [
+            {
+                "id": "4",
+                "name": "Americano",
+                "price": 37000,
+                "quantity": 1,
+                "size": "M",
+                "temperature": "ice",
+                "addons": "[{\"code\":\"extra_sugar\",\"name\":\"Extra Sugar\",\"price\":2000}]",
+                "base_price": 30000,
+                "size_price_modifier": 5000,
+                "addons_total": 2000
+            }
+        ],
+        "total": 37000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. Surabaya gg 2 lowakwaru kota malang"
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T12:06:40+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770466098-7162": {
+        "id": "ORD-1770466098-7162",
+        "items": [
+            {
+                "id": "3",
+                "name": "Latte",
+                "price": 56000,
+                "quantity": 1,
+                "size": "L",
+                "temperature": "hot",
+                "addons": "[{\"code\":\"extra_espresso\",\"name\":\"Extra Espresso Shot\",\"price\":8000}]",
+                "base_price": 38000,
+                "size_price_modifier": 10000,
+                "addons_total": 8000
+            }
+        ],
+        "total": 56000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. Surabaya gg 2 lowakwaru kota malang"
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T12:08:18+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770466362-1468": {
+        "id": "ORD-1770466362-1468",
+        "items": [
+            {
+                "id": "2",
+                "name": "Cappuccino",
+                "price": 45000,
+                "quantity": 1,
+                "size": "L",
+                "temperature": "hot",
+                "addons": "[]",
+                "base_price": 35000,
+                "size_price_modifier": 10000,
+                "addons_total": 0
+            }
+        ],
+        "total": 45000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. Surabaya gg 2 lowakwaru kota malang"
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T12:12:42+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770467253-5852": {
+        "id": "ORD-1770467253-5852",
+        "items": [
+            {
+                "id": "2",
+                "name": "Cappuccino",
+                "price": 35000,
+                "quantity": 1,
+                "size": "Regular",
+                "temperature": "Hot"
+            }
+        ],
+        "total": 50000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "nm bnmbnbn,mb,b, Df03, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T12:27:34+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770467711-9604": {
+        "id": "ORD-1770467711-9604",
+        "items": [
+            {
+                "id": "2",
+                "name": "Cappuccino",
+                "price": 35000,
+                "quantity": 1,
+                "size": "Regular",
+                "temperature": "Hot"
+            }
+        ],
+        "total": 50000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "klasjfkljklsjkfjaskl, Df02, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T12:35:12+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770467855-1433": {
+        "id": "ORD-1770467855-1433",
+        "items": [
+            {
+                "id": "4",
+                "name": "Americano",
+                "price": 30000,
+                "quantity": 1
+            }
+        ],
+        "total": 30000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. Surabaya gg 2 lowakwaru kota malang"
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T12:37:35+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770477511-4589": {
+        "id": "ORD-1770477511-4589",
+        "items": [
+            {
+                "id": "4",
+                "name": "Americano",
+                "price": 30000,
+                "quantity": 1
+            }
+        ],
+        "total": 30000,
+        "customer": {
+            "name": "adi",
+            "email": "guest-1770477511844@dailycup.local",
+            "phone": "0000000000",
+            "address": ""
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T15:18:31+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770477558-1014": {
+        "id": "ORD-1770477558-1014",
+        "items": [
+            {
+                "id": "7",
+                "name": "Chocolate",
+                "price": 35000,
+                "quantity": 1
+            }
+        ],
+        "total": 35000,
+        "customer": {
+            "name": "adi",
+            "email": "guest-1770477558234@dailycup.local",
+            "phone": "0000000000",
+            "address": ""
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T15:19:18+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770477580-6368": {
+        "id": "ORD-1770477580-6368",
+        "items": [
+            {
+                "id": "8",
+                "name": "Fresh Orange Juice",
+                "price": 28000,
+                "quantity": 1
+            }
+        ],
+        "total": 28000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. Surabaya gg 2 lowakwaru kota malang"
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T15:19:40+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770478626-5131": {
+        "id": "ORD-1770478626-5131",
+        "items": [
+            {
+                "id": "2",
+                "name": "Cappuccino",
+                "price": 35000,
+                "quantity": 1,
+                "size": "Regular",
+                "temperature": "Hot"
+            }
+        ],
+        "total": 50000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "sljfjndjsaanfj, Df03, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T15:37:07+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770478766-2276": {
+        "id": "ORD-1770478766-2276",
+        "items": [
+            {
+                "id": "2",
+                "name": "Cappuccino",
+                "price": 35000,
+                "quantity": 1,
+                "size": "Regular",
+                "temperature": "Hot"
+            }
+        ],
+        "total": 50000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "jshjhsjhdfdgdsg, Df01, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T15:39:26+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770496762-5831": {
+        "id": "ORD-1770496762-5831",
+        "items": [
+            {
+                "id": "3",
+                "name": "Latte",
+                "price": 38000,
+                "quantity": 2,
+                "size": "Regular",
+                "temperature": "Hot"
+            }
+        ],
+        "total": 91000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "0808970878",
+            "address": "jl. malang no 90, Df01, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T20:39:22+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770497311-7419": {
+        "id": "ORD-1770497311-7419",
+        "items": [
+            {
+                "id": "2",
+                "name": "Cappuccino",
+                "price": 35000,
+                "quantity": 1,
+                "size": "Regular",
+                "temperature": "Hot"
+            }
+        ],
+        "total": 50000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. manukan no 09 , Df01, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T20:48:31+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770499553-8832": {
+        "id": "ORD-1770499553-8832",
+        "items": [
+            {
+                "id": "8",
+                "name": "Fresh Orange Juice",
+                "price": 33000,
+                "quantity": 1,
+                "size": "Large"
+            }
+        ],
+        "total": 48000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "jl.manuk 09, Df02, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T21:25:53+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770500269-9852": {
+        "id": "ORD-1770500269-9852",
+        "items": [
+            {
+                "id": "3",
+                "name": "Latte",
+                "price": 38000,
+                "quantity": 1,
+                "size": "Regular",
+                "temperature": "Hot"
+            }
+        ],
+        "total": 53000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "jl. kontol 90, Df01, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-07T21:37:49+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770518915-8845": {
+        "id": "ORD-1770518915-8845",
+        "items": [
+            {
+                "id": "6",
+                "name": "Matcha Latte",
+                "price": 49000,
+                "quantity": 1,
+                "size": "Large",
+                "temperature": "Iced"
+            }
+        ],
+        "total": 64000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. kontol no 09 , Df02, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-08T02:48:35+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770522812-8045": {
+        "id": "ORD-1770522812-8045",
+        "items": [
+            {
+                "id": "6",
+                "name": "Matcha Latte",
+                "price": 42000,
+                "quantity": 1,
+                "size": "Regular",
+                "temperature": "Hot"
+            },
+            {
+                "id": "5",
+                "name": "Mocha",
+                "price": 40000,
+                "quantity": 1,
+                "size": "Regular",
+                "temperature": "Hot"
+            },
+            {
+                "id": "5",
+                "name": "Mocha",
+                "price": 47000,
+                "quantity": 1,
+                "size": "Large",
+                "temperature": "Iced"
+            }
+        ],
+        "total": 144000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "0987676755",
+            "address": "Jl. Naga no 19, Df02, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-08T03:53:32+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770740530-7059": {
+        "id": "ORD-1770740530-7059",
+        "items": [
+            {
+                "id": "8",
+                "name": "Fresh Orange Juice",
+                "price": 33000,
+                "quantity": 1,
+                "size": "Large"
+            }
+        ],
+        "total": 48000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. Mayjend Panjaitan No.10, Penanggungan, Kec. Klojen, Kota Malang, Jawa Timur , Df01, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-10T16:22:10+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770743962-8035": {
+        "id": "ORD-1770743962-8035",
+        "items": [
+            {
+                "id": "2",
+                "name": "Cappuccino",
+                "price": 35000,
+                "quantity": 1,
+                "size": "Regular",
+                "temperature": "Hot"
+            }
+        ],
+        "total": 50000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. Mayjend Panjaitan No.10 , Penanggungan, Kec. Klojen, Kota Malang, Jawa Timur , Df01, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-10T17:19:22+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770747058-7620": {
+        "id": "ORD-1770747058-7620",
+        "items": [
+            {
+                "id": "6",
+                "name": "Matcha Latte",
+                "price": 42000,
+                "quantity": 1,
+                "size": "Regular",
+                "temperature": "Hot"
+            }
+        ],
+        "total": 57000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. Mayjend Panjaitan No.10, Penanggungan, Kec. Klojen, Kota Malang, Jawa Timur , Df01, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-10T18:10:59+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770747874-4819": {
+        "id": "ORD-1770747874-4819",
+        "items": [
+            {
+                "id": "5",
+                "name": "Mocha",
+                "price": 40000,
+                "quantity": 1,
+                "size": "Regular",
+                "temperature": "Hot"
+            }
+        ],
+        "total": 55000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. Mayjend Panjaitan No.10, Penanggungan, Kec. Klojen, Kota Malang, Jawa Timur , JI0201, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-10T18:24:35+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770747992-9440": {
+        "id": "ORD-1770747992-9440",
+        "items": [
+            {
+                "id": "1",
+                "name": "espresso",
+                "price": 30000,
+                "quantity": 1,
+                "size": "Regular",
+                "temperature": "Hot"
+            }
+        ],
+        "total": 45000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. Mayjend Panjaitan No.72, Penanggungan, Kec. Klojen, Kota Malang, Jawa Timur 65113, JI0201, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-10T18:26:32+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770748762-8496": {
+        "id": "ORD-1770748762-8496",
+        "items": [
+            {
+                "id": "4",
+                "name": "Americano",
+                "price": 30000,
+                "quantity": 1,
+                "size": "Regular",
+                "temperature": "Hot"
+            }
+        ],
+        "total": 45000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. Mayjend Panjaitan No.10 , Penanggungan, Kec. Klojen, Kota Malang, Jawa Timur, JI0201, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-10T18:39:22+00:00",
+        "ip_address": "::1"
+    },
+    "ORD-1770749813-1259": {
+        "id": "ORD-1770749813-1259",
+        "items": [
+            {
+                "id": "6",
+                "name": "Matcha Latte",
+                "price": 42000,
+                "quantity": 1,
+                "size": "Regular",
+                "temperature": "Hot"
+            }
+        ],
+        "total": 57000,
+        "customer": {
+            "name": "ridho",
+            "email": "ridhohuman11@gmail.com",
+            "phone": "085649697970",
+            "address": "Jl. Mayjend Panjaitan No.10, Penanggungan, Kec. Klojen, Kota Malang, Jawa Timur , JI0201, JI02, JI"
+        },
+        "status": "pending",
+        "created_at": "2026-02-10T18:56:53+00:00",
+        "ip_address": "::1"
+    }
+}

@@ -1,0 +1,82 @@
+[
+    {
+        "id": "log_6985d7b6c4f227.69626050",
+        "timestamp": "2026-02-06 11:59:50.000000",
+        "action": "ORDER_CREATE",
+        "level": "info",
+        "user_id": "13",
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (Windows NT; Windows NT 10.0; id-ID) WindowsPowerShell\/5.1.19041.6456",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/create_order.php",
+        "data": {
+            "order_id": "ORD-1770379190-4182",
+            "total": 30000
+        },
+        "country": null
+    },
+    {
+        "id": "log_6985d7e85ec252.73961423",
+        "timestamp": "2026-02-06 12:00:40.000000",
+        "action": "ORDER_CREATE",
+        "level": "info",
+        "user_id": "13",
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (Windows NT; Windows NT 10.0; id-ID) WindowsPowerShell\/5.1.19041.6456",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/create_order.php",
+        "data": {
+            "order_id": "ORD-1770379240-9506",
+            "total": 30000
+        },
+        "country": null
+    },
+    {
+        "id": "log_6985d8aa9da925.61607451",
+        "timestamp": "2026-02-06 12:03:54.000000",
+        "action": "ORDER_CREATE",
+        "level": "info",
+        "user_id": "13",
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (Windows NT; Windows NT 10.0; id-ID) WindowsPowerShell\/5.1.19041.6456",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/create_order.php",
+        "data": {
+            "order_id": "ORD-1770379434-4365",
+            "total": 30000
+        },
+        "country": null
+    },
+    {
+        "id": "log_6985d9142e44a9.35708373",
+        "timestamp": "2026-02-06 12:05:40.000000",
+        "action": "ORDER_CREATE",
+        "level": "info",
+        "user_id": "13",
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (Windows NT; Windows NT 10.0; id-ID) WindowsPowerShell\/5.1.19041.6456",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/create_order.php",
+        "data": {
+            "order_id": "ORD-1770379540-1110",
+            "total": 30000
+        },
+        "country": null
+    },
+    {
+        "id": "log_69860bff4fef43.43556766",
+        "timestamp": "2026-02-06 15:42:55.000000",
+        "action": "ORDER_CREATE",
+        "level": "info",
+        "user_id": "1",
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/create_order.php",
+        "data": {
+            "order_id": "ORD-1770392575-5298",
+            "total": 42000
+        },
+        "country": null
+    }
+]

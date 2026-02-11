@@ -1,0 +1,15 @@
+[Unit]
+Description=DailyCup Analytics Refresh Healthcheck (one-shot)
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/path/to/DailyCup/webapp
+ExecStart=/usr/bin/php backend/scripts/check_analytics_refresh_health.php 24
+User=www-data
+Group=www-data
+StandardOutput=append:/var/log/dailycup/analytics_healthcheck.log
+StandardError=append:/var/log/dailycup/analytics_healthcheck.log
+
+[Install]
+WantedBy=multi-user.target

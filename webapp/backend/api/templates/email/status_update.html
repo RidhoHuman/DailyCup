@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Status Update - DailyCup</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f0ec;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f0ec; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #a97456 0%, #8a5a3a 100%); padding: 30px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold;">☕ DailyCup</h1>
+                            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 14px;">Your Daily Coffee Companion</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Status Icon -->
+                    <tr>
+                        <td style="padding: 40px 30px 20px; text-align: center;">
+                            <div style="width: 80px; height: 80px; background-color: #e3f2fd; border-radius: 50%; margin: 0 auto;">
+                                <span style="font-size: 40px; line-height: 80px;">📦</span>
+                            </div>
+                            <h2 style="color: #1976d2; margin: 20px 0 10px; font-size: 24px;">Order Update</h2>
+                            <p style="color: #666; margin: 0; font-size: 16px;">Hi {{customer_name}}, here's an update on your order!</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Status Badge -->
+                    <tr>
+                        <td style="padding: 0 30px;">
+                            <table width="100%" style="background-color: #e3f2fd; border-radius: 12px; border: 2px solid #2196f3;">
+                                <tr>
+                                    <td style="padding: 25px; text-align: center;">
+                                        <p style="color: #1565c0; margin: 0 0 10px; font-size: 14px;">ORDER STATUS</p>
+                                        <p style="color: #0d47a1; margin: 0; font-size: 28px; font-weight: bold; text-transform: uppercase;">{{status}}</p>
+                                        <p style="color: #666; margin: 15px 0 0; font-size: 14px;">{{status_message}}</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Order Info -->
+                    <tr>
+                        <td style="padding: 30px;">
+                            <table width="100%" style="background-color: #faf8f5; border-radius: 12px;">
+                                <tr>
+                                    <td style="padding: 20px;">
+                                        <table width="100%">
+                                            <tr>
+                                                <td style="color: #888; font-size: 14px; padding: 8px 0;">Order Number</td>
+                                                <td style="color: #333; font-size: 14px; font-weight: bold; text-align: right;">{{order_number}}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Progress Tracker -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <h3 style="color: #333; margin: 0 0 20px; font-size: 16px; text-align: center;">Order Progress</h3>
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td style="text-align: center; width: 20%;">
+                                        <div style="width: 40px; height: 40px; background-color: #4caf50; border-radius: 50%; margin: 0 auto; line-height: 40px; color: #fff; font-size: 18px;">✓</div>
+                                        <p style="color: #4caf50; font-size: 11px; margin: 8px 0 0;">Confirmed</p>
+                                    </td>
+                                    <td style="text-align: center; width: 20%;">
+                                        <div style="width: 40px; height: 40px; background-color: #4caf50; border-radius: 50%; margin: 0 auto; line-height: 40px; color: #fff; font-size: 18px;">✓</div>
+                                        <p style="color: #4caf50; font-size: 11px; margin: 8px 0 0;">Paid</p>
+                                    </td>
+                                    <td style="text-align: center; width: 20%;">
+                                        <div style="width: 40px; height: 40px; background-color: #2196f3; border-radius: 50%; margin: 0 auto; line-height: 40px; color: #fff; font-size: 14px;">●</div>
+                                        <p style="color: #2196f3; font-size: 11px; margin: 8px 0 0; font-weight: bold;">Preparing</p>
+                                    </td>
+                                    <td style="text-align: center; width: 20%;">
+                                        <div style="width: 40px; height: 40px; background-color: #e0e0e0; border-radius: 50%; margin: 0 auto; line-height: 40px; color: #999; font-size: 14px;">○</div>
+                                        <p style="color: #999; font-size: 11px; margin: 8px 0 0;">Delivery</p>
+                                    </td>
+                                    <td style="text-align: center; width: 20%;">
+                                        <div style="width: 40px; height: 40px; background-color: #e0e0e0; border-radius: 50%; margin: 0 auto; line-height: 40px; color: #999; font-size: 14px;">○</div>
+                                        <p style="color: #999; font-size: 11px; margin: 8px 0 0;">Complete</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- CTA Button -->
+                    <tr>
+                        <td style="padding: 0 30px 40px; text-align: center;">
+                            <a href="{{order_url}}" style="display: inline-block; background-color: #a97456; color: #ffffff; text-decoration: none; padding: 15px 40px; border-radius: 30px; font-weight: bold; font-size: 16px;">View Order Details</a>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f5f5f5; padding: 25px 30px; text-align: center;">
+                            <p style="color: #888; margin: 0 0 10px; font-size: 13px;">Questions about your order?</p>
+                            <p style="color: #a97456; margin: 0; font-size: 13px;">Contact us at support@dailycup.com</p>
+                            <p style="color: #aaa; margin: 20px 0 0; font-size: 11px;">© 2026 DailyCup. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
