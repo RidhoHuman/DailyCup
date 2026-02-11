@@ -58,7 +58,7 @@ interface RequestConfig {
 /**
  * Main API request function
  */
-async function apiRequest<T = unknown>(
+async function apiRequest<T = any>(
   endpoint: string,
   config: RequestConfig = {}
 ): Promise<T> {
@@ -162,19 +162,19 @@ async function apiRequest<T = unknown>(
 // ===========================================
 
 export const api = {
-  get: <T = unknown>(endpoint: string, config?: Omit<RequestConfig, 'method' | 'body'>) =>
+  get: <T = any>(endpoint: string, config?: Omit<RequestConfig, 'method' | 'body'>) =>
     apiRequest<T>(endpoint, { ...config, method: 'GET' }),
 
-  post: <T = unknown>(endpoint: string, body?: Record<string, unknown>, config?: Omit<RequestConfig, 'method'>) =>
+  post: <T = any>(endpoint: string, body?: Record<string, unknown>, config?: Omit<RequestConfig, 'method'>) =>
     apiRequest<T>(endpoint, { ...config, method: 'POST', body }),
 
-  put: <T = unknown>(endpoint: string, body?: Record<string, unknown>, config?: Omit<RequestConfig, 'method'>) =>
+  put: <T = any>(endpoint: string, body?: Record<string, unknown>, config?: Omit<RequestConfig, 'method'>) =>
     apiRequest<T>(endpoint, { ...config, method: 'PUT', body }),
 
-  delete: <T = unknown>(endpoint: string, config?: Omit<RequestConfig, 'method'>) =>
+  delete: <T = any>(endpoint: string, config?: Omit<RequestConfig, 'method'>) =>
     apiRequest<T>(endpoint, { ...config, method: 'DELETE' }),
 
-  patch: <T = unknown>(endpoint: string, body?: Record<string, unknown>, config?: Omit<RequestConfig, 'method'>) =>
+  patch: <T = any>(endpoint: string, body?: Record<string, unknown>, config?: Omit<RequestConfig, 'method'>) =>
     apiRequest<T>(endpoint, { ...config, method: 'PATCH', body }),
 };
 
