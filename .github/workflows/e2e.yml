@@ -19,9 +19,22 @@ jobs:
           cd frontend
           npm ci
           npx playwright install --with-deps
-      - name: Worker sanity check
+      - name: Worker sanity check (debug)
         run: |
-          php webapp/backend/scripts/worker_sanity.php
+          echo "PWD: $(pwd)"
+          echo "Root listing:"
+          ls -la
+          echo "Look for webapp directory:"
+          ls -la webapp || true
+          echo "Find worker_sanity.php in repo (up to depth 4):"
+          find . -maxdepth 4 -type f -name 'worker_sanity.php' -print || true
+          if [ -f webapp/backend/scripts/worker_sanity.php ]; then
+            echo "Found worker_sanity.php, running it now..."
+            php webapp/backend/scripts/worker_sanity.php
+          else
+            echo "worker_sanity.php not found on runner. Failing the step for diagnostics."
+            exit 1
+          fi
 
       - name: Run Playwright tests
         run: |
