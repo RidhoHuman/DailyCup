@@ -95,9 +95,9 @@ export default function HappyHourAnalyticsPage() {
     try {
       setLoading(true);
       setError('');
-      const response = await api.get(`/happy_hour/analytics.php?period=${period}`);
-      
-      if (response.data) {
+      const response: any = await api.get(`/happy_hour/analytics.php?period=${period}`);
+
+      if (response?.data) {
         setAnalytics(response.data);
       } else {
         setError('Failed to load analytics data');
