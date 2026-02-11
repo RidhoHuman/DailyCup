@@ -117,14 +117,14 @@ export default function CODManagementPage() {
         ...updateForm,
       };
 
-      const response = await api.post('/cod_tracking.php', payload);
-      
-      if (response.data.success) {
+      const response: any = await api.post('/cod_tracking.php', payload);
+
+      if (response?.data?.success) {
         alert('COD tracking updated successfully!');
         setShowUpdateModal(false);
         fetchCODOrders();
       } else {
-        alert(response.data.message || 'Update failed');
+        alert(response?.data?.message || 'Update failed');
       }
     } catch (err: any) {
       console.error('Error updating COD tracking:', err);
