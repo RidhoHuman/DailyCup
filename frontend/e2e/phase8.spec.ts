@@ -17,11 +17,14 @@ test('complete checkout with mock payment', async ({ page }) => {
   await page.locator('input[placeholder="Email address"]').fill('test@example.com');
   await page.locator('textarea[placeholder="Delivery address"]').fill('Jl. Test 123');
   
-  await page.click('text=Proceed to Payment');
+  const proceedBtn = page.locator('text=Proceed to Payment');
+  await expect(proceedBtn).toBeVisible({ timeout: 5000 });
+  await proceedBtn.click();
 
   // On payment page, simulate success
-  await page.waitForSelector('text=Simulate Success');
-  await page.click('text=Simulate Success');
+  const simulateSuccess = page.locator('text=Simulate Success');
+  await expect(simulateSuccess).toBeVisible({ timeout: 5000 });
+  await simulateSuccess.click();
 
   // Confirm order status updated
   await page.waitForSelector('text=Payment successful', { timeout: 5000 });

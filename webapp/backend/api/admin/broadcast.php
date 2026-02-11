@@ -155,8 +155,8 @@ function getIntegrationSetting($db, $key) {
 }
 
 # backend/scripts/test_broadcast.php
-$path = 'webapp/backend/scripts/test_broadcast.php'
-$content = @'
+$path = 'webapp/backend/scripts/test_broadcast.php';
+$content = <<<'PHP'
 <?php
 // Simple test script: broadcast 'reminder' to segment 'new' (mock provider expected if no Twilio creds)
 $backend = getenv('BACKEND_URL') ?: 'http://127.0.0.1:8000';
@@ -190,3 +190,6 @@ echo "Response:\n" . ($resp ?? '') . "\n";
 if ($err) { echo "cURL error: {$err}\n"; exit(2); }
 if ($http < 200 || $http >= 300) { exit(3); }
 exit(0);
+PHP;
+
+@file_put_contents(__DIR__ . '/../../' . $path, $content);

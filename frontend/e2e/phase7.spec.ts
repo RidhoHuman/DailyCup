@@ -7,9 +7,12 @@ test('profile edit validation and save', async ({ page }) => {
   });
 
   await page.goto('/');
+  await page.waitForLoadState('networkidle');
   await page.getByRole('link', { name: 'Profile' }).click();
+  await expect(page).toHaveURL(/\/profile|\/account|\/dashboard/);
 
   // Start editing
+  await expect(page.getByRole('button', { name: 'Edit Profile' })).toBeVisible({ timeout: 5000 });
   await page.getByRole('button', { name: 'Edit Profile' }).click();
 
   // Clear name to trigger validation - use input directly since label is not linked via for/id

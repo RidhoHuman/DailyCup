@@ -64,25 +64,21 @@ jobs:
       - name: Apply migrations
         run: php webapp/backend/scripts/apply_migrations.php
 
+      - name: Seed test data
+        run: php webapp/backend/scripts/seed_test_data.php
+
       - name: Start PHP built-in server (backend) in background
         run: |
           php -S 127.0.0.1:8000 -t webapp/backend > /tmp/php-server.log 2>&1 &
           for i in {1..30}; do curl -sS 127.0.0.1:8000/ || sleep 2; done
+
       - name: Worker sanity check
         run: |
-          # Run sanity check but don't fail the job if there are DB errors (we still want to run E2E)
-          php webapp/backend/scripts/worker_sanity.php || true
+          php webapp/backend/scripts/worker_sanity.php
 
       - name: Run Playwright tests
         run: |
           cd frontend
           npm run test:e2e
         env:
-          NEXT_PUBLIC_API_URL: http://127.0.0.1:8000/DailyCup/webapp/backend/api
-
-      - name: Run Playwright tests
-        run: |
-          cd frontend
-          npm run test:e2e
-        env:
-          NEXT_PUBLIC_API_URL: http://localhost/DailyCup/webapp/backend/api
+          NEXT_PUBLIC_API_URL: http://127.0.0.1:8000

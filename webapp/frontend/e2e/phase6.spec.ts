@@ -9,7 +9,7 @@ test('product variants adjust price and add to cart', async ({ page }) => {
   const card = cappuccinoHeading.locator('xpath=ancestor::div[contains(@class, "rounded")]').first();
 
   // Select Large size and Iced temperature
-  await card.getByRole('button', { name: 'Large' }).first().first().click();
+  await card.getByRole('button', { name: 'Large' }).first().click();
   await card.getByRole('button', { name: 'Iced' }).first().click();
 
   // Ensure the card is visible
@@ -28,7 +28,9 @@ test('product variants adjust price and add to cart', async ({ page }) => {
   expect(displayed).toBe(expected);
 
   // Add to cart
-  await card.getByRole('button', { name: 'Add to Cart' }).click();
+  const addBtn = card.getByRole('button', { name: 'Add to Cart' }).first();
+  await expect(addBtn).toBeVisible({ timeout: 5000 });
+  await addBtn.click();
 
   // Wait for cart update before navigating
   await page.waitForTimeout(500);
