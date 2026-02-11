@@ -50,7 +50,8 @@ function getAuthToken(): string | null {
 interface RequestConfig {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   headers?: Record<string, string>;
-  body?: Record<string, unknown> | unknown[];
+  // Body can be a plain object/array or FormData for file uploads
+  body?: Record<string, unknown> | unknown[] | FormData;
   requiresAuth?: boolean;
   timeout?: number;
 }
@@ -76,8 +77,9 @@ async function apiRequest<T = any>(
     : `${API_BASE_URL}/${endpoint.replace(/^\//, '')}`;
 
   // Build headers
+  // Do not set Content-Type by default because some requests (e.g. FormData) need the
+  // browser to set the correct multipart boundary automatically.
   const requestHeaders: Record<string, string> = {
-    'Content-Type': 'application/json',
     'Accept': 'application/json',
     'ngrok-skip-browser-warning': '69420', // Bypass ngrok browser warning
     ...headers,
@@ -100,7 +102,13 @@ async function apiRequest<T = any>(
 
   // Add body for non-GET requests
   if (body && method !== 'GET') {
-    fetchOptions.body = JSON.stringify(body);
+    if (typeof FormData !== 'undefined' && body instanceof FormData) {
+      // Let the browser set the Content-Type with proper boundary
+      fetchOptions.body = body as FormData;
+    } else {
+      requestHeaders['Content-Type'] = 'application/json';
+      fetchOptions.body = JSON.stringify(body);
+    }
   }
 
   // Create abort controller for timeout
@@ -165,16 +173,16 @@ export const api = {
   get: <T = any>(endpoint: string, config?: Omit<RequestConfig, 'method' | 'body'>) =>
     apiRequest<T>(endpoint, { ...config, method: 'GET' }),
 
-  post: <T = any>(endpoint: string, body?: Record<string, unknown>, config?: Omit<RequestConfig, 'method'>) =>
+  post: <T = any>(endpoint: string, body?: any, config?: Omit<RequestConfig, 'method'>) =>
     apiRequest<T>(endpoint, { ...config, method: 'POST', body }),
 
-  put: <T = any>(endpoint: string, body?: Record<string, unknown>, config?: Omit<RequestConfig, 'method'>) =>
+  put: <T = any>(endpoint: string, body?: any, config?: Omit<RequestConfig, 'method'>) =>
     apiRequest<T>(endpoint, { ...config, method: 'PUT', body }),
 
   delete: <T = any>(endpoint: string, config?: Omit<RequestConfig, 'method'>) =>
     apiRequest<T>(endpoint, { ...config, method: 'DELETE' }),
 
-  patch: <T = any>(endpoint: string, body?: Record<string, unknown>, config?: Omit<RequestConfig, 'method'>) =>
+  patch: <T = any>(endpoint: string, body?: any, config?: Omit<RequestConfig, 'method'>) =>
     apiRequest<T>(endpoint, { ...config, method: 'PATCH', body }),
 };
 
