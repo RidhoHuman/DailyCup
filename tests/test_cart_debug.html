@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .log { background: #f0f0f0; padding: 10px; margin: 10px 0; border-left: 3px solid #333; }
+        .success { border-color: green; background: #e0ffe0; }
+        .error { border-color: red; background: #ffe0e0; }
+        button { padding: 10px 20px; margin: 10px 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Cart API Debug Test</h1>
+    
+    <div>
+        <h3>Test Buttons</h3>
+        <button onclick="testLogin()">1. Test Login Status</button>
+        <button onclick="testGetCart()">2. Test Get Cart</button>
+        <button onclick="testAddToCart()">3. Test Add to Cart</button>
+    </div>
+    
+    <div id="logs"></div>
+    
+    <script>
+        const SITE_URL = window.location.origin + '/DailyCup';
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = 'log ' + type;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${message}`;
+            document.getElementById('logs').appendChild(div);
+            console.log(message);
+        }
+        
+        function testLogin() {
+            log('Testing login status...');
+            fetch(`${SITE_URL}/api/cart.php?action=get`)
+                .then(response => {
+                    log(`Response status: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    log(`Response: ${JSON.stringify(data)}`, data.success ? 'success' : 'error');
+                })
+                .catch(error => {
+                    log(`Error: ${error}`, 'error');
+                });
+        }
+        
+        function testGetCart() {
+            log('Getting cart contents...');
+            fetch(`${SITE_URL}/api/cart.php?action=get`)
+                .then(response => response.json())
+                .then(data => {
+                    log(`Cart items: ${JSON.stringify(data)}`, 'success');
+                })
+                .catch(error => {
+                    log(`Error: ${error}`, 'error');
+                });
+        }
+        
+        function testAddToCart() {
+            log('Testing add to cart...');
+            
+            const testData = {
+                action: 'add',
+                product_id: 1,
+                product_name: 'Test Product',
+                price: 25000,
+                size: 'Medium',
+                temperature: 'Hot',
+                quantity: 1
+            };
+            
+            log(`Sending: ${JSON.stringify(testData)}`);
+            
+            fetch(`${SITE_URL}/api/cart.php`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(testData)
+            })
+            .then(response => {
+                log(`Response status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                log(`Response: ${JSON.stringify(data)}`, data.success ? 'success' : 'error');
+            })
+            .catch(error => {
+                log(`Error: ${error}`, 'error');
+            });
+        }
+        
+        log('Debug page loaded. Please test the buttons in order.', 'success');
+    </script>
+</body>
+</html>

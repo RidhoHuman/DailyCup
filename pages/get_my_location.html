@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dapatkan Koordinat Lokasi Saya</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #6F4E37;
+            text-align: center;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #6F4E37;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #8B4513;
+        }
+        .result {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+        .coordinate {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2e7d32;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+        .code-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin-top: 15px;
+            border-left: 4px solid #6F4E37;
+        }
+        .copy-btn {
+            background: #4CAF50;
+            margin-top: 10px;
+        }
+        .copy-btn:hover {
+            background: #45a049;
+        }
+        .loading {
+            text-align: center;
+            color: #666;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📍 Dapatkan Koordinat Lokasi Toko</h1>
+        <p style="text-align: center; color: #666;">
+            Klik tombol di bawah untuk mendapatkan koordinat GPS lokasi Anda saat ini
+        </p>
+
+        <button onclick="getLocation()">
+            🗺️ Dapatkan Lokasi Saya Sekarang
+        </button>
+
+        <div class="loading" id="loading">
+            ⏳ Mendapatkan lokasi... Mohon izinkan akses GPS jika diminta.
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="result" id="result">
+            <h3 style="margin-top: 0; color: #2e7d32;">✅ Koordinat Berhasil Didapat!</h3>
+            
+            <div class="coordinate" id="latitude"></div>
+            <div class="coordinate" id="longitude"></div>
+
+            <div class="code-box" id="code"></div>
+
+            <button class="copy-btn" onclick="copyCode()">
+                📋 Copy Code untuk constants.php
+            </button>
+
+            <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                <strong>Langkah selanjutnya:</strong><br>
+                1. Copy code di atas<br>
+                2. Buka file: <code>config/constants.php</code><br>
+                3. Ganti baris STORE_LATITUDE dan STORE_LONGITUDE<br>
+                4. Save file dan refresh browser
+            </p>
+
+            <a href="https://www.google.com/maps?q=PLACEHOLDER" 
+               id="mapLink" 
+               target="_blank" 
+               style="display: block; text-align: center; margin-top: 15px; color: #6F4E37; text-decoration: none; font-weight: bold;">
+                🗺️ Lihat Lokasi di Google Maps
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function getLocation() {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const result = document.getElementById('result');
+
+            // Hide previous results
+            error.style.display = 'none';
+            result.style.display = 'none';
+            loading.style.display = 'block';
+
+            if (!navigator.geolocation) {
+                error.textContent = '❌ Browser Anda tidak support GPS. Gunakan browser modern seperti Chrome/Firefox/Edge.';
+                error.style.display = 'block';
+                loading.style.display = 'none';
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    const accuracy = position.coords.accuracy;
+
+                    // Display results
+                    document.getElementById('latitude').innerHTML = 
+                        '<strong>Latitude:</strong><br>' + lat.toFixed(6);
+                    
+                    document.getElementById('longitude').innerHTML = 
+                        '<strong>Longitude:</strong><br>' + lng.toFixed(6);
+
+                    document.getElementById('code').innerHTML = 
+                        `define('STORE_LATITUDE', ${lat.toFixed(6)});<br>` +
+                        `define('STORE_LONGITUDE', ${lng.toFixed(6)});`;
+
+                    // Update map link
+                    const mapLink = document.getElementById('mapLink');
+                    mapLink.href = `https://www.google.com/maps?q=${lat},${lng}`;
+
+                    loading.style.display = 'none';
+                    result.style.display = 'block';
+
+                    console.log('Accuracy: ' + accuracy + ' meters');
+                },
+                function(err) {
+                    let errorMsg = '';
+                    switch(err.code) {
+                        case err.PERMISSION_DENIED:
+                            errorMsg = '❌ Anda menolak akses lokasi. Refresh halaman dan izinkan akses GPS.';
+                            break;
+                        case err.POSITION_UNAVAILABLE:
+                            errorMsg = '❌ Informasi lokasi tidak tersedia. Aktifkan GPS/Location Service.';
+                            break;
+                        case err.TIMEOUT:
+                            errorMsg = '❌ Timeout mendapatkan lokasi. Coba lagi.';
+                            break;
+                        default:
+                            errorMsg = '❌ Error tidak diketahui: ' + err.message;
+                    }
+                    error.textContent = errorMsg;
+                    error.style.display = 'block';
+                    loading.style.display = 'none';
+                }
+            );
+        }
+
+        function copyCode() {
+            const code = document.getElementById('code').innerText;
+            navigator.clipboard.writeText(code).then(function() {
+                alert('✅ Code berhasil di-copy! Paste ke file constants.php');
+            }, function() {
+                alert('❌ Gagal copy. Copy manual dari kotak di atas.');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+# Ignore config with sensitive data
+.env
+.env.local
+.env.*.local
+config/database.php
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+.DS_Store
+
+# Ignore uploaded files in development
+assets/images/products/*
+assets/images/reviews/*
+assets/images/returns/*
+!assets/images/products/.gitkeep
+!assets/images/reviews/.gitkeep
+!assets/images/returns/.gitkeep
+
+# Ignore temporary files
+*.tmp
+*.log
+*.cache
+*~
+
+# Ignore node_modules if using npm
+node_modules/
+
+# Ignore composer vendor if using composer
+vendor/
+
+# Ignore system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini

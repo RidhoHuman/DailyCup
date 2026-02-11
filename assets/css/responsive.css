@@ -1,0 +1,363 @@
+/* Responsive Design for DailyCup */
+
+/* Tablet Devices */
+@media (max-width: 992px) {
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .hero-section {
+        padding: 60px 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    
+    .product-card-img {
+        height: 220px;
+    }
+    
+    .navbar-collapse {
+        background-color: var(--primary-color);
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+}
+
+/* Mobile Devices */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 30px;
+    }
+    
+    .section-padding {
+        padding: 50px 0;
+    }
+    
+    .hero-section {
+        padding: 40px 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-section p {
+        font-size: 1rem;
+    }
+    
+    /* Product Cards */
+    .product-card-img {
+        height: 200px;
+    }
+    
+    .product-title {
+        font-size: 1.1rem;
+    }
+    
+    .product-price {
+        font-size: 1.2rem;
+    }
+    
+    /* Navigation */
+    .navbar-brand {
+        font-size: 1.3rem;
+    }
+    
+    .navbar-nav {
+        margin-top: 10px;
+    }
+    
+    .nav-item {
+        margin: 5px 0;
+    }
+    
+    /* Footer */
+    .footer {
+        padding: 30px 0 15px;
+    }
+    
+    .footer .col-md-4,
+    .footer .col-md-2,
+    .footer .col-md-3 {
+        margin-bottom: 25px;
+    }
+    
+    /* Forms */
+    .form-control {
+        font-size: 1rem;
+    }
+    
+    /* Buttons */
+    .btn-coffee,
+    .btn-outline-coffee {
+        padding: 8px 20px;
+        font-size: 0.95rem;
+    }
+    
+    /* Cards */
+    .card {
+        margin-bottom: 20px;
+    }
+    
+    /* Tables */
+    .table {
+        font-size: 0.85rem;
+    }
+    
+    .table thead {
+        font-size: 0.8rem;
+    }
+    
+    .table-responsive {
+        border-radius: 10px;
+    }
+    
+    /* Cart */
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    .cart-item-image {
+        width: 100%;
+        height: 150px;
+        margin-bottom: 15px;
+    }
+    
+    .cart-item-details {
+        width: 100%;
+    }
+    
+    /* Checkout */
+    .checkout-summary {
+        margin-top: 30px;
+    }
+    
+    /* Order Tracking */
+    .order-status-timeline {
+        overflow-x: auto;
+    }
+    
+    .timeline-item {
+        min-width: 150px;
+    }
+    
+    /* Profile Page */
+    .profile-sidebar {
+        margin-bottom: 30px;
+    }
+    
+    /* Admin Panel */
+    .admin-sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    
+    .admin-main {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+    }
+    
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .stat-card {
+        margin-bottom: 20px;
+    }
+    
+    .admin-table {
+        overflow-x: auto;
+    }
+    
+    /* Modal */
+    .modal-dialog {
+        margin: 10px;
+    }
+    
+    .modal-content {
+        border-radius: 10px;
+    }
+}
+
+/* Small Mobile Devices */
+@media (max-width: 576px) {
+    .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 25px;
+    }
+    
+    .hero-section h1 {
+        font-size: 1.75rem;
+    }
+    
+    .product-card-img {
+        height: 180px;
+    }
+    
+    .product-title {
+        font-size: 1rem;
+    }
+    
+    .product-price {
+        font-size: 1.1rem;
+    }
+    
+    /* Buttons */
+    .btn-coffee,
+    .btn-outline-coffee {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    /* Grid */
+    .row > div[class*="col-"] {
+        margin-bottom: 20px;
+    }
+    
+    /* Quantity Input */
+    .quantity-input button {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .quantity-input input {
+        width: 50px;
+    }
+    
+    /* Review Images */
+    .review-images img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    /* Return Images */
+    .return-images img {
+        width: 100px;
+        height: 100px;
+    }
+    
+    /* Stat Cards */
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .stat-card .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+}
+
+/* Landscape Orientation */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero-section {
+        padding: 30px 0;
+    }
+    
+    .navbar {
+        padding: 5px 0;
+    }
+    
+    .modal-dialog {
+        max-width: 90vw;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .navbar,
+    .footer,
+    .btn,
+    .admin-sidebar,
+    .no-print {
+        display: none !important;
+    }
+    
+    .admin-main {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    body {
+        background-color: white;
+    }
+    
+    .card,
+    .admin-table {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Dark Mode Support (Optional) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --light-bg: #1a1a1a;
+        --dark: #ffffff;
+    }
+    
+    /* Add dark mode styles if needed */
+}
+
+/* High Resolution Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .product-card-img,
+    .cart-item-image,
+    .review-images img,
+    .return-images img {
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
+
+/* Utility Classes for Responsive */
+.mobile-only {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-only {
+        display: block;
+    }
+    
+    .desktop-only {
+        display: none;
+    }
+}
+
+/* Flex Utilities for Mobile */
+@media (max-width: 768px) {
+    .flex-mobile-column {
+        flex-direction: column !important;
+    }
+    
+    .text-mobile-center {
+        text-align: center !important;
+    }
+    
+    .w-mobile-100 {
+        width: 100% !important;
+    }
+}

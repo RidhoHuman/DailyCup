@@ -1,0 +1,355 @@
+.home-sign-up {
+  background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 49%,
+      rgba(0, 0, 0, 0.6) 100%
+    ), linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%);
+  min-height: 1117px;
+  min-width: 1728px;
+  position: relative;
+  width: 100%;
+}
+
+.home-sign-up .group-happy-young {
+  aspect-ratio: 2.5;
+  height: 731px;
+  left: 0;
+  object-fit: cover;
+  position: absolute;
+  top: 386px;
+  width: 1728px;
+}
+
+.home-sign-up .back-home {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: #ffffff;
+  font-family: "Quantico-Regular", Helvetica;
+  font-size: 18px;
+  text-decoration: none;
+  z-index: 10;
+}
+
+.home-sign-up .sign-in {
+  display: flex;
+  flex-direction: column;
+  height: 674px;
+  left: 605px;
+  position: absolute;
+  top: 224px;
+  width: 507px;
+}
+
+.home-sign-up .email-field {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 112px;
+  margin-top: -17px;
+  position: relative;
+  width: 507px;
+}
+
+.home-sign-up .text-wrapper {
+  color: #ffffff;
+  font-family: "Quantico-Regular", Helvetica;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1.00px;
+  position: relative;
+  width: fit-content;
+}
+
+.home-sign-up .input-field {
+  align-items: center;
+  background-color: #000000;
+  border: 4px solid;
+  border-color: #ffffff;
+  border-radius: 15px;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 15px;
+  padding: 13px 205px 13px 18px;
+  position: relative;
+  width: 507px;
+}
+
+.home-sign-up .div {
+  height: 44px;
+  position: relative;
+  width: 44px;
+}
+
+.home-sign-up .layer {
+  background-image: url(/assets/image/email-2.svg);
+  background-size: 100% 100%;
+  height: 66.67%;
+  left: 8.33%;
+  position: relative;
+  top: 16.67%;
+  width: 83.33%;
+}
+
+.home-sign-up .line {
+  height: 36.06px;
+  position: relative;
+  width: 2px;
+  background-color: #ffffff;
+}
+
+.home-sign-up .text-wrapper-2 {
+  color: #ffffff;
+  font-family: "Quantico-Bold", Helvetica;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  width: fit-content;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.home-sign-up .div-2 {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 112px;
+  margin-top: 23px;
+  position: relative;
+  width: 507px;
+}
+
+.home-sign-up .layer-2 {
+  background-image: url(/assets/image/email.svg);
+  background-size: 100% 100%;
+  height: 66.67%;
+  left: 8.33%;
+  position: relative;
+  top: 16.67%;
+  width: 83.33%;
+}
+
+.home-sign-up .ardanprmmm-gmail-com {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-family: "Quantico-Bold", Helvetica;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-right: -84.00px;
+  padding: 0;
+  position: relative;
+  width: fit-content;
+}
+
+.home-sign-up .text-wrapper-3 {
+  color: #ffffff82;
+  font-family: "Quantico-Regular", Helvetica;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1.00px;
+  position: relative;
+  width: fit-content;
+}
+
+.home-sign-up .input-field-2 {
+  align-items: center;
+  background-color: #000000;
+  border: 4px solid;
+  border-color: #ffffff82;
+  border-radius: 15px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 15px;
+  padding: 13px 323px 13px 18px;
+  position: relative;
+}
+
+.home-sign-up .vector {
+  height: 73.12%;
+  left: 15.60%;
+  position: absolute;
+  top: 14.37%;
+  width: 68.78%;
+}
+
+.home-sign-up .text-wrapper-4 {
+  color: #ffffff82;
+  font-family: "Itim-Regular", Helvetica;
+  font-size: 24px;
+  font-weight: 400;
+  height: 23px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  white-space: nowrap;
+  width: 92px;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.home-sign-up .log-in-button {
+  all: unset;
+  align-items: center;
+  background-color: #a97456;
+  border-radius: 15px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 20px;
+  height: 75px;
+  justify-content: center;
+  margin-left: 8.5px;
+  margin-top: 49px;
+  padding: 15px 193px;
+  position: relative;
+  width: 490px;
+  cursor: pointer;
+}
+
+.home-sign-up .text-wrapper-5 {
+  color: #ffffff;
+  font-family: "Quantico-Regular", Helvetica;
+  font-size: 31.3px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -0.50px;
+  position: relative;
+  width: fit-content;
+}
+
+.home-sign-up .or {
+  display: flex;
+  gap: 12px;
+  margin-left: 63px;
+  margin-top: 23px;
+  width: 383px;
+}
+
+.home-sign-up .img {
+  height: 2px;
+  margin-left: -1px;
+  margin-top: 16px;
+  width: 166px;
+  background-color: #ffffff;
+}
+
+.home-sign-up .text-wrapper-6 {
+  color: #ffffff;
+  font-family: "Quantico-Regular", Helvetica;
+  font-size: 24px;
+  font-weight: 400;
+  height: 34px;
+  letter-spacing: 0;
+  line-height: normal;
+  width: 27px;
+}
+
+.home-sign-up .line-2 {
+  height: 2px;
+  margin-top: 16px;
+  width: 166px;
+  background-color: #ffffff;
+}
+
+.home-sign-up .social-icons {
+  display: flex;
+  gap: 27px;
+  margin-left: 154.5px;
+  margin-top: 23px;
+  width: 198px;
+}
+
+.home-sign-up .google-instance {
+  height: 48px !important;
+  position: relative !important;
+  width: 48px !important;
+}
+
+.home-sign-up .apple {
+  height: 48px !important;
+  width: 48px !important;
+}
+
+.home-sign-up .already-have-an {
+  color: transparent;
+  font-family: "Quantico-Bold", Helvetica;
+  font-size: 24px;
+  font-weight: 700;
+  height: 34px;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: 23px;
+  text-align: center;
+}
+
+.home-sign-up .span {
+  color: #ffffff;
+  font-family: "Quantico-BoldItalic", Helvetica;
+  font-style: italic;
+}
+
+.home-sign-up .text-wrapper-7 {
+  color: #a97456;
+  font-family: "Quantico-BoldItalic", Helvetica;
+  font-style: italic;
+  text-decoration: none;
+}
+
+.home-sign-up .group {
+  height: 69px;
+  left: 605px;
+  position: absolute;
+  top: 120px;
+  width: 509px;
+}
+
+.home-sign-up .text-wrapper-8 {
+  color: #ffffff;
+  font-family: "Quantico-Regular", Helvetica;
+  font-size: 48px;
+  font-weight: 400;
+  left: 0;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  width: 507px;
+}
+
+.home-sign-up .image {
+  aspect-ratio: 1;
+  height: 50px;
+  left: 119px;
+  object-fit: cover;
+  position: absolute;
+  top: 9px;
+  width: 50px;
+}
+
+.home-sign-up .text {
+  color: #ffffff;
+  font-family: "Quantico-BoldItalic", Helvetica;
+  font-size: 25px;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 38.0px;
+  position: absolute;
+  right: 488px;
+  top: 933px;
+  width: 715px;
+}

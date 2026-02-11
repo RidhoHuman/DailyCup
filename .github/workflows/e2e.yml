@@ -1,0 +1,31 @@
+name: E2E Tests (Playwright)
+
+on:
+  pull_request:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: |
+          cd webapp/frontend
+          npm ci
+          npx playwright install --with-deps
+      - name: Worker sanity check
+        run: |
+          php backend/scripts/worker_sanity.php
+
+      - name: Run Playwright tests
+        run: |
+          cd webapp/frontend
+          npm run test:e2e
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost/DailyCup/webapp/backend/api
