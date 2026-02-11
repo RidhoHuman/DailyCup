@@ -56,12 +56,12 @@ export default function CODManagementPage() {
     try {
       setLoading(true);
       setError('');
-      const response = await api.get('/cod_tracking.php?all=1');
-      
-      if (response.data.success) {
+      const response: any = await api.get('/cod_tracking.php?all=1');
+
+      if (response?.data?.success) {
         setOrders(response.data.data || []);
       } else {
-        setError(response.data.message || 'Failed to load COD orders');
+        setError(response?.data?.message || 'Failed to load COD orders');
       }
     } catch (err: any) {
       console.error('Error fetching COD orders:', err);
