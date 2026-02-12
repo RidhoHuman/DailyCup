@@ -5,12 +5,14 @@ test('complete checkout with mock payment', async ({ page }) => {
   await page.goto('/menu');
   await page.getByRole('button', { name: /Add to Cart/ }).first().click();
   
-  // Wait for cart update
-  await page.waitForTimeout(500);
+  // Wait for cart update (header badge should appear)
+  await page.waitForSelector('[data-testid="cart-badge"]', { timeout: 5000 });
 
   // Go to checkout
   await page.goto('/checkout', { waitUntil: 'networkidle' });
   
+  // Ensure checkout form is visible before interacting
+  await page.waitForSelector('input[placeholder="Full name"]', { timeout: 10000 });
   // Fill form with controlled inputs
   await page.locator('input[placeholder="Full name"]').fill('Test User');
   await page.locator('input[placeholder="Phone number"]').fill('081234567890');

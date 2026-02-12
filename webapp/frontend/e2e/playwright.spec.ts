@@ -12,6 +12,8 @@ test('home page loads and shows featured products', async ({ page }) => {
 // Test mock notice appears when API dispatches mock event
 test('mock notice shows when api:mock event dispatched', async ({ page }) => {
   await page.goto('/');
+  // Ensure ClientUI root mounted so MockNotice listener is attached
+  await page.waitForSelector('#__client_ui_root', { timeout: 5000 });
   // Dispatch event in page context
   await page.evaluate(() => {
     window.dispatchEvent(new CustomEvent('api:mock', { detail: { endpoint: 'products' } }));

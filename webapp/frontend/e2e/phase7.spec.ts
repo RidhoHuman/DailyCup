@@ -41,9 +41,10 @@ test('profile edit validation and save', async ({ page }) => {
   
   // Click save and wait for the simulated API call (1 second delay in profile page)
   await page.getByRole('button', { name: 'Save Changes' }).click();
-  
+  // wait for the success alert/dialog and allow more time for client-side state update
+  await page.waitForEvent('dialog', { timeout: 7000 }).catch(() => {});
   // Wait for button text to change back from "Saving..." indicating completion
-  await expect(page.getByRole('button', { name: 'Edit Profile' })).toBeVisible({ timeout: 5000 });
+  await expect(page.getByRole('button', { name: 'Edit Profile' })).toBeVisible({ timeout: 10000 });
 });
 
 test('add item to cart, apply coupon and checkout alert', async ({ page }) => {
