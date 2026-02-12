@@ -25,11 +25,11 @@ test.describe('Complete Shopping Journey', () => {
     await page.waitForTimeout(500); // Wait for search debounce
     
     // 4. Click on a product
-    const productCard = page.locator('text=Cappuccino').first();
+    const productCard = page.locator('h3:has-text("Cappuccino")').first();
     await expect(productCard).toBeVisible();
     
-    // 5. Add to cart
-    const addToCartBtn = page.locator('button:has-text("Add to Cart")').first();
+    // 5. Add to cart (scope Add button to the Cappuccino card)
+    const addToCartBtn = productCard.locator('..').locator('button:has-text("Add to Cart")').first();
     await expect(addToCartBtn).toBeVisible({ timeout: 10000 });
     await addToCartBtn.click();
     
