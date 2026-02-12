@@ -1,6 +1,22 @@
 import { test, expect } from '@playwright/test';
 
 test('Analytics page shows integration KPIs', async ({ page }) => {
+  // Capture console and page errors to surface runtime exceptions (helps debug overlay)
+  const consoleErrors: string[] = [];
+  page.on('console', msg => {
+    if (msg.type() === 'error') {
+      consoleErrors.push(msg.text());
+      // also print to test runner log
+      console.error('[PAGE CONSOLE ERROR]', msg.text());
+    }
+  });
+  page.on('pageerror', err => {
+    consoleErrors.push(err.message || String(err));
+    console.error('[PAGE ERROR]', err);
+  });
+
+  // Use a stable absolute base URL so tests do not depend on Playwright config being loaded
+  const BASE = process.env.PLAYWRIGHT_BASE_URL || process.env.PW_BASE_URL || 'http://127.0.0.1:3000';
   // Intercept both rewritten and direct backend paths
   // Summary endpoint (only handle action=summary) — leave provider requests to the dedicated mock
   await page.route('**/admin/analytics.php**', async route => {
@@ -69,14 +85,14 @@ test('Analytics page shows integration KPIs', async ({ page }) => {
   // wait specifically for the admin summary API used by the integration cards
   await page.waitForResponse(resp => /admin\/analytics\.php/.test(resp.url()) && resp.status() === 200, { timeout: 10000 }).catch(()=>{});
 
-  // transient Next dev overlay can occasionally appear in CI/dev; reload once if present
-  const overlayCount = await page.locator('text=Oops! Something went wrong').count();
-  if (overlayCount > 0) {
-    // reload and re-wait for the analytics summary response
-    await page.reload();
-    await page.waitForLoadState('networkidle');
-    await page.waitForResponse(resp => /admin\/analytics\.php/.test(resp.url()) && resp.status() === 200, { timeout: 10000 }).catch(()=>{});
-  }
+  // navigate using absolute URL and wait for the integration card (case-insensitive)
+  await page.goto(`${BASE}/admin/analytics`, { waitUntil: 'load' });
+
+  // wait for analytics API to return (handle rewrites and rewrites-to-/api)
+  await page.waitForResponse(resp => /analytics\.php/.test(resp.url()) && resp.status() === 200, { timeout: 15000 });
+
+  // wait specifically for the admin summary API used by the integration cards
+  await page.waitForResponse(resp => /admin\/analytics\.php/.test(resp.url()) && resp.status() === 200, { timeout: 10000 }).catch(()=>{});
 
   // wait for integration card to appear (case-insensitive)
   await expect(page.locator('text=/twilio/i')).toBeVisible({ timeout: 20000 });
