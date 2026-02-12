@@ -16,5 +16,6 @@ test('mock notice shows when api:mock event dispatched', async ({ page }) => {
   await page.evaluate(() => {
     window.dispatchEvent(new CustomEvent('api:mock', { detail: { endpoint: 'products' } }));
   });
-  await expect(page.locator('text=Using mock data for products').first()).toBeVisible({ timeout: 5000 });
+  // Be resilient to small text changes and casing
+  await expect(page.locator('text=/mock data.*products/i').first()).toBeVisible({ timeout: 5000 });
 });

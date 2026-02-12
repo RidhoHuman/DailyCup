@@ -15,10 +15,11 @@ test.describe('Complete Shopping Journey', () => {
     // 1. Land on homepage
     await expect(page).toHaveTitle(/DailyCup/i);
     
-    // 2. Navigate to menu
-    await page.click('text=Menu');
-    await expect(page).toHaveURL(/\/menu/);
-    
+    // 2. Navigate to menu (use role-based selector + wait for navigation)
+    await page.getByRole('link', { name: 'Menu' }).click();
+    await page.waitForURL(/\/menu/, { timeout: 10000 });
+    await page.waitForLoadState('networkidle');
+
     // 3. Search for a product
     await page.fill('input[placeholder*="Search"]', 'cappuccino');
     await page.waitForTimeout(500); // Wait for search debounce

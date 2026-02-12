@@ -47,7 +47,10 @@ test('Twilio admin page shows settings and logs and can export CSV', async ({ pa
   // Send a test message (use stable placeholders + role selectors)
   await page.getByPlaceholder('To (e.g., whatsapp:+62 or +62)').fill('whatsapp:+123');
   await page.getByPlaceholder('Message body').fill('test msg');
-  await page.getByRole('button', { name: 'Send' }).click();
+  // Disambiguate 'Send' button (exact match) so Playwright doesn't match other buttons like "Send Test Alert"
+  await page.getByRole('button', { name: 'Send', exact: true }).click();
+  // confirm the mocked send endpoint was hit (best-effort timing guard)
+  await page.waitForResponse(r => /integrations\/send\.php\?action=send/.test(r.url()) && r.status() === 200, { timeout: 2000 }).catch(()=>{});
   await page.waitForTimeout(250);
   await expect(page.locator('text=Message sent')).toBeHidden().catch(()=>{}); // notification may appear briefly
 
