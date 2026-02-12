@@ -1,7 +1,11 @@
 import { test, expect } from '@playwright/test';
 
 test('Analytics page shows integration KPIs', async ({ page }) => {
+  // Intercept both rewritten and direct backend paths
   await page.route('**/admin/analytics.php?action=summary', async route => {
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, summary: [{ provider: 'twilio', sent_last_24h: 5, failed_last_24h: 1, retry_scheduled_total: 2, avg_retry_count: 0.5 }], trend: [] }) });
+  });
+  await page.route('**/api/admin/analytics.php?action=summary', async route => {
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, summary: [{ provider: 'twilio', sent_last_24h: 5, failed_last_24h: 1, retry_scheduled_total: 2, avg_retry_count: 0.5 }], trend: [] }) });
   });
 
