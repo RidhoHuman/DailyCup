@@ -2,11 +2,22 @@ import { test, expect } from '@playwright/test';
 
 test('Analytics page shows integration KPIs', async ({ page }) => {
   // Intercept both rewritten and direct backend paths
-  await page.route('**/admin/analytics.php?action=summary', async route => {
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, summary: [{ provider: 'twilio', sent_last_24h: 5, failed_last_24h: 1, retry_scheduled_total: 2, avg_retry_count: 0.5 }], trend: [] }) });
+  // Summary endpoint (only handle action=summary) — leave provider requests to the dedicated mock
+  await page.route('**/admin/analytics.php**', async route => {
+    const url = route.request().url();
+    if (url.includes('action=summary')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, summary: [{ provider: 'twilio', sent_last_24h: 5, failed_last_24h: 1, retry_scheduled_total: 2, avg_retry_count: 0.5 }], trend: [] }) });
+      return;
+    }
+    await route.continue();
   });
-  await page.route('**/api/admin/analytics.php?action=summary', async route => {
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, summary: [{ provider: 'twilio', sent_last_24h: 5, failed_last_24h: 1, retry_scheduled_total: 2, avg_retry_count: 0.5 }], trend: [] }) });
+  await page.route('**/api/admin/analytics.php**', async route => {
+    const url = route.request().url();
+    if (url.includes('action=summary')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, summary: [{ provider: 'twilio', sent_last_24h: 5, failed_last_24h: 1, retry_scheduled_total: 2, avg_retry_count: 0.5 }], trend: [] }) });
+      return;
+    }
+    await route.continue();
   });
 
   // Mock provider breakdown
@@ -33,10 +44,7 @@ test('Analytics page shows integration KPIs', async ({ page }) => {
     });
   });
 
-  // Defensive: catch any analytics-related backend path (SSR or alternate path patterns)
-  await page.route('**/*analytics*.php*', async route => {
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, fallback: true }) });
-  });
+
 
   // Ensure page has a hydrated admin auth state (Zustand persist format)
   await page.addInitScript(() => {
@@ -58,7 +66,10 @@ test('Analytics page shows integration KPIs', async ({ page }) => {
   // wait for analytics API to return (handle rewrites and rewrites-to-/api)
   await page.waitForResponse(resp => /analytics\.php/.test(resp.url()) && resp.status() === 200, { timeout: 15000 });
 
+  // wait specifically for the admin summary API used by the integration cards
+  await page.waitForResponse(resp => /admin\/analytics\.php/.test(resp.url()) && resp.status() === 200, { timeout: 10000 }).catch(()=>{});
+
   // wait for integration card to appear (case-insensitive)
-  await expect(page.locator('text=/twilio/i')).toBeVisible({ timeout: 10000 });
+  await expect(page.locator('text=/twilio/i')).toBeVisible({ timeout: 15000 });
   await expect(page.locator('text=Sent (24h):')).toHaveText(/Sent \(24h\):/, { timeout: 5000 });
 });
