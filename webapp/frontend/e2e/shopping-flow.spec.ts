@@ -191,7 +191,7 @@ test.describe('Authentication Flow', () => {
   test('should logout successfully', async ({ page }) => {
     // Ensure user is logged in for logout test
     await page.addInitScript(() => {
-      try { const user = { id:'2', name:'Test User', email:'test@example.com', role:'customer', loyaltyPoints:0, joinDate:new Date().toISOString() }; localStorage.setItem('dailycup-auth', JSON.stringify({ user, token: 'ci-user-token', isAuthenticated: true })); } catch(e){}
+      try { const user = { id:'2', name:'Test User', email:'test@example.com', role:'customer', loyaltyPoints:0, joinDate:new Date().toISOString() }; localStorage.setItem('dailycup-auth', JSON.stringify({ state: { user, token: 'ci-user-token', isAuthenticated: true } })); } catch(e){}
     });
 
     await page.goto('/dashboard');

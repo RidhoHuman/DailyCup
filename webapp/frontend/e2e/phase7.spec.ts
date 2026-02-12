@@ -10,7 +10,7 @@ test('profile edit validation and save', async ({ page }) => {
   await page.addInitScript(() => {
     try {
       const user = { id: '2', name: 'Test User', email: 'test@example.com', role: 'customer', loyaltyPoints: 0, joinDate: new Date().toISOString() };
-      localStorage.setItem('dailycup-auth', JSON.stringify({ user, token: 'ci-user-token', isAuthenticated: true }));
+      localStorage.setItem('dailycup-auth', JSON.stringify({ state: { user, token: 'ci-user-token', isAuthenticated: true } }));
     } catch (e) { }
   });
 

@@ -33,6 +33,11 @@ test('Analytics page shows integration KPIs', async ({ page }) => {
     });
   });
 
+  // Defensive: catch any analytics-related backend path (SSR or alternate path patterns)
+  await page.route('**/*analytics*.php*', async route => {
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, fallback: true }) });
+  });
+
   // Ensure page has a hydrated admin auth state (Zustand persist format)
   await page.addInitScript(() => {
     try {
@@ -44,7 +49,8 @@ test('Analytics page shows integration KPIs', async ({ page }) => {
         loyaltyPoints: 0,
         joinDate: new Date().toISOString(),
       };
-      localStorage.setItem('dailycup-auth', JSON.stringify({ user: adminUser, token: 'ci-admin-token', isAuthenticated: true }));
+      // Zustand persist stores the snapshot under a `state` key — mirror that shape
+      localStorage.setItem('dailycup-auth', JSON.stringify({ state: { user: adminUser, token: 'ci-admin-token', isAuthenticated: true } }));
     } catch (e) { /* ignore */ }
   });
 

@@ -37,7 +37,7 @@ test('Twilio admin page shows settings and logs and can export CSV', async ({ pa
 
   // Ensure admin auth so integrations page shows
   await page.addInitScript(() => {
-    try { const adminUser = { id:'1', name:'Admin', email:'admin@example.com', role:'admin', loyaltyPoints:0, joinDate:new Date().toISOString() }; localStorage.setItem('dailycup-auth', JSON.stringify({ user: adminUser, token: 'ci-admin-token', isAuthenticated: true })); } catch(e){}
+    try { const adminUser = { id:'1', name:'Admin', email:'admin@example.com', role:'admin', loyaltyPoints:0, joinDate:new Date().toISOString() }; localStorage.setItem('dailycup-auth', JSON.stringify({ state: { user: adminUser, token: 'ci-admin-token', isAuthenticated: true } })); } catch(e){}
   });
 
   await page.goto('/admin/integrations/twilio');
