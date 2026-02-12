@@ -73,7 +73,7 @@ test.describe('Complete Shopping Journey', () => {
     await page.goto('/menu');
     
     // Sort by price: low to high
-    await page.selectOption('select', { value: 'price_low_high' });
+    await page.selectOption('select', { value: 'price-low' });
     await page.waitForLoadState('networkidle');
     
     // Verify products are sorted

@@ -1,0 +1,105 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]: DC
+          - generic [ref=e7]:
+            - heading "DailyCup" [level=1] [ref=e8]
+            - paragraph [ref=e9]: Admin Panel
+        - text: 
+      - navigation [ref=e10]:
+        - link " Dashboard" [ref=e11] [cursor=pointer]:
+          - /url: /admin/dashboard
+          - generic [ref=e12]: 
+          - generic [ref=e13]: Dashboard
+        - link " Orders" [ref=e14] [cursor=pointer]:
+          - /url: /admin/orders
+          - generic [ref=e15]: 
+          - generic [ref=e16]: Orders
+        - link " Products" [ref=e17] [cursor=pointer]:
+          - /url: /admin/products
+          - generic [ref=e18]: 
+          - generic [ref=e19]: Products
+        - link " Customers" [ref=e20] [cursor=pointer]:
+          - /url: /admin/customers
+          - generic [ref=e21]: 
+          - generic [ref=e22]: Customers
+        - link " Analytics" [ref=e23] [cursor=pointer]:
+          - /url: /admin/analytics
+          - generic [ref=e24]: 
+          - generic [ref=e25]: Analytics
+        - link " Kurir" [ref=e26] [cursor=pointer]:
+          - /url: /admin/kurir
+          - generic [ref=e27]: 
+          - generic [ref=e28]: Kurir
+        - link " Undangan Kurir" [ref=e29] [cursor=pointer]:
+          - /url: /admin/kurir-invitations
+          - generic [ref=e30]: 
+          - generic [ref=e31]: Undangan Kurir
+        - link " Assign Orders" [ref=e32] [cursor=pointer]:
+          - /url: /admin/assign-orders
+          - generic [ref=e33]: 
+          - generic [ref=e34]: Assign Orders
+        - link " Delivery Monitor" [ref=e35] [cursor=pointer]:
+          - /url: /admin/delivery-monitoring
+          - generic [ref=e36]: 
+          - generic [ref=e37]: Delivery Monitor
+        - link " Geocode Issues" [ref=e38] [cursor=pointer]:
+          - /url: /admin/delivery-monitoring/geocode-failures
+          - generic [ref=e39]: 
+          - generic [ref=e40]: Geocode Issues
+        - link " Delivery Recap" [ref=e41] [cursor=pointer]:
+          - /url: /admin/delivery-recap
+          - generic [ref=e42]: 
+          - generic [ref=e43]: Delivery Recap
+        - link " Integrations" [ref=e44] [cursor=pointer]:
+          - /url: /admin/integrations/twilio
+          - generic [ref=e45]: 
+          - generic [ref=e46]: Integrations
+        - link " Themes" [ref=e47] [cursor=pointer]:
+          - /url: /admin/themes
+          - generic [ref=e48]: 
+          - generic [ref=e49]: Themes
+        - link " Currencies" [ref=e50] [cursor=pointer]:
+          - /url: /admin/currencies
+          - generic [ref=e51]: 
+          - generic [ref=e52]: Currencies
+        - link " Settings" [ref=e53] [cursor=pointer]:
+          - /url: /admin/settings
+          - generic [ref=e54]: 
+          - generic [ref=e55]: Settings
+      - generic [ref=e57]:
+        - generic [ref=e59]: 
+        - generic [ref=e60]:
+          - paragraph [ref=e61]: Admin User
+          - paragraph [ref=e62]: admin@dailycup.com
+        - button "" [ref=e63]:
+          - generic [ref=e64]: 
+    - generic [ref=e65]:
+      - banner [ref=e66]:
+        - generic [ref=e68]:
+          - textbox "Search products, orders, customers..." [ref=e69]
+          - img [ref=e70]
+        - button "A" [ref=e74]:
+          - generic [ref=e75]: A
+          - img [ref=e76]
+      - main [ref=e78]:
+        - paragraph [ref=e82]: Loading analytics...
+  - region "Notifications alt+T"
+  - generic [ref=e87] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e88]:
+      - img [ref=e89]
+    - generic [ref=e92]:
+      - button "Open issues overlay" [ref=e93]:
+        - generic [ref=e94]:
+          - generic [ref=e95]: "0"
+          - generic [ref=e96]: "1"
+        - generic [ref=e97]: Issue
+      - button "Collapse issues badge" [ref=e98]:
+        - img [ref=e99]
+  - alert [ref=e101]
+```

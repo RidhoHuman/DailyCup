@@ -1,0 +1,349 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e5]:
+        - link " DailyCup" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e8]: 
+          - generic [ref=e9]: DailyCup
+        - navigation [ref=e10]:
+          - link "Home" [ref=e11] [cursor=pointer]:
+            - /url: /
+          - link "Menu" [ref=e12] [cursor=pointer]:
+            - /url: /menu
+          - link "Cart" [ref=e13] [cursor=pointer]:
+            - /url: /cart
+          - link "About" [ref=e14] [cursor=pointer]:
+            - /url: /about
+          - link "Profile" [ref=e15] [cursor=pointer]:
+            - /url: /profile
+        - generic [ref=e16]:
+          - button "Toggle theme" [ref=e17]:
+            - generic [ref=e18]: 
+          - link "" [ref=e19] [cursor=pointer]:
+            - /url: /wishlist
+            - generic [ref=e20]: 
+          - button "" [ref=e21]:
+            - generic [ref=e22]: 
+          - link "" [ref=e23] [cursor=pointer]:
+            - /url: /login
+            - generic [ref=e24]: 
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - heading "Our Menu" [level=1] [ref=e27]
+        - paragraph [ref=e28]: Discover our delicious selection of coffee, drinks, and treats
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - generic [ref=e32]:
+            - textbox "Search products..." [ref=e33]
+            - generic [ref=e35]: 
+          - combobox [ref=e37]:
+            - option "Sort by Name" [selected]
+            - 'option "Price: Low to High"'
+            - 'option "Price: High to Low"'
+            - option "Sort by Rating"
+          - text: 
+        - generic [ref=e39]:
+          - button "All Categories" [ref=e40]
+          - button "Coffee" [ref=e41]
+          - button "Non-Coffee" [ref=e42]
+          - button "Snacks" [ref=e43]
+          - button "Desserts" [ref=e44]
+      - paragraph [ref=e46]: Showing 13 products
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - generic [ref=e49]:
+            - generic [ref=e50]:
+              - button "Add to wishlist" [ref=e51]:
+                - img [ref=e52]
+              - button "Share" [ref=e54]:
+                - img [ref=e55]
+            - img "espresso" [ref=e61]
+            - generic [ref=e62]: Featured
+          - generic [ref=e63]:
+            - link "espresso" [ref=e66] [cursor=pointer]:
+              - /url: /product/1
+              - heading "espresso" [level=3] [ref=e67]
+            - generic [ref=e69]:
+              - generic [ref=e70]:
+                - text: size
+                - generic [ref=e71]:
+                  - button "Regular" [ref=e72]
+                  - button "Large" [ref=e73]
+              - generic [ref=e74]:
+                - text: temperature
+                - button "Hot" [ref=e76]
+            - generic [ref=e77]:
+              - generic [ref=e80]: Rp 30,000
+              - button "Add to Cart" [ref=e81]
+        - generic [ref=e82]:
+          - generic [ref=e83]:
+            - generic [ref=e84]:
+              - button "Add to wishlist" [ref=e85]:
+                - img [ref=e86]
+              - button "Share" [ref=e88]:
+                - img [ref=e89]
+            - img "Cappuccino" [ref=e95]
+            - generic [ref=e96]: Featured
+          - generic [ref=e97]:
+            - link "Cappuccino" [ref=e100] [cursor=pointer]:
+              - /url: /product/2
+              - heading "Cappuccino" [level=3] [ref=e101]
+            - generic [ref=e103]:
+              - generic [ref=e104]:
+                - text: size
+                - generic [ref=e105]:
+                  - button "Regular" [ref=e106]
+                  - button "Large" [ref=e107]
+              - generic [ref=e108]:
+                - text: temperature
+                - generic [ref=e109]:
+                  - button "Hot" [ref=e110]
+                  - button "Iced" [ref=e111]
+            - generic [ref=e112]:
+              - generic [ref=e115]: Rp 35,000
+              - button "Add to Cart" [ref=e116]
+        - generic [ref=e117]:
+          - generic [ref=e118]:
+            - generic [ref=e119]:
+              - button "Add to wishlist" [ref=e120]:
+                - img [ref=e121]
+              - button "Share" [ref=e123]:
+                - img [ref=e124]
+            - img "Latte" [ref=e130]
+            - generic [ref=e131]: Featured
+          - generic [ref=e132]:
+            - link "Latte" [ref=e135] [cursor=pointer]:
+              - /url: /product/3
+              - heading "Latte" [level=3] [ref=e136]
+            - generic [ref=e138]:
+              - generic [ref=e139]:
+                - text: size
+                - generic [ref=e140]:
+                  - button "Regular" [ref=e141]
+                  - button "Large" [ref=e142]
+              - generic [ref=e143]:
+                - text: temperature
+                - generic [ref=e144]:
+                  - button "Hot" [ref=e145]
+                  - button "Iced" [ref=e146]
+            - generic [ref=e147]:
+              - generic [ref=e150]: Rp 38,000
+              - button "Add to Cart" [ref=e151]
+        - generic [ref=e152]:
+          - generic [ref=e153]:
+            - generic [ref=e154]:
+              - button "Add to wishlist" [ref=e155]:
+                - img [ref=e156]
+              - button "Share" [ref=e158]:
+                - img [ref=e159]
+            - img "Americano" [ref=e165]
+            - generic [ref=e166]: Featured
+          - generic [ref=e167]:
+            - link "Americano" [ref=e170] [cursor=pointer]:
+              - /url: /product/4
+              - heading "Americano" [level=3] [ref=e171]
+            - generic [ref=e173]:
+              - generic [ref=e174]:
+                - text: size
+                - generic [ref=e175]:
+                  - button "Regular" [ref=e176]
+                  - button "Large" [ref=e177]
+              - generic [ref=e178]:
+                - text: temperature
+                - generic [ref=e179]:
+                  - button "Hot" [ref=e180]
+                  - button "Iced" [ref=e181]
+            - generic [ref=e182]:
+              - generic [ref=e185]: Rp 30,000
+              - button "Add to Cart" [ref=e186]
+        - generic [ref=e187]:
+          - generic [ref=e188]:
+            - generic [ref=e189]:
+              - button "Add to wishlist" [ref=e190]:
+                - img [ref=e191]
+              - button "Share" [ref=e193]:
+                - img [ref=e194]
+            - img "Mocha" [ref=e200]
+            - generic [ref=e201]: Featured
+          - generic [ref=e202]:
+            - link "Mocha" [ref=e205] [cursor=pointer]:
+              - /url: /product/5
+              - heading "Mocha" [level=3] [ref=e206]
+            - generic [ref=e208]:
+              - generic [ref=e209]:
+                - text: size
+                - generic [ref=e210]:
+                  - button "Regular" [ref=e211]
+                  - button "Large" [ref=e212]
+              - generic [ref=e213]:
+                - text: temperature
+                - generic [ref=e214]:
+                  - button "Hot" [ref=e215]
+                  - button "Iced" [ref=e216]
+            - generic [ref=e217]:
+              - generic [ref=e220]: Rp 40,000
+              - button "Add to Cart" [ref=e221]
+        - generic [ref=e222]:
+          - generic [ref=e223]:
+            - generic [ref=e224]:
+              - button "Add to wishlist" [ref=e225]:
+                - img [ref=e226]
+              - button "Share" [ref=e228]:
+                - img [ref=e229]
+            - img "Matcha Latte" [ref=e235]
+            - generic [ref=e236]: Featured
+          - generic [ref=e237]:
+            - link "Matcha Latte" [ref=e240] [cursor=pointer]:
+              - /url: /product/6
+              - heading "Matcha Latte" [level=3] [ref=e241]
+            - generic [ref=e243]:
+              - generic [ref=e244]:
+                - text: size
+                - generic [ref=e245]:
+                  - button "Regular" [ref=e246]
+                  - button "Large" [ref=e247]
+              - generic [ref=e248]:
+                - text: temperature
+                - generic [ref=e249]:
+                  - button "Hot" [ref=e250]
+                  - button "Iced" [ref=e251]
+            - generic [ref=e252]:
+              - generic [ref=e255]: Rp 42,000
+              - button "Add to Cart" [ref=e256]
+        - generic [ref=e257]:
+          - generic [ref=e258]:
+            - generic [ref=e259]:
+              - button "Add to wishlist" [ref=e260]:
+                - img [ref=e261]
+              - button "Share" [ref=e263]:
+                - img [ref=e264]
+            - img "Chocolate" [ref=e270]
+            - generic [ref=e271]: Featured
+          - generic [ref=e272]:
+            - link "Chocolate" [ref=e275] [cursor=pointer]:
+              - /url: /product/7
+              - heading "Chocolate" [level=3] [ref=e276]
+            - generic [ref=e278]:
+              - generic [ref=e279]:
+                - text: size
+                - generic [ref=e280]:
+                  - button "Regular" [ref=e281]
+                  - button "Large" [ref=e282]
+              - generic [ref=e283]:
+                - text: temperature
+                - button "Hot" [ref=e285]
+            - generic [ref=e286]:
+              - generic [ref=e289]: Rp 35,000
+              - button "Add to Cart" [ref=e290]
+        - generic [ref=e291]:
+          - generic [ref=e292]:
+            - generic [ref=e293]:
+              - button "Add to wishlist" [ref=e294]:
+                - img [ref=e295]
+              - button "Share" [ref=e297]:
+                - img [ref=e298]
+            - img "Fresh Orange Juice" [ref=e304]
+            - generic [ref=e305]: Featured
+          - generic [ref=e306]:
+            - link "Fresh Orange Juice" [ref=e309] [cursor=pointer]:
+              - /url: /product/8
+              - heading "Fresh Orange Juice" [level=3] [ref=e310]
+            - generic [ref=e313]:
+              - text: size
+              - generic [ref=e314]:
+                - button "Regular" [ref=e315]
+                - button "Large" [ref=e316]
+            - generic [ref=e317]:
+              - generic [ref=e320]: Rp 28,000
+              - button "Add to Cart" [ref=e321]
+        - generic [ref=e322]:
+          - generic [ref=e323]:
+            - generic [ref=e324]:
+              - button "Add to wishlist" [ref=e325]:
+                - img [ref=e326]
+              - button "Share" [ref=e328]:
+                - img [ref=e329]
+            - img "Croissant" [ref=e335]
+            - generic [ref=e336]: Featured
+          - generic [ref=e337]:
+            - link "Croissant" [ref=e340] [cursor=pointer]:
+              - /url: /product/9
+              - heading "Croissant" [level=3] [ref=e341]
+            - generic [ref=e343]:
+              - generic [ref=e346]: Rp 25,000
+              - button "Add to Cart" [ref=e347]
+        - generic [ref=e348]:
+          - generic [ref=e349]:
+            - generic [ref=e350]:
+              - button "Add to wishlist" [ref=e351]:
+                - img [ref=e352]
+              - button "Share" [ref=e354]:
+                - img [ref=e355]
+            - img "Sandwich" [ref=e361]
+            - generic [ref=e362]: Featured
+          - generic [ref=e363]:
+            - link "Sandwich" [ref=e366] [cursor=pointer]:
+              - /url: /product/10
+              - heading "Sandwich" [level=3] [ref=e367]
+            - generic [ref=e369]:
+              - generic [ref=e372]: Rp 45,000
+              - button "Add to Cart" [ref=e373]
+        - generic [ref=e374]:
+          - generic [ref=e375]:
+            - generic [ref=e376]:
+              - button "Add to wishlist" [ref=e377]:
+                - img [ref=e378]
+              - button "Share" [ref=e380]:
+                - img [ref=e381]
+            - img "Tiramisu" [ref=e387]
+            - generic [ref=e388]: Featured
+          - generic [ref=e389]:
+            - link "Tiramisu" [ref=e392] [cursor=pointer]:
+              - /url: /product/11
+              - heading "Tiramisu" [level=3] [ref=e393]
+            - generic [ref=e395]:
+              - generic [ref=e398]: Rp 35,000
+              - button "Add to Cart" [ref=e399]
+        - generic [ref=e400]:
+          - generic [ref=e401]:
+            - generic [ref=e402]:
+              - button "Add to wishlist" [ref=e403]:
+                - img [ref=e404]
+              - button "Share" [ref=e406]:
+                - img [ref=e407]
+            - img "Iced Special" [ref=e413]
+          - generic [ref=e414]:
+            - link "Iced Special" [ref=e417] [cursor=pointer]:
+              - /url: /product/18
+              - heading "Iced Special" [level=3] [ref=e418]
+            - generic [ref=e420]:
+              - generic [ref=e422]:
+                - generic [ref=e423]: Rp 40,000
+                - generic [ref=e424]: Out of stock
+              - button "Sold Out" [disabled] [ref=e425]
+        - generic [ref=e426]:
+          - generic [ref=e427]:
+            - generic [ref=e428]:
+              - button "Add to wishlist" [ref=e429]:
+                - img [ref=e430]
+              - button "Share" [ref=e432]:
+                - img [ref=e433]
+            - img "Filter Brew" [ref=e439]
+          - generic [ref=e440]:
+            - link "Filter Brew" [ref=e443] [cursor=pointer]:
+              - /url: /product/19
+              - heading "Filter Brew" [level=3] [ref=e444]
+            - generic [ref=e446]:
+              - generic [ref=e448]:
+                - generic [ref=e449]: Rp 30,000
+                - generic [ref=e450]: Low stock
+              - button "Add to Cart" [ref=e451]
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e457] [cursor=pointer]:
+    - img [ref=e458]
+  - alert [ref=e461]
+```

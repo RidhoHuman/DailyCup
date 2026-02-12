@@ -1,0 +1,328 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e5]:
+        - link " DailyCup" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e8]: 
+          - generic [ref=e9]: DailyCup
+        - navigation [ref=e10]:
+          - link "Home" [ref=e11] [cursor=pointer]:
+            - /url: /
+          - link "Menu" [ref=e12] [cursor=pointer]:
+            - /url: /menu
+          - link "Cart" [ref=e13] [cursor=pointer]:
+            - /url: /cart
+          - link "About" [ref=e14] [cursor=pointer]:
+            - /url: /about
+          - link "Profile" [ref=e15] [cursor=pointer]:
+            - /url: /profile
+        - generic [ref=e16]:
+          - button "Toggle theme" [ref=e17]:
+            - generic [ref=e18]: 
+          - link "" [ref=e19] [cursor=pointer]:
+            - /url: /wishlist
+            - generic [ref=e20]: 
+          - button "" [ref=e21]:
+            - generic [ref=e22]: 
+          - link "" [ref=e23] [cursor=pointer]:
+            - /url: /login
+            - generic [ref=e24]: 
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - heading "Discover Your Perfect Cup" [level=1] [ref=e29]:
+          - generic [ref=e30]: Discover
+          - generic [ref=e31]: Your
+          - generic [ref=e32]: Perfect Cup
+        - generic:
+          - img "Coffee Bean"
+        - generic [ref=e33]:
+          - paragraph [ref=e34]: "\"Where every pour meets precision and every sip tells a story of excellence.\""
+          - paragraph [ref=e35]: "- Ardan Pramudya"
+        - link "Order Now" [ref=e36] [cursor=pointer]:
+          - /url: "#menu"
+        - generic [ref=e37]:
+          - generic [ref=e38]: • Refined Beans
+          - generic [ref=e39]: • Signature Blends
+          - generic [ref=e40]: • Maximum Taste
+          - generic [ref=e41]: • Special Sponsors
+        - generic [ref=e42]:
+          - img "KFC" [ref=e44]
+          - img "McDonald's" [ref=e46]
+          - img "Shopee" [ref=e48]
+          - img "GoFood" [ref=e50]
+          - img "Rotio" [ref=e52]
+          - img "Gacoan" [ref=e54]
+      - generic [ref=e56]:
+        - img "People enjoying coffee" [ref=e57]
+        - generic [ref=e59]: ✨
+    - generic [ref=e61]:
+      - generic [ref=e62]:
+        - heading "⚡ Flash Sale" [level=2] [ref=e63]
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - generic [ref=e66]: Ends in
+            - generic [ref=e67]:
+              - generic [ref=e68]: "11"
+              - generic [ref=e69]: ":"
+            - generic [ref=e70]:
+              - generic [ref=e71]: "59"
+              - generic [ref=e72]: ":"
+            - generic [ref=e74]: "56"
+          - button "Lihat Semua" [ref=e75]
+      - generic [ref=e77]:
+        - generic [ref=e78] [cursor=pointer]:
+          - generic [ref=e79]:
+            - img "Ethiopian Yirgacheffe Grade 1" [ref=e80]
+            - generic [ref=e81]: "-22%"
+          - generic [ref=e82]:
+            - paragraph [ref=e83]: Ethiopian Yirgacheffe Grade 1
+            - paragraph [ref=e84]: Rp 145.000
+            - paragraph [ref=e85]: Rp 185.000
+            - paragraph [ref=e89]: 42 sold
+        - generic [ref=e90] [cursor=pointer]:
+          - generic [ref=e91]:
+            - img "Sumatra Mandheling" [ref=e92]
+            - generic [ref=e93]: "-22%"
+          - generic [ref=e94]:
+            - paragraph [ref=e95]: Sumatra Mandheling
+            - paragraph [ref=e96]: Rp 125.000
+            - paragraph [ref=e97]: Rp 160.000
+            - paragraph [ref=e101]: 8 sold
+        - generic [ref=e102] [cursor=pointer]:
+          - generic [ref=e103]:
+            - img "Vietnam Drip Special" [ref=e104]
+            - generic [ref=e105]: "-21%"
+          - generic [ref=e106]:
+            - paragraph [ref=e107]: Vietnam Drip Special
+            - paragraph [ref=e108]: Rp 75.000
+            - paragraph [ref=e109]: Rp 95.000
+            - paragraph [ref=e113]: 88 sold
+    - generic [ref=e115]:
+      - heading "MENU CATEGORIES" [level=2] [ref=e116]
+      - generic [ref=e117]:
+        - link "⚫ Espresso Kopi hitam klasik dengan cita rasa autentik" [ref=e118] [cursor=pointer]:
+          - /url: /menu?category=espresso
+          - generic [ref=e119]:
+            - generic [ref=e120]: ⚫
+            - heading "Espresso" [level=3] [ref=e121]
+            - paragraph [ref=e122]: Kopi hitam klasik dengan cita rasa autentik
+        - link "🥛 Latte Perpaduan sempurna kopi dan susu lembut" [ref=e123] [cursor=pointer]:
+          - /url: /menu?category=latte
+          - generic [ref=e124]:
+            - generic [ref=e125]: 🥛
+            - heading "Latte" [level=3] [ref=e126]
+            - paragraph [ref=e127]: Perpaduan sempurna kopi dan susu lembut
+        - link "☕ Cappuccino Kopi dengan foam susu yang creamy" [ref=e128] [cursor=pointer]:
+          - /url: /menu?category=cappuccino
+          - generic [ref=e129]:
+            - generic [ref=e130]: ☕
+            - heading "Cappuccino" [level=3] [ref=e131]
+            - paragraph [ref=e132]: Kopi dengan foam susu yang creamy
+        - link "🧊 Cold Brew Kopi dingin yang menyegarkan" [ref=e133] [cursor=pointer]:
+          - /url: /menu?category=cold brew
+          - generic [ref=e134]:
+            - generic [ref=e135]: 🧊
+            - heading "Cold Brew" [level=3] [ref=e136]
+            - paragraph [ref=e137]: Kopi dingin yang menyegarkan
+    - generic [ref=e139]:
+      - heading "Featured Products" [level=2] [ref=e140]
+      - generic [ref=e141]:
+        - generic [ref=e142]:
+          - generic [ref=e143]:
+            - button "Share" [ref=e145]:
+              - img [ref=e146]
+            - img "espresso" [ref=e152]
+          - generic [ref=e154]:
+            - heading "espresso" [level=3] [ref=e155]
+            - paragraph [ref=e156]: Rich and bold espresso
+            - generic [ref=e157]:
+              - generic [ref=e158]: Rp 30,000
+              - button "Select Options" [ref=e159]
+        - generic [ref=e160]:
+          - generic [ref=e161]:
+            - button "Share" [ref=e163]:
+              - img [ref=e164]
+            - img "Cappuccino" [ref=e170]
+          - generic [ref=e172]:
+            - heading "Cappuccino" [level=3] [ref=e173]
+            - paragraph [ref=e174]: Classic cappuccino with perfect foam
+            - generic [ref=e175]:
+              - generic [ref=e176]: Rp 35,000
+              - button "Select Options" [ref=e177]
+        - generic [ref=e178]:
+          - generic [ref=e179]:
+            - button "Share" [ref=e181]:
+              - img [ref=e182]
+            - img "Latte" [ref=e188]
+          - generic [ref=e190]:
+            - heading "Latte" [level=3] [ref=e191]
+            - paragraph [ref=e192]: Smooth and creamy latte
+            - generic [ref=e193]:
+              - generic [ref=e194]: Rp 38,000
+              - button "Select Options" [ref=e195]
+        - generic [ref=e196]:
+          - generic [ref=e197]:
+            - button "Share" [ref=e199]:
+              - img [ref=e200]
+            - img "Americano" [ref=e206]
+          - generic [ref=e208]:
+            - heading "Americano" [level=3] [ref=e209]
+            - paragraph [ref=e210]: Classic black coffee
+            - generic [ref=e211]:
+              - generic [ref=e212]: Rp 30,000
+              - button "Select Options" [ref=e213]
+        - generic [ref=e214]:
+          - generic [ref=e215]:
+            - button "Share" [ref=e217]:
+              - img [ref=e218]
+            - img "Mocha" [ref=e224]
+          - generic [ref=e226]:
+            - heading "Mocha" [level=3] [ref=e227]
+            - paragraph [ref=e228]: Chocolate coffee blend
+            - generic [ref=e229]:
+              - generic [ref=e230]: Rp 40,000
+              - button "Select Options" [ref=e231]
+        - generic [ref=e232]:
+          - generic [ref=e233]:
+            - button "Share" [ref=e235]:
+              - img [ref=e236]
+            - img "Matcha Latte" [ref=e242]
+          - generic [ref=e244]:
+            - heading "Matcha Latte" [level=3] [ref=e245]
+            - paragraph [ref=e246]: Premium Japanese matcha
+            - generic [ref=e247]:
+              - generic [ref=e248]: Rp 42,000
+              - button "Select Options" [ref=e249]
+    - generic [ref=e252]:
+      - heading "ABOUT US" [level=2] [ref=e253]
+      - generic [ref=e254]:
+        - generic [ref=e255]:
+          - img "Ardan Pramudya - CEO" [ref=e257]
+          - generic [ref=e258]:
+            - heading "👤 Chief Executive Officer" [level=3] [ref=e259]:
+              - generic [ref=e260]: 👤
+              - text: Chief Executive Officer
+            - paragraph [ref=e261]:
+              - text: Sebagai Chief Executive Officer,
+              - strong [ref=e262]: Ardan Pramudya
+              - text: memimpin Tim & Arah Gerak Bisnis DailyCup dengan visi yang jelas dan orientasi masa depan. Ardan melihat kopi bukan hanya sebagai minuman, tetapi sebagai representasi gaya hidup produktif dan modern. Di bawah kepemimpinannya, DailyCup mengusung nilai kesederhanaan yang berkelas, menghadirkan pengalaman minum kopi yang bermakna dan relevan bagi setiap pelanggan.
+        - generic [ref=e263]:
+          - img "Hafiz Ferozaldi - Manager" [ref=e265]
+          - generic [ref=e266]:
+            - heading "👤 Manager" [level=3] [ref=e267]:
+              - generic [ref=e268]: 👤
+              - text: Manager
+            - paragraph [ref=e269]:
+              - text: Sebagai Manager,
+              - strong [ref=e270]: Hafiz Ferozaldi
+              - text: memegang peran vital dalam memastikan seluruh operasional DailyCup berjalan dengan efisien dan terkoordinasi. Ia mengawasi alur kerja dari awal hingga akhir, memastikan kualitas layanan tetap konsisten dan setiap pelanggan mendapatkan pengalaman terbaik.
+        - generic [ref=e271]:
+          - img "Ridho Human Daryata - Marketing + HRD" [ref=e273]
+          - generic [ref=e274]:
+            - heading "👤 Marketing + HRD" [level=3] [ref=e275]:
+              - generic [ref=e276]: 👤
+              - text: Marketing + HRD
+            - paragraph [ref=e277]:
+              - text: Sebagai Marketing + HRD,
+              - strong [ref=e278]: Ridho Human Daryata
+              - text: bertanggung jawab dalam membangun identitas dan energi DailyCup melalui strategi pemasaran yang kreatif, relevan, dan berorientasi pada audiens. Ia memastikan bahwa setiap kampanye, materi konten, dan komunikasi perusahaan selalu konsisten, menarik, dan selaras dengan karakter brand.
+        - generic [ref=e279]:
+          - img "Ruth Tiara Sinaga - Supervisor" [ref=e281]
+          - generic [ref=e282]:
+            - heading "👤 Supervisor" [level=3] [ref=e283]:
+              - generic [ref=e284]: 👤
+              - text: Supervisor
+            - paragraph [ref=e285]:
+              - text: Sebagai Supervisor,
+              - strong [ref=e286]: Ruth Tiara Sinaga
+              - text: menjadi pusat ketertiban dan konsistensi operasional. Ia memastikan setiap detail mulai dari persiapan, kebersihan area kerja, hingga pengelolaan inventaris berjalan sesuai standar. Dengan gaya kerja yang sistematis dan perhatian penuh pada kualitas, Ruth memperkuat ritme kerja tim.
+      - generic [ref=e287]:
+        - heading "Get To Know" [level=2] [ref=e288]
+        - heading "DailyCup" [level=1] [ref=e289]
+        - generic [ref=e290]:
+          - paragraph [ref=e291]:
+            - strong [ref=e292]: DailyCup
+            - text: merupakan sebuah coffee shop yang berkomitmen menghadirkan pengalaman menikmati kopi dengan standar kualitas tinggi. Dengan proses penyajian yang terukur dan pemilihan bahan baku terbaik, DailyCup menawarkan cita rasa yang konsisten, elegan, dan berkarakter.
+          - paragraph [ref=e293]: "Beroperasi sebagai ruang yang nyaman dan berorientasi pada pelayanan, DailyCup dirancang untuk menjadi tempat di mana pelanggan dapat bekerja, berdiskusi, maupun beristirahat dengan suasana yang tenang. Filosofi kami sederhana: setiap cangkir harus memberikan kesan mendalam, mencerminkan profesionalisme serta dedikasi terhadap kualitas."
+      - generic [ref=e294]:
+        - generic [ref=e295]:
+          - heading "Our Mission" [level=3] [ref=e296]
+          - paragraph [ref=e297]: Menciptakan pengalaman menikmati kopi yang autentik dan berkualitas tinggi melalui perpaduan rasa, suasana, dan pelayanan terbaik. Kami berkomitmen menghadirkan kopi yang fresh, dibuat dengan standar barista profesional, serta disajikan dalam lingkungan yang hangat dan nyaman.
+        - generic [ref=e298]:
+          - heading "Our Value" [level=3] [ref=e299]
+          - paragraph [ref=e300]: Kami menjunjung nilai kualitas, keaslian, dan kenyamanan dalam setiap proses penyajian kopi. Kami memilih bahan terbaik, menjaga standar pembuatan yang konsisten, dan menghadirkan suasana yang hangat untuk setiap pelanggan. Nilai kami berakar pada komitmen untuk memberi pengalaman yang tulus.
+      - generic [ref=e301]:
+        - heading "Contact Us" [level=3] [ref=e302]
+        - generic [ref=e303]:
+          - link "📷 @dailycup" [ref=e304] [cursor=pointer]:
+            - /url: https://instagram.com/dailycup
+            - generic [ref=e305]: 📷
+            - generic [ref=e306]: "@dailycup"
+          - link "💬 +62 812-3456-789" [ref=e307] [cursor=pointer]:
+            - /url: https://wa.me/628123456789
+            - generic [ref=e308]: 💬
+            - generic [ref=e309]: +62 812-3456-789
+          - link "✉️ info@dailycup.com" [ref=e310] [cursor=pointer]:
+            - /url: mailto:info@dailycup.com
+            - generic [ref=e311]: ✉️
+            - generic [ref=e312]: info@dailycup.com
+    - generic [ref=e314]:
+      - heading "Stay Updated" [level=2] [ref=e315]
+      - paragraph [ref=e316]: Get the latest news about our special offers and new menu items
+      - generic [ref=e317]:
+        - textbox "Enter your email" [ref=e318]
+        - button "Subscribe" [ref=e319]
+    - contentinfo [ref=e320]:
+      - generic [ref=e321]:
+        - generic [ref=e322]:
+          - generic [ref=e323]:
+            - generic [ref=e324]: DailyCup
+            - paragraph [ref=e325]: Kopi premium untuk hari yang lebih baik
+          - generic [ref=e326]:
+            - heading "Menu" [level=3] [ref=e327]
+            - list [ref=e328]:
+              - listitem [ref=e329]:
+                - link "Produk" [ref=e330] [cursor=pointer]:
+                  - /url: /products
+              - listitem [ref=e331]:
+                - link "Tentang Kami" [ref=e332] [cursor=pointer]:
+                  - /url: /about
+              - listitem [ref=e333]:
+                - link "Kontak" [ref=e334] [cursor=pointer]:
+                  - /url: /contact
+          - generic [ref=e335]:
+            - heading "Layanan" [level=3] [ref=e336]
+            - list [ref=e337]:
+              - listitem [ref=e338]:
+                - link "Pesanan Saya" [ref=e339] [cursor=pointer]:
+                  - /url: /customer/orders
+              - listitem [ref=e340]:
+                - link "Favorit" [ref=e341] [cursor=pointer]:
+                  - /url: /customer/favorites
+              - listitem [ref=e342]:
+                - link "FAQ" [ref=e343] [cursor=pointer]:
+                  - /url: /faq
+          - generic [ref=e344]:
+            - heading "Karir" [level=3] [ref=e345]
+            - list [ref=e346]:
+              - listitem [ref=e347]:
+                - link " Bergabung Jadi Kurir" [ref=e348] [cursor=pointer]:
+                  - /url: /kurir/info
+                  - generic [ref=e349]: 
+                  - generic [ref=e350]: Bergabung Jadi Kurir
+        - generic [ref=e351]:
+          - generic [ref=e352]: © 2025 DailyCup. All rights reserved.
+          - generic [ref=e353]:
+            - link "Kebijakan Privasi" [ref=e354] [cursor=pointer]:
+              - /url: /privacy
+            - link "Syarat & Ketentuan" [ref=e355] [cursor=pointer]:
+              - /url: /terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e361] [cursor=pointer]:
+    - img [ref=e362]
+  - alert [ref=e365]
+```

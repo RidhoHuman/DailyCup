@@ -15,6 +15,10 @@ test('profile edit validation and save', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Edit Profile' })).toBeVisible({ timeout: 5000 });
   await page.getByRole('button', { name: 'Edit Profile' }).click();
 
+  // Ensure name input visible before validation
+  const nameInput = page.locator('input[type="text"]').first();
+  await expect(nameInput).toBeVisible({ timeout: 3000 });
+
   // Clear name to trigger validation - use input directly since label is not linked via for/id
   const nameInput = page.locator('input[type="text"]').first();
   await nameInput.fill('');
