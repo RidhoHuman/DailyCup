@@ -1,0 +1,48 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - link "← Back to Home" [ref=e4] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - link "DailyCup" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e8]: DailyCup
+        - heading "Welcome Back" [level=2] [ref=e9]
+        - paragraph [ref=e10]: Sign in to your account
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - generic [ref=e13]:
+            - generic [ref=e14]: Email Address
+            - textbox "Email Address" [active] [ref=e15]:
+              - /placeholder: Enter your email
+          - generic [ref=e16]:
+            - generic [ref=e17]: Password
+            - textbox "Password" [ref=e18]:
+              - /placeholder: Enter your password
+          - generic [ref=e19]:
+            - generic [ref=e20]:
+              - checkbox "Remember me" [ref=e21]
+              - generic [ref=e22]: Remember me
+            - button "Forgot password?" [ref=e24]
+          - button "Sign In" [ref=e25]
+        - generic [ref=e26]:
+          - generic [ref=e31]: Or continue with
+          - generic [ref=e32]:
+            - button "Google" [ref=e33]:
+              - img "Google" [ref=e34]
+            - button "Facebook" [ref=e35]:
+              - img "Facebook" [ref=e36]
+            - button "Apple" [ref=e37]:
+              - img "Apple" [ref=e38]
+      - paragraph [ref=e40]:
+        - text: Don't have an account?
+        - link "Sign up" [ref=e41] [cursor=pointer]:
+          - /url: /register
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e47] [cursor=pointer]:
+    - img [ref=e48]
+  - alert [ref=e51]
+```

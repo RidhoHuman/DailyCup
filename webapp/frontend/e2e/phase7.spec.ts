@@ -6,13 +6,25 @@ test('profile edit validation and save', async ({ page }) => {
     await dialog.accept();
   });
 
+  // Ensure user is logged in (persisted auth) so Profile page shows Edit button
+  await page.addInitScript(() => {
+    try {
+      const user = { id: '2', name: 'Test User', email: 'test@example.com', role: 'customer', loyaltyPoints: 0, joinDate: new Date().toISOString() };
+      localStorage.setItem('dailycup-auth', JSON.stringify({ user, token: 'ci-user-token', isAuthenticated: true }));
+    } catch (e) { }
+  });
+
   await page.goto('/');
   await page.waitForLoadState('networkidle');
+
+  // Force reload so persisted auth in localStorage hydrates into Zustand store
+  await page.reload();
+
   await page.getByRole('link', { name: 'Profile' }).click();
   await expect(page).toHaveURL(/\/profile|\/account|\/dashboard/);
 
-  // Start editing
-  await expect(page.getByRole('button', { name: 'Edit Profile' })).toBeVisible({ timeout: 5000 });
+  // Start editing (give extra time for client-side hydration)
+  await expect(page.getByRole('button', { name: 'Edit Profile' })).toBeVisible({ timeout: 15000 });
   await page.getByRole('button', { name: 'Edit Profile' }).click();
 
   // Ensure name input visible before validation

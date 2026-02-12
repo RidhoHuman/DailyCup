@@ -1,0 +1,150 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e5]:
+        - link " DailyCup" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e8]: 
+          - generic [ref=e9]: DailyCup
+        - navigation [ref=e10]:
+          - link "Home" [ref=e11] [cursor=pointer]:
+            - /url: /
+          - link "Menu" [ref=e12] [cursor=pointer]:
+            - /url: /menu
+          - link "Cart" [ref=e13] [cursor=pointer]:
+            - /url: /cart
+          - link "About" [ref=e14] [cursor=pointer]:
+            - /url: /about
+          - link "Profile" [ref=e15] [cursor=pointer]:
+            - /url: /profile
+        - generic [ref=e16]:
+          - button "Toggle theme" [ref=e17]:
+            - generic [ref=e18]: 
+          - link "" [ref=e19] [cursor=pointer]:
+            - /url: /wishlist
+            - generic [ref=e20]: 
+          - button " 1" [ref=e21]:
+            - generic [ref=e22]: 
+            - generic [ref=e23]: "1"
+          - link "" [ref=e24] [cursor=pointer]:
+            - /url: /login
+            - generic [ref=e25]: 
+    - generic [ref=e26]:
+      - heading "Checkout" [level=1] [ref=e27]
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - generic [ref=e30]:
+            - heading "1 Shipping Information" [level=2] [ref=e31]:
+              - generic [ref=e32]: "1"
+              - text: Shipping Information
+            - generic [ref=e33]:
+              - generic [ref=e34]:
+                - generic [ref=e35]:
+                  - text: Full Name
+                  - textbox "Jhon Doe" [ref=e37]
+                - generic [ref=e38]:
+                  - text: Email Address
+                  - textbox "name@example.com" [ref=e40]
+              - generic [ref=e41]:
+                - text: Phone Number (WhatsApp)
+                - textbox "08123456789" [ref=e43]
+              - separator [ref=e44]
+              - heading "Shipping Address" [level=3] [ref=e45]
+              - generic [ref=e46]:
+                - generic [ref=e47]:
+                  - generic [ref=e48]:
+                    - generic [ref=e49]: 
+                    - generic [ref=e50]: Validasi Lokasi Delivery
+                  - button " Gunakan Lokasi Saya" [ref=e51]:
+                    - generic [ref=e52]: 
+                    - text: Gunakan Lokasi Saya
+                - paragraph [ref=e53]:
+                  - generic [ref=e54]: 
+                  - text: Klik tombol di atas untuk memvalidasi apakah lokasi Anda dalam jangkauan delivery (maks. 30km dari outlet)
+              - generic [ref=e55]:
+                - generic [ref=e56]:
+                  - text: Province
+                  - combobox [ref=e57]:
+                    - option "Select Province" [selected]
+                    - option "Aceh"
+                    - option "Sumatera Utara"
+                    - option "Sumatera Barat"
+                    - option "Riau"
+                    - option "DKI Jakarta"
+                    - option "Jawa Barat"
+                    - option "Jawa Tengah"
+                    - option "Jawa Timur"
+                    - option "DI Yogyakarta"
+                    - option "Banten"
+                    - option "Bali"
+                - generic [ref=e58]:
+                  - text: City / Kota
+                  - combobox [disabled] [ref=e59]:
+                    - option "Select City" [selected]
+                - generic [ref=e60]:
+                  - text: District / Kecamatan
+                  - combobox [disabled] [ref=e61]:
+                    - option "Select District" [selected]
+              - generic [ref=e62]:
+                - text: Full Address Detail
+                - textbox "Jl. Kebun Jeruk No. 12, RT/RW 01/02..." [ref=e63]
+          - generic [ref=e64]:
+            - heading "2 Payment Method" [level=2] [ref=e65]:
+              - generic [ref=e66]: "2"
+              - text: Payment Method
+            - generic [ref=e67]:
+              - generic [ref=e68] [cursor=pointer]:
+                - generic [ref=e72]: 
+                - generic [ref=e73]:
+                  - generic [ref=e74]:
+                    - heading "Online Payment (Xendit)" [level=3] [ref=e75]
+                    - generic [ref=e76]: Automatic
+                  - paragraph [ref=e77]: Bank Transfer, E-Wallet, QRIS, Credit Card, dll.
+                  - paragraph [ref=e78]: BCA, Mandiri, BNI, GoPay, OVO, Dana, QRIS, dan lainnya
+              - generic [ref=e79] [cursor=pointer]:
+                - generic [ref=e82]: 
+                - generic [ref=e83]:
+                  - generic [ref=e84]:
+                    - heading "Cash on Delivery (COD)" [level=3] [ref=e85]
+                    - generic [ref=e86]: Manual
+                  - paragraph [ref=e87]: Bayar tunai saat kurir sampai
+                  - paragraph [ref=e88]: Tersedia untuk area tertentu
+        - generic [ref=e90]:
+          - heading "Order Summary" [level=2] [ref=e91]
+          - generic [ref=e93]:
+            - generic [ref=e94]:
+              - img "espresso" [ref=e95]
+              - generic [ref=e96]: x1
+            - generic [ref=e97]:
+              - paragraph [ref=e98]: espresso
+              - paragraph [ref=e99]: Regular, Hot
+              - paragraph [ref=e100]: Rp 30,000
+          - generic [ref=e101]:
+            - heading "Have a coupon?" [level=3] [ref=e102]
+            - generic [ref=e103]:
+              - textbox "Enter code" [ref=e104]
+              - button "Apply" [disabled] [ref=e105]
+          - generic [ref=e106]:
+            - generic [ref=e107]:
+              - generic [ref=e108]: Subtotal
+              - generic [ref=e109]: Rp 30,000
+            - generic [ref=e110]:
+              - generic [ref=e111]: Shipping (JNE Reg)
+              - generic [ref=e112]: Rp 15,000
+            - generic [ref=e113]:
+              - generic [ref=e114]: Total
+              - generic [ref=e115]: Rp 45,000
+          - button "Place Order " [ref=e116]:
+            - text: Place Order
+            - generic [ref=e117]: 
+          - paragraph [ref=e118]:
+            - generic [ref=e119]: 
+            - text: Secure Encrypted Payment
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e125] [cursor=pointer]:
+    - img [ref=e126]
+  - alert [ref=e129]
+```

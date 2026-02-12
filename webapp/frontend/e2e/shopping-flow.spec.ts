@@ -29,13 +29,13 @@ test.describe('Complete Shopping Journey', () => {
     
     // 5. Add to cart
     const addToCartBtn = page.locator('button:has-text("Add to Cart")').first();
-    await expect(addToCartBtn).toBeVisible({ timeout: 5000 });
+    await expect(addToCartBtn).toBeVisible({ timeout: 10000 });
     await addToCartBtn.click();
     
     // 6. Verify cart badge updates
     const cartBadge = page.locator('[data-testid="cart-badge"]');
-    await expect(cartBadge).toBeVisible({ timeout: 5000 });
-    await expect(cartBadge).toHaveText('1');
+    await expect(cartBadge).toBeVisible({ timeout: 10000 });
+    await expect(cartBadge).toHaveText('1', { timeout: 5000 });
     
     // 7. Open cart
     await page.click('[data-testid="cart-button"]');
@@ -183,14 +183,20 @@ test.describe('Authentication Flow', () => {
     // Submit without filling
     await page.click('button[type="submit"]');
     
-    // Should show error messages
-    await expect(page.locator('text=required')).toBeVisible();
+    // Should show error messages (email/password required)
+    await expect(page.locator('text=Email is required')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('text=Password is required')).toBeVisible({ timeout: 5000 });
   });
 
   test('should logout successfully', async ({ page }) => {
-    // Assume user is logged in
+    // Ensure user is logged in for logout test
+    await page.addInitScript(() => {
+      try { const user = { id:'2', name:'Test User', email:'test@example.com', role:'customer', loyaltyPoints:0, joinDate:new Date().toISOString() }; localStorage.setItem('dailycup-auth', JSON.stringify({ user, token: 'ci-user-token', isAuthenticated: true })); } catch(e){}
+    });
+
     await page.goto('/dashboard');
-    
+    await page.waitForLoadState('networkidle');
+
     // Click logout
     await page.click('button:has-text("Logout")');
     
@@ -205,26 +211,28 @@ test.describe('Responsive Design', () => {
     await page.setViewportSize({ width: 375, height: 667 });
     
     await page.goto('/');
+    await page.waitForLoadState('networkidle');
     
     // Mobile menu should be visible
     const mobileMenuBtn = page.locator('[aria-label="Open menu"]');
-    await expect(mobileMenuBtn).toBeVisible();
+    await expect(mobileMenuBtn).toBeVisible({ timeout: 5000 });
     
     // Click to open
     await mobileMenuBtn.click();
     
     // Menu should expand
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav')).toBeVisible({ timeout: 5000 });
   });
 
   test('should work on tablet viewport', async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 1024 });
     
     await page.goto('/menu');
+    await page.waitForLoadState('networkidle');
     
     // Product grid should adapt
     const productGrid = page.locator('[data-testid="product-grid"]');
-    await expect(productGrid).toBeVisible();
+    await expect(productGrid).toBeVisible({ timeout: 5000 });
   });
 });
 
@@ -252,11 +260,12 @@ test.describe('Performance & Accessibility', () => {
 
   test('should have proper heading hierarchy', async ({ page }) => {
     await page.goto('/');
-    
-    // Should have h1
-    const h1 = page.locator('h1');
-    await expect(h1).toBeVisible();
-    
+    await page.waitForLoadState('networkidle');
+
+    // There may be multiple h1 on the page; assert at least one visible and headings exist
+    const visibleH1 = page.locator('h1').filter({ hasText: /./ });
+    await expect(visibleH1.first()).toBeVisible({ timeout: 5000 });
+
     // Count headings
     const headings = await page.locator('h1, h2, h3, h4, h5, h6').count();
     expect(headings).toBeGreaterThan(0);

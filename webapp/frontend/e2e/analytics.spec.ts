@@ -33,9 +33,19 @@ test('Analytics page shows integration KPIs', async ({ page }) => {
     });
   });
 
-  // Ensure page has an auth token (analytics requires auth)
+  // Ensure page has a hydrated admin auth state (Zustand persist format)
   await page.addInitScript(() => {
-    try { localStorage.setItem('dailycup-auth', JSON.stringify({ state: { token: 'ci-admin-token' } })); } catch (e) { /* ignore */ }
+    try {
+      const adminUser = {
+        id: '1',
+        name: 'Admin',
+        email: 'admin@example.com',
+        role: 'admin',
+        loyaltyPoints: 0,
+        joinDate: new Date().toISOString(),
+      };
+      localStorage.setItem('dailycup-auth', JSON.stringify({ user: adminUser, token: 'ci-admin-token', isAuthenticated: true }));
+    } catch (e) { /* ignore */ }
   });
 
   await page.goto('/admin/analytics');

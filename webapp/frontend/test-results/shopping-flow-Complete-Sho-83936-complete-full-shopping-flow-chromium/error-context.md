@@ -1,0 +1,88 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e5]:
+        - link " DailyCup" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e8]: 
+          - generic [ref=e9]: DailyCup
+        - navigation [ref=e10]:
+          - link "Home" [ref=e11] [cursor=pointer]:
+            - /url: /
+          - link "Menu" [ref=e12] [cursor=pointer]:
+            - /url: /menu
+          - link "Cart" [ref=e13] [cursor=pointer]:
+            - /url: /cart
+          - link "About" [ref=e14] [cursor=pointer]:
+            - /url: /about
+          - link "Profile" [ref=e15] [cursor=pointer]:
+            - /url: /profile
+        - generic [ref=e16]:
+          - button "Toggle theme" [ref=e17]:
+            - generic [ref=e18]: 
+          - link "" [ref=e19] [cursor=pointer]:
+            - /url: /wishlist
+            - generic [ref=e20]: 
+          - button " 1" [ref=e21]:
+            - generic [ref=e22]: 
+            - generic [ref=e23]: "1"
+          - link "" [ref=e24] [cursor=pointer]:
+            - /url: /login
+            - generic [ref=e25]: 
+    - generic [ref=e26]:
+      - generic [ref=e27]:
+        - heading "Our Menu" [level=1] [ref=e28]
+        - paragraph [ref=e29]: Discover our delicious selection of coffee, drinks, and treats
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - generic [ref=e33]:
+            - textbox "Search products..." [ref=e34]: cappuccino
+            - generic [ref=e36]: 
+          - combobox [ref=e38]:
+            - option "Sort by Name" [selected]
+            - 'option "Price: Low to High"'
+            - 'option "Price: High to Low"'
+            - option "Sort by Rating"
+          - text: 
+        - generic [ref=e40]:
+          - button "All Categories" [ref=e41]
+          - button "Coffee" [ref=e42]
+          - button "Non-Coffee" [ref=e43]
+          - button "Snacks" [ref=e44]
+          - button "Desserts" [ref=e45]
+      - paragraph [ref=e47]: Showing 1 product for "cappuccino"
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - button "Add to wishlist" [ref=e52]:
+              - img [ref=e53]
+            - button "Share" [ref=e55]:
+              - img [ref=e56]
+          - img "Cappuccino" [ref=e62]
+          - generic [ref=e63]: Featured
+        - generic [ref=e64]:
+          - link "Cappuccino" [ref=e67] [cursor=pointer]:
+            - /url: /product/2
+            - heading "Cappuccino" [level=3] [ref=e68]
+          - generic [ref=e70]:
+            - generic [ref=e71]:
+              - text: size
+              - generic [ref=e72]:
+                - button "Regular" [ref=e73]
+                - button "Large" [ref=e74]
+            - generic [ref=e75]:
+              - text: temperature
+              - generic [ref=e76]:
+                - button "Hot" [ref=e77]
+                - button "Iced" [ref=e78]
+          - generic [ref=e79]:
+            - generic [ref=e82]: Rp 35,000
+            - button "Add to Cart" [active] [ref=e83]
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e89] [cursor=pointer]:
+    - img [ref=e90]
+  - alert [ref=e93]
+```

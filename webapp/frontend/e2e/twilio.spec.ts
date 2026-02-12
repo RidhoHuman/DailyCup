@@ -35,8 +35,13 @@ test('Twilio admin page shows settings and logs and can export CSV', async ({ pa
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, message: 'Test alert triggered' }) });
   });
 
+  // Ensure admin auth so integrations page shows
+  await page.addInitScript(() => {
+    try { const adminUser = { id:'1', name:'Admin', email:'admin@example.com', role:'admin', loyaltyPoints:0, joinDate:new Date().toISOString() }; localStorage.setItem('dailycup-auth', JSON.stringify({ user: adminUser, token: 'ci-admin-token', isAuthenticated: true })); } catch(e){}
+  });
+
   await page.goto('/admin/integrations/twilio');
-  await page.waitForSelector('text=Twilio (WhatsApp) Integration');
+  await page.waitForSelector('text=Twilio (WhatsApp) Integration', { timeout: 5000 });
   await expect(page.getByPlaceholder('Account SID')).toHaveValue('AC123');
 
   // Send a test message
