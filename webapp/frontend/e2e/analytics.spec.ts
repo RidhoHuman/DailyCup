@@ -16,7 +16,7 @@ test('Analytics page shows integration KPIs', async ({ page }) => {
   });
 
   await page.goto('/admin/analytics');
-  // wait for integration card to appear
-  await expect(page.locator('text=Twilio')).toBeVisible({ timeout: 5000 });
+  // wait for integration card to appear (case-insensitive)
+  await expect(page.locator('text=/twilio/i')).toBeVisible({ timeout: 5000 });
   await expect(page.locator('text=Sent (24h):')).toHaveText(/Sent \(24h\):/, { timeout: 5000 });
 });
