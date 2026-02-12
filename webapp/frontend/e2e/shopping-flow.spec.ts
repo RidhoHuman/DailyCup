@@ -33,13 +33,13 @@ test.describe('Complete Shopping Journey', () => {
     await expect(addToCartBtn).toBeVisible({ timeout: 10000 });
     await addToCartBtn.click();
     
-    // 6. Verify cart badge updates (header uses icon + badge span)
-    const cartBadge = page.locator('button:has(i.bi-cart) span');
+    // 6. Verify cart badge updates (use stable data-testid)
+    const cartBadge = page.locator('[data-testid="cart-badge"]');
     await expect(cartBadge).toBeVisible({ timeout: 10000 });
     await expect(cartBadge).toHaveText('1', { timeout: 5000 });
     
     // 7. Open cart (click the cart icon button)
-    await page.locator('button:has(i.bi-cart)').click();
+    await page.click('[data-testid="cart-button"]');
     
     // 8. Verify cart contains product
     await expect(page.locator('text=Cappuccino')).toBeVisible();

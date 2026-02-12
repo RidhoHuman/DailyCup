@@ -93,10 +93,11 @@ export default function Header() {
                 onClick={() => setShowCart(!showCart)}
                 className="relative p-2 text-gray-700 hover:text-[#a97456] dark:text-gray-300 dark:hover:text-[#a97456]"
                 suppressHydrationWarning={true}
+                data-testid="cart-button"
               >
                 <i className="bi bi-cart text-xl"></i>
                 {mounted && state.itemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#a97456] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  <span data-testid="cart-badge" className="absolute -top-1 -right-1 bg-[#a97456] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                     {state.itemCount}
                   </span>
                 )}
