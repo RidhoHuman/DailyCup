@@ -14,13 +14,35 @@ test('Analytics page shows integration KPIs', async ({ page }) => {
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, providers: ['twilio'], provider: 'twilio', from: '2026-01-01', to: '2026-01-14', series: [{ provider: 'twilio', day: '2026-01-01', channel: 'whatsapp', total_messages: 2, delivered_count: 1, failed_count: 0 }], totals: [{ provider: 'twilio', total_sent: 2, total_delivered: 1, total_failed: 0 }] }) });
   });
 
+  // Mock main analytics payload (page fetches /api/analytics.php via Next.js rewrites)
+  await page.route('**/api/analytics.php**', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        period: '30days',
+        date_range: { start: '2026-01-01', end: '2026-01-30' },
+        trends: { daily_revenue: [{ date: '2026-01-01', orders: 1, revenue: 10000 }], peak_hours: [{ hour: 9, orders: 1, revenue: 10000 }] },
+        products: { top_selling: [], category_performance: [] },
+        customers: { total: 10, new: 2, top_customers: [] },
+        payment_methods: [],
+        reviews: { avg_rating: 4.5, total: 5 },
+        revenue: { total: 100000, avg_order_value: 20000, highest_order: 50000, growth_percentage: 5 }
+      })
+    });
+  });
+
   // Ensure page has an auth token (analytics requires auth)
   await page.addInitScript(() => {
     try { localStorage.setItem('dailycup-auth', JSON.stringify({ state: { token: 'ci-admin-token' } })); } catch (e) { /* ignore */ }
   });
 
   await page.goto('/admin/analytics');
+  // wait for analytics API to return (handle rewrites and rewrites-to-/api)
+  await page.waitForResponse(resp => /analytics\.php/.test(resp.url()) && resp.status() === 200, { timeout: 15000 });
+
   // wait for integration card to appear (case-insensitive)
-  await expect(page.locator('text=/twilio/i')).toBeVisible({ timeout: 5000 });
+  await expect(page.locator('text=/twilio/i')).toBeVisible({ timeout: 10000 });
   await expect(page.locator('text=Sent (24h):')).toHaveText(/Sent \(24h\):/, { timeout: 5000 });
 });
