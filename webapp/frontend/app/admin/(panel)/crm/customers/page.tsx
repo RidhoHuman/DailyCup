@@ -4,20 +4,21 @@ import { useEffect, useState } from 'react';
 import { api, endpoints } from '@/lib/api-client';
 
 export default function CustomersPage() {
-  const [customers, setCustomers] = useState<any[]>([]);
+  interface OrderSummary { id: number; order_number: string; total: number; status: string; created_at: string; }
+  interface Customer { id: number; name: string; phone?: string; email?: string; total_spend?: number; orders_count?: number; last_order_at?: string; joined_at?: string; orders?: OrderSummary[]; }
+
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(50);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState('');
   const [segment, setSegment] = useState('');
   const [loading, setLoading] = useState(false);
-  const [selected, setSelected] = useState<any|null>(null);
+  const [selected, setSelected] = useState<Customer|null>(null);
   const [broadcastOpen, setBroadcastOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [template, setTemplate] = useState('gajian');
   const [sending, setSending] = useState(false);
-
-  useEffect(()=>{ fetchCustomers(); }, [page, limit, search, segment]);
 
   const fetchCustomers = async () => {
     setLoading(true);
@@ -26,36 +27,39 @@ export default function CustomersPage() {
       q.set('page', String(page)); q.set('limit', String(limit));
       if (search) q.set('search', search);
       if (segment) q.set('segment', segment);
-      const res: any = await api.get(endpoints.admin.customers() + '&' + q.toString());
+      const res = await api.get<{ success: boolean; customers?: Customer[]; total?: number }>(endpoints.admin.customers() + '&' + q.toString());
       if (res.success) { setCustomers(res.customers || []); setTotal(res.total || 0); }
-    } catch (e) { console.error(e); }
+    } catch (e: unknown) { console.error(e); }
     setLoading(false);
   };
 
+  useEffect(()=>{ fetchCustomers(); }, [page, limit, search, segment]);
+
   const openDetail = async (id:number) => {
     try {
-      const res: any = await api.get(endpoints.admin.customer(id));
-      if (res.success) setSelected(res.customer);
-    } catch (e) { console.error(e); }
+      const res = await api.get<{ success: boolean; customer?: Customer }>(endpoints.admin.customer(id));
+      if (res.success) setSelected(res.customer || null);
+    } catch (e: unknown) { console.error(e); }
   };
 
   const toggleSelect = (id:number) => {
     setSelectedIds(prev => prev.includes(id) ? prev.filter(x=>x!==id) : [...prev,id]);
   };
 
+  type BroadcastPayload = { template: string; user_ids?: number[]; segment?: string };
   const sendBroadcast = async () => {
     if (!confirm('Send broadcast?')) return;
     setSending(true);
     try {
-      const payload:any = { template };
+      const payload: BroadcastPayload = { template };
       if (selectedIds.length) payload.user_ids = selectedIds;
       else if (segment) payload.segment = segment;
       else { alert('Select users or segment'); setSending(false); return; }
 
-      const res:any = await api.post(endpoints.admin.broadcast(), payload);
-      if (res.success) { alert('Sent: ' + res.sent + ', failed: ' + res.failed); setBroadcastOpen(false); setSelectedIds([]); fetchCustomers(); }
+      const res = await api.post<{ success: boolean; sent?: number; failed?: number }>(endpoints.admin.broadcast(), payload);
+      if (res.success) { alert('Sent: ' + (res.sent ?? 0) + ', failed: ' + (res.failed ?? 0)); setBroadcastOpen(false); setSelectedIds([]); fetchCustomers(); }
       else alert('Broadcast failed');
-    } catch (e:any) { alert('Failed: ' + e.message); }
+    } catch (e: unknown) { const msg = e instanceof Error ? e.message : String(e); alert('Failed: ' + msg); }
     setSending(false);
   };
 
@@ -123,7 +127,7 @@ export default function CustomersPage() {
               <div>
                 <h5 className="font-semibold">Recent Orders</h5>
                 <ul>
-                  {selected.orders && selected.orders.length ? selected.orders.map((o:any)=>(<li key={o.id} className="text-sm">{o.order_number} — Rp {Number(o.total).toLocaleString()} — {o.status} — {o.created_at}</li>)) : <li className="text-sm">No orders</li>}
+                  {selected.orders && selected.orders.length ? selected.orders.map((o: OrderSummary) => (<li key={o.id} className="text-sm">{o.order_number} — Rp {Number(o.total).toLocaleString()} — {o.status} — {o.created_at}</li>)) : <li className="text-sm">No orders</li>}
                 </ul>
               </div>
             </div>

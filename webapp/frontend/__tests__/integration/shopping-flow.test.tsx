@@ -7,6 +7,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import { CartProvider } from '@/contexts/CartContext'
+import apiClient from '@/lib/api-client'
 
 // Mock router
 const mockPush = jest.fn()
@@ -132,8 +133,8 @@ describe('Shopping Flow Integration Tests', () => {
 
   describe('Error Handling', () => {
     it('shows error when API fails', async () => {
-      const apiClient = require('@/lib/api-client').default
-      apiClient.post.mockRejectedValueOnce(new Error('Network error'))
+      // apiClient imported above
+      (apiClient.post as jest.Mock).mockRejectedValueOnce(new Error('Network error'))
 
       // Trigger API call
       // Should show error message
