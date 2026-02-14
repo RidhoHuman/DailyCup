@@ -123,6 +123,8 @@ Gunakan kredensial berikut untuk login sebagai Super Admin:
 
 ## 📁 Struktur Folder
 
+> Catatan: frontend (Next.js) yang aktif dan digunakan untuk build/deploy berada di `webapp/frontend`. Folder `frontend` di root telah dihapus/diarsipkan untuk menghindari kebingungan.
+
 ```
 dailycup/
 ├── config/              # Konfigurasi database & OAuth
