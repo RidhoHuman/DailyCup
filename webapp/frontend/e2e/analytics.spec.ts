@@ -21,6 +21,9 @@ test('Analytics page shows integration KPIs', async ({ page }) => {
   // Summary endpoint (only handle action=summary) — leave provider requests to the dedicated mock
   await page.route('**/admin/analytics.php**', async route => {
     const url = route.request().url();
+    const auth = (route.request().headers()['authorization'] || '').toLowerCase();
+    // ensure client sent Authorization (ci-admin-token injected by addInitScript)
+    expect(auth).toContain('ci-admin-token');
     if (url.includes('action=summary')) {
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, summary: [{ provider: 'twilio', sent_last_24h: 5, failed_last_24h: 1, retry_scheduled_total: 2, avg_retry_count: 0.5 }], trend: [] }) });
       return;
@@ -29,6 +32,8 @@ test('Analytics page shows integration KPIs', async ({ page }) => {
   });
   await page.route('**/api/admin/analytics.php**', async route => {
     const url = route.request().url();
+    const auth = (route.request().headers()['authorization'] || '').toLowerCase();
+    expect(auth).toContain('ci-admin-token');
     if (url.includes('action=summary')) {
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, summary: [{ provider: 'twilio', sent_last_24h: 5, failed_last_24h: 1, retry_scheduled_total: 2, avg_retry_count: 0.5 }], trend: [] }) });
       return;

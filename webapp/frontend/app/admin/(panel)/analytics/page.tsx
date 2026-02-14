@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import api, { endpoints } from '@/lib/api-client';
 
 // 1. Kita definisikan Interface agar tidak perlu pakai 'any'
 interface AnalyticsData {
@@ -56,23 +57,8 @@ export default function AdminAnalyticsPage() {
       setLoading(true);
       setError(null);
       try {
-        const headers: Record<string, string> = {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
-        };
-
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
-        const res = await fetch(`${apiUrl}/admin/analytics.php?period=${period}`, {
-          headers,
-        });
-
-        const contentType = res.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new Error("Server response was not JSON");
-        }
-
-        // Kita casting result ke tipe ApiResponse agar aman
-        const data = (await res.json()) as ApiResponse;
+        // Use centralized API client so Authorization and ngrok header are added automatically
+        const data = await api.get<ApiResponse>(`${endpoints.admin.analytics()}&period=${period}`);
 
         if (isMounted) {
             if (data.success) {
