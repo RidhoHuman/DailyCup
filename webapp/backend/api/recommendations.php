@@ -8,9 +8,7 @@ ini_set('error_log', __DIR__ . '/../../logs/recommendations_error.log');
 ob_start();
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+// CORS handled centrally (cors.php / .htaccess)
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);

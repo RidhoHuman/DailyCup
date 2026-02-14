@@ -6,10 +6,17 @@
 
 // Global error handler: always return JSON on error, with CORS
 function analytics_send_cors_headers() {
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Methods: GET,POST,OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, Origin, Cache-Control, Pragma, ngrok-skip-browser-warning');
-    header('Access-Control-Allow-Credentials: true');
+    // CORS handled centrally (cors.php / .htaccess) — avoid duplicate Access-Control-Allow-Origin
+    $apacheCors = getenv('CORS_ORIGIN') ?: ($_SERVER['CORS_ORIGIN'] ?? $_SERVER['REDIRECT_CORS_ORIGIN'] ?? '');
+    if (empty($apacheCors)) {
+        if (isset($_SERVER['HTTP_ORIGIN'])) {
+            header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+            header('Access-Control-Allow-Credentials: true');
+            header('Access-Control-Max-Age: 86400');
+        }
+        header('Access-Control-Allow-Methods: GET,POST,OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, Origin, Cache-Control, Pragma, ngrok-skip-browser-warning');
+    }
 }
 set_exception_handler(function($e){
     analytics_send_cors_headers();

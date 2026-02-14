@@ -1,5 +1,5 @@
 <?php
 // Super minimal test - just one header
 header('X-Test-Custom: working');
-header('Access-Control-Allow-Origin: *');
+// CORS handled centrally (cors.php / .htaccess)
 echo 'ok';
