@@ -84,6 +84,15 @@ async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> 
     ...options?.headers,
   };
 
+  // If using ngrok-hosted backend, include ngrok bypass header so browser requests from Vercel won't be blocked
+  try {
+    if (typeof window !== 'undefined' && (API_BASE.includes('ngrok-free.app') || API_BASE.includes('ngrok-free.dev') || API_BASE.includes('.ngrok.io'))) {
+      (headers as Record<string, string>)["ngrok-skip-browser-warning"] = "69420";
+    }
+  } catch (e) {
+    /* noop */
+  }
+
   const response = await fetch(`${API_BASE}${endpoint}`, {
     ...options,
     headers,

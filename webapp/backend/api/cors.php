@@ -7,10 +7,12 @@
  */
 
 // .htaccess already sets all CORS headers
-// DO NOT set headers here to avoid conflicts!
+// Keep this file lightweight but ensure OPTIONS preflight accepts the ngrok bypass header
 
-// Handle OPTIONS - exit immediately
+// Handle OPTIONS - respond with necessary preflight headers
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    // Allow common headers + ngrok header so browser requests to ngrok do not fail
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, Origin, Cache-Control, Pragma, ngrok-skip-browser-warning');
     http_response_code(204);
     exit();
 }

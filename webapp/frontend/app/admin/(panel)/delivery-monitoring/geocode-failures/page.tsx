@@ -44,7 +44,12 @@ export default function GeocodeFailuresPage() {
   const fetchJobs = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/geocode/failed_jobs.php`);
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if ((process.env.NEXT_PUBLIC_API_URL || '').includes('ngrok-free.app') || (process.env.NEXT_PUBLIC_API_URL || '').includes('ngrok-free.dev') || (process.env.NEXT_PUBLIC_API_URL || '').includes('.ngrok.io')) {
+        headers['ngrok-skip-browser-warning'] = '69420';
+      }
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/geocode/failed_jobs.php`, { headers });
       const data = await res.json();
       if (data.success) {
         setJobs(data.data);
@@ -65,9 +70,14 @@ export default function GeocodeFailuresPage() {
   const handleSaveFix = async () => {
     if (!selectedJob) return;
     try {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if ((process.env.NEXT_PUBLIC_API_URL || '').includes('ngrok-free.app') || (process.env.NEXT_PUBLIC_API_URL || '').includes('ngrok-free.dev') || (process.env.NEXT_PUBLIC_API_URL || '').includes('.ngrok.io')) {
+        headers['ngrok-skip-browser-warning'] = '69420';
+      }
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/geocode/manual_update.php`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           order_id: selectedJob.order_id,
           lat: manualCoords.lat,
