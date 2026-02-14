@@ -1,0 +1,47 @@
+[
+    {
+        "id": "log_698f06a202af18.94880319",
+        "timestamp": "2026-02-13 11:10:26.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "updated_at": "2026-02-13 11:10:26"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698f0879222f99.11957474",
+        "timestamp": "2026-02-13 11:18:17.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH",
+        "level": "info",
+        "user_id": null,
+        "ip": "127.0.0.1",
+        "user_agent": "unknown",
+        "request_method": "unknown",
+        "request_uri": "unknown",
+        "data": {
+            "updated_at": "2026-02-13 11:18:17"
+        },
+        "country": null
+    },
+    {
+        "id": "log_698f0ab72206a8.49873902",
+        "timestamp": "2026-02-13 11:27:51.000000",
+        "action": "ANALYTICS_MATERIALIZED_REFRESH",
+        "level": "info",
+        "user_id": null,
+        "ip": "::1",
+        "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/144.0.0.0 Safari\/537.36",
+        "request_method": "POST",
+        "request_uri": "\/DailyCup\/webapp\/backend\/api\/admin\/analytics.php?action=refresh_materialized",
+        "data": {
+            "updated_at": "2026-02-13 11:27:51"
+        },
+        "country": null
+    }
+]

@@ -89,6 +89,7 @@ LEFT JOIN orders o ON u.id = o.user_id AND o.payment_status = 'paid'
 WHERE u.role = 'customer'
 GROUP BY u.id, u.name, u.email, u.phone, u.loyalty_points, u.created_at;
 
--- Index for faster queries
--- Note: If index already exists, this will show an error which can be safely ignored
-CREATE INDEX idx_orders_user_payment ON orders(user_id, payment_status, created_at);
+-- Index for faster queries (create only if missing)
+SET @idx = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'orders' AND index_name = 'idx_orders_user_payment');
+SET @s = IF(@idx = 0, 'CREATE INDEX idx_orders_user_payment ON orders(user_id, payment_status, created_at)', 'SELECT 1');
+PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;

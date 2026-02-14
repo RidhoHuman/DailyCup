@@ -16,8 +16,13 @@ CREATE TABLE IF NOT EXISTS push_subscriptions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Index for faster lookups (endpoint dengan key length karena TEXT)
-CREATE INDEX idx_user_active ON push_subscriptions(user_id, is_active);
-CREATE INDEX idx_endpoint ON push_subscriptions(endpoint(255));
+SET @idx = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'push_subscriptions' AND index_name = 'idx_user_active');
+SET @s = IF(@idx = 0, 'CREATE INDEX idx_user_active ON push_subscriptions(user_id, is_active)', 'SELECT 1');
+PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @idx = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'push_subscriptions' AND index_name = 'idx_endpoint');
+SET @s = IF(@idx = 0, 'CREATE INDEX idx_endpoint ON push_subscriptions(endpoint(255))', 'SELECT 1');
+PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- Notification Preferences Table
 CREATE TABLE IF NOT EXISTS notification_preferences (

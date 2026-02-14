@@ -59,7 +59,7 @@ export default function OrderTrackingPage() {
           {
             id: 1,
             name: 'Caramel Macchiato',
-            image: 'prod_695df2ce5f252.jfif',
+            image: 'product_699045a386d37_1771062691.jfif',
             variant: 'Large, Hot',
             price: 45000,
             quantity: 2
@@ -67,7 +67,7 @@ export default function OrderTrackingPage() {
           {
             id: 2,
             name: 'Croissant Butter',
-            image: 'prod_695df2e14a90a.jfif',
+            image: 'product_699045c91881b_1771062729.png',
             variant: 'Standard',
             price: 25000,
             quantity: 1

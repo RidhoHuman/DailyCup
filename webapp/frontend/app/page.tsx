@@ -35,7 +35,7 @@ export default function Home() {
       salePrice: 145000,
       stock: 50,
       sold: 42,
-      image: "/products/prod_6957b9f6639d3.jfif"
+      image: "/uploads/products/product_699045961508a_1771062678.jfif"
     },
     {
       id: "fs-2", 
@@ -44,7 +44,7 @@ export default function Home() {
       salePrice: 125000,
       stock: 30,
       sold: 8,
-      image: "/products/prod_695df2ce5f252.jfif"
+      image: "/uploads/products/product_699045a386d37_1771062691.jfif"
     },
      {
       id: "fs-3", 
@@ -53,7 +53,7 @@ export default function Home() {
       salePrice: 75000,
       stock: 100,
       sold: 88,
-      image: "/products/prod_695df2e14a90a.jfif"
+      image: "/uploads/products/product_699045c91881b_1771062729.png"
     }
   ];
 

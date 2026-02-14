@@ -15,9 +15,14 @@ CREATE TABLE IF NOT EXISTS push_subscriptions (
     UNIQUE KEY unique_subscription (user_id, endpoint)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Index for faster lookups
-CREATE INDEX idx_user_active ON push_subscriptions(user_id, is_active);
-CREATE INDEX idx_endpoint ON push_subscriptions(endpoint);
+-- Index for faster lookups (create only if missing)
+SET @idx = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'push_subscriptions' AND index_name = 'idx_user_active');
+SET @s = IF(@idx = 0, 'CREATE INDEX idx_user_active ON push_subscriptions(user_id, is_active)', 'SELECT 1');
+PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @idx = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'push_subscriptions' AND index_name = 'idx_endpoint');
+SET @s = IF(@idx = 0, 'CREATE INDEX idx_endpoint ON push_subscriptions(endpoint(191))', 'SELECT 1');
+PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- Notification Preferences Table
 CREATE TABLE IF NOT EXISTS notification_preferences (

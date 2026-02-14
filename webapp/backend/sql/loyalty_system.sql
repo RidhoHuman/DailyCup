@@ -3,11 +3,23 @@
 
 -- Add loyalty_points field to users table
 -- Note: If columns already exist, you can ignore the error or run each ALTER separately
-ALTER TABLE `users` 
-ADD COLUMN `loyalty_points` INT DEFAULT 0 COMMENT 'Current loyalty points balance',
-ADD COLUMN `total_points_earned` INT DEFAULT 0 COMMENT 'Lifetime points earned',
-ADD COLUMN `total_points_redeemed` INT DEFAULT 0 COMMENT 'Lifetime points redeemed',
-ADD INDEX `idx_loyalty_points` (`loyalty_points`);
+-- Add loyalty-related columns to users if missing
+SET @cnt = (SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'users' AND column_name = 'loyalty_points');
+SET @s = IF(@cnt = 0, 'ALTER TABLE `users` ADD COLUMN `loyalty_points` INT DEFAULT 0 COMMENT ''Current loyalty points balance''', 'SELECT 1');
+PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @cnt = (SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'users' AND column_name = 'total_points_earned');
+SET @s = IF(@cnt = 0, 'ALTER TABLE `users` ADD COLUMN `total_points_earned` INT DEFAULT 0 COMMENT ''Lifetime points earned''', 'SELECT 1');
+PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @cnt = (SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'users' AND column_name = 'total_points_redeemed');
+SET @s = IF(@cnt = 0, 'ALTER TABLE `users` ADD COLUMN `total_points_redeemed` INT DEFAULT 0 COMMENT ''Lifetime points redeemed''', 'SELECT 1');
+PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- Add index if missing
+SET @idx = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'users' AND index_name = 'idx_loyalty_points');
+SET @s = IF(@idx = 0, 'ALTER TABLE `users` ADD INDEX `idx_loyalty_points` (`loyalty_points`)', 'SELECT 1');
+PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- Loyalty Points Transaction History
 CREATE TABLE IF NOT EXISTS `loyalty_transactions` (
@@ -31,10 +43,18 @@ CREATE TABLE IF NOT EXISTS `loyalty_transactions` (
 
 -- Add discount_from_points to orders table
 -- Note: If columns already exist, you can ignore the error or run each ALTER separately
-ALTER TABLE `orders`
-ADD COLUMN `points_used` INT DEFAULT 0 COMMENT 'Points redeemed for this order',
-ADD COLUMN `points_earned` INT DEFAULT 0 COMMENT 'Points earned from this order',
-ADD COLUMN `discount_from_points` DECIMAL(12,2) DEFAULT 0.00 COMMENT 'Discount amount from points redemption';
+-- Add points-related columns to orders only if missing
+SET @cnt = (SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'orders' AND column_name = 'points_used');
+SET @s = IF(@cnt = 0, 'ALTER TABLE `orders` ADD COLUMN `points_used` INT DEFAULT 0 COMMENT ''Points redeemed for this order''', 'SELECT 1');
+PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @cnt = (SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'orders' AND column_name = 'points_earned');
+SET @s = IF(@cnt = 0, 'ALTER TABLE `orders` ADD COLUMN `points_earned` INT DEFAULT 0 COMMENT ''Points earned from this order''', 'SELECT 1');
+PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @cnt = (SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'orders' AND column_name = 'discount_from_points');
+SET @s = IF(@cnt = 0, 'ALTER TABLE `orders` ADD COLUMN `discount_from_points` DECIMAL(12,2) DEFAULT 0.00 COMMENT ''Discount amount from points redemption''', 'SELECT 1');
+PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- Loyalty Point Rules (for configuration)
 CREATE TABLE IF NOT EXISTS `loyalty_rules` (
