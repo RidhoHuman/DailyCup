@@ -85,7 +85,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const fetchCurrentTheme = async () => {
     try {
-      const response = await fetch('http://localhost/DailyCup/webapp/backend/api/themes.php?action=current');
+      const response = await fetch('http://localhost/DailyCup/webapp/backend/api/themes.php?action=current', {
+        headers: { 'ngrok-skip-browser-warning': '69420' }
+      });
       const data = await response.json();
 
       if (data.success && data.theme) {

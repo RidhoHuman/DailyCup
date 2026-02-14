@@ -58,7 +58,9 @@ export default function ProductRecommendations({
         url += `&cart_items=${encodeURIComponent(JSON.stringify(cartItems))}`;
       }
 
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        headers: { 'ngrok-skip-browser-warning': '69420' }
+      });
       const data = await response.json();
 
       if (data.success) {
