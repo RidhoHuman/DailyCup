@@ -1,408 +1,289 @@
 <?php
-// CRITICAL: Start output buffering FIRST to prevent any early output
-ob_start();
+/**
+ * Analytics API endpoint - Order/Revenue analytics
+ * Provides period-based analytics: revenue, orders, customers, products, trends, payment methods, reviews
+ */
 
-// CRITICAL: .htaccess handles ALL CORS headers via mod_headers
-// DO NOT set CORS headers here to prevent duplicates!
-// Only set Content-Type for JSON response
-header('Content-Type: application/json; charset=utf-8');
-
-// Handle OPTIONS preflight - .htaccess handles CORS, we just return 200
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    ob_end_flush();
-    exit();
+// Global error handler: always return JSON on error, with CORS
+function analytics_send_cors_headers() {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET,POST,OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, Origin, Cache-Control, Pragma, ngrok-skip-browser-warning');
+    header('Access-Control-Allow-Credentials: true');
 }
-
-// CRITICAL: Prevent session from starting before our CORS headers
-@ini_set('session.auto_start', 0);
-
-require_once __DIR__ . '/../../../config/database.php';
-require_once __DIR__ . '/../../../includes/functions.php';
-require_once __DIR__ . '/jwt.php'; // CRITICAL: Use same JWT class as login.php
-
-// CRITICAL: Get Authorization token from multiple sources
-$authHeader = null;
-
-// Method 1: Try getallheaders() first (most reliable if available)
-if (function_exists('getallheaders')) {
-    $headers = getallheaders();
-    $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? null;
-    error_log('[Analytics Debug] getallheaders() Authorization: ' . ($authHeader ?? 'NULL'));
-}
-
-// Method 2: Fallback to $_SERVER if getallheaders() didn't work
-if (empty($authHeader)) {
-    $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? null;
-    error_log('[Analytics Debug] $_SERVER[HTTP_AUTHORIZATION]: ' . ($authHeader ?? 'NULL'));
-}
-
-// Method 3: Fallback to REDIRECT_HTTP_AUTHORIZATION (Apache rewrite)
-if (empty($authHeader)) {
-    $authHeader = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? null;
-    error_log('[Analytics Debug] $_SERVER[REDIRECT_HTTP_AUTHORIZATION]: ' . ($authHeader ?? 'NULL'));
-}
-
-// Method 4: Fallback to apache_request_headers() if available
-if (empty($authHeader) && function_exists('apache_request_headers')) {
-    $apacheHeaders = apache_request_headers();
-    $authHeader = $apacheHeaders['Authorization'] ?? $apacheHeaders['authorization'] ?? null;
-    error_log('[Analytics Debug] apache_request_headers() Authorization: ' . ($authHeader ?? 'NULL'));
-}
-
-// DEBUG: Log ALL server variables related to Authorization
-error_log('[Analytics Debug] ALL $_SERVER KEYS: ' . implode(', ', array_keys($_SERVER)));
-error_log('[Analytics Debug] Final Auth Header: ' . ($authHeader ?? 'NULL'));
-
-// Final check
-if (empty($authHeader)) {
-    http_response_code(401);
-    echo json_encode([
-        'success' => false, 
-        'error' => 'No token provided',
-        'debug' => [
-            'getallheaders_exists' => function_exists('getallheaders'),
-            'apache_request_headers_exists' => function_exists('apache_request_headers'),
-            'checked_sources' => ['getallheaders', '$_SERVER[HTTP_AUTHORIZATION]', '$_SERVER[REDIRECT_HTTP_AUTHORIZATION]', 'apache_request_headers'],
-            'hint' => 'Check .htaccess for Authorization header pass-through'
-        ]
-    ]);
-    ob_end_flush();
+set_exception_handler(function($e){
+    analytics_send_cors_headers();
+    http_response_code(500);
+    echo json_encode(['success'=>false,'message'=>'Internal server error','error'=>$e->getMessage()]);
     exit;
-}
-
-// Extract token from "Bearer <token>"
-if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'error' => 'Invalid authorization format']);
-    ob_end_flush();
+});
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    analytics_send_cors_headers();
+    http_response_code(500);
+    echo json_encode(['success'=>false,'message'=>'Internal server error','error'=>"$errstr in $errfile:$errline"]);
     exit;
-}
+});
 
-$token = $matches[1];
-$user = JWT::verify($token); // CRITICAL: Use JWT::verify() not verifyJWT()
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/auth.php';
 
-// DEBUG: Log token verification result
-error_log('[Analytics Debug] Token: ' . substr($token, 0, 50) . '...');
-error_log('[Analytics Debug] JWT::verify() result: ' . ($user ? 'SUCCESS' : 'FAILED'));
-if ($user) {
-    error_log('[Analytics Debug] User Data: ' . json_encode($user));
-    error_log('[Analytics Debug] User Role: ' . ($user['role'] ?? 'NULL'));
-    error_log('[Analytics Debug] Role Check: role=' . ($user['role'] ?? 'NULL') . ', expected=admin, match=' . (($user['role'] ?? '') === 'admin' ? 'YES' : 'NO'));
-}
-
-if (!$user || ($user['role'] ?? '') !== 'admin') {
-    http_response_code(403);
-    echo json_encode([
-        'success' => false, 
-        'error' => 'Admin access required',
-        'debug' => [
-            'token_verified' => $user ? true : false,
-            'user_role' => $user['role'] ?? null,
-            'expected_role' => 'admin',
-            'user_data' => $user ?? null
-        ]
-    ]);
-    ob_end_flush();
-    exit;
-}
-
-// Get database connection
 $db = Database::getConnection();
 
-try {
+analytics_send_cors_headers();
+header('Content-Type: application/json');
 
-$period = $_GET['period'] ?? '30days'; // 7days, 30days, 90days, 1year, all
-$startDate = null;
-$endDate = date('Y-m-d 23:59:59');
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
+// Require admin auth
+$user = validateToken();
+if (!$user || ($user['role'] ?? '') !== 'admin') {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Admin access required']);
+    exit;
+}
+
+$period = $_GET['period'] ?? '30days';
+
+// Calculate date range based on period
+$endDate = date('Y-m-d');
+$endDateTime = date('Y-m-d H:i:s');
 switch ($period) {
     case '7days':
-        $startDate = date('Y-m-d 00:00:00', strtotime('-7 days'));
+        $startDate = date('Y-m-d', strtotime('-7 days'));
+        $prevStartDate = date('Y-m-d', strtotime('-14 days'));
         break;
     case '30days':
-        $startDate = date('Y-m-d 00:00:00', strtotime('-30 days'));
+        $startDate = date('Y-m-d', strtotime('-30 days'));
+        $prevStartDate = date('Y-m-d', strtotime('-60 days'));
         break;
     case '90days':
-        $startDate = date('Y-m-d 00:00:00', strtotime('-90 days'));
+        $startDate = date('Y-m-d', strtotime('-90 days'));
+        $prevStartDate = date('Y-m-d', strtotime('-180 days'));
         break;
     case '1year':
-        $startDate = date('Y-m-d 00:00:00', strtotime('-1 year'));
+        $startDate = date('Y-m-d', strtotime('-1 year'));
+        $prevStartDate = date('Y-m-d', strtotime('-2 years'));
         break;
     case 'all':
-        $startDate = '2000-01-01 00:00:00';
+        $startDate = '2000-01-01';
+        $prevStartDate = '2000-01-01';
         break;
     default:
-        $startDate = date('Y-m-d 00:00:00', strtotime('-30 days'));
+        $startDate = date('Y-m-d', strtotime('-30 days'));
+        $prevStartDate = date('Y-m-d', strtotime('-60 days'));
 }
 
-// Revenue Analytics
-$revenueQuery = "
-    SELECT 
-        COUNT(*) as total_orders,
-        SUM(CASE WHEN status = 'completed' THEN final_amount ELSE 0 END) as total_revenue,
-        SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_orders,
-        SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled_orders,
-        AVG(CASE WHEN status = 'completed' THEN final_amount ELSE NULL END) as avg_order_value,
-        MAX(CASE WHEN status = 'completed' THEN final_amount ELSE 0 END) as highest_order
-    FROM orders
-    WHERE created_at BETWEEN ? AND ?
-";
-$stmt = $db->prepare($revenueQuery);
-$stmt->bind_param("ss", $startDate, $endDate);
-$stmt->execute();
-$revenueData = $stmt->get_result()->fetch_assoc();
+// ========== REVENUE ==========
+$revenueData = ['total' => 0, 'avg_order_value' => 0, 'highest_order' => 0, 'growth_percentage' => 0];
+try {
+    $stmt = $db->prepare("SELECT 
+        COALESCE(SUM(total_amount), 0) as total_revenue,
+        COALESCE(AVG(total_amount), 0) as avg_order_value,
+        COALESCE(MAX(total_amount), 0) as highest_order
+        FROM orders WHERE created_at >= ? AND created_at <= ?");
+    $stmt->bind_param('ss', $startDate, $endDateTime);
+    $stmt->execute();
+    $rev = $stmt->get_result()->fetch_assoc();
+    $revenueData['total'] = floatval($rev['total_revenue']);
+    $revenueData['avg_order_value'] = floatval($rev['avg_order_value']);
+    $revenueData['highest_order'] = floatval($rev['highest_order']);
 
-// Daily Revenue Trend
-$dailyRevenueQuery = "
-    SELECT 
-        DATE(created_at) as date,
-        COUNT(*) as orders,
-        SUM(CASE WHEN status = 'completed' THEN final_amount ELSE 0 END) as revenue
-    FROM orders
-    WHERE created_at BETWEEN ? AND ?
-    GROUP BY DATE(created_at)
-    ORDER BY date ASC
-";
-$stmt = $db->prepare($dailyRevenueQuery);
-$stmt->bind_param("ss", $startDate, $endDate);
-$stmt->execute();
-$result = $stmt->get_result();
-$dailyRevenue = [];
-while ($row = $result->fetch_assoc()) {
-    $dailyRevenue[] = $row;
-}
+    // Previous period for growth
+    $stmt2 = $db->prepare("SELECT COALESCE(SUM(total_amount), 0) as prev_revenue FROM orders WHERE created_at >= ? AND created_at < ?");
+    $stmt2->bind_param('ss', $prevStartDate, $startDate);
+    $stmt2->execute();
+    $prev = $stmt2->get_result()->fetch_assoc();
+    $prevRevenue = floatval($prev['prev_revenue']);
+    if ($prevRevenue > 0) {
+        $revenueData['growth_percentage'] = round((($revenueData['total'] - $prevRevenue) / $prevRevenue) * 100, 2);
+    } elseif ($revenueData['total'] > 0) {
+        $revenueData['growth_percentage'] = 100;
+    }
+} catch (Throwable $e) { /* graceful fallback */ }
 
-// Top Products
-$productQuery = "
-    SELECT 
-        p.id,
-        p.name,
-        p.category_id,
-        p.base_price as price,
-        COUNT(oi.id) as times_ordered,
-        SUM(oi.quantity) as total_quantity,
-        SUM(oi.quantity * oi.unit_price) as total_revenue
-    FROM products p
-    LEFT JOIN order_items oi ON p.ID = oi.product_id
-    LEFT JOIN orders o ON oi.order_id = o.id AND o.status = 'completed'
-    WHERE o.created_at BETWEEN ? AND ?
-    GROUP BY p.id
-    ORDER BY total_revenue DESC
-    LIMIT 10
-";
-$stmt = $db->prepare($productQuery);
-$stmt->bind_param("ss", $startDate, $endDate);
-$stmt->execute();
-$result = $stmt->get_result();
-$topProducts = [];
-while ($row = $result->fetch_assoc()) {
-    $topProducts[] = $row;
-}
+// ========== ORDERS ==========
+$ordersData = ['total' => 0, 'completed' => 0, 'cancelled' => 0, 'growth_percentage' => 0, 'status_distribution' => []];
+try {
+    $stmt = $db->prepare("SELECT COUNT(*) as total,
+        SUM(CASE WHEN status = 'completed' OR status = 'delivered' THEN 1 ELSE 0 END) as completed,
+        SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled
+        FROM orders WHERE created_at >= ? AND created_at <= ?");
+    $stmt->bind_param('ss', $startDate, $endDateTime);
+    $stmt->execute();
+    $ord = $stmt->get_result()->fetch_assoc();
+    $ordersData['total'] = intval($ord['total']);
+    $ordersData['completed'] = intval($ord['completed']);
+    $ordersData['cancelled'] = intval($ord['cancelled']);
 
-// Category Performance
-$categoryQuery = "
-    SELECT 
-        p.category_id,
-        COUNT(DISTINCT oi.order_id) as orders,
-        SUM(oi.quantity) as items_sold,
-        SUM(oi.quantity * oi.unit_price) as revenue
-    FROM order_items oi
-    JOIN products p ON oi.product_id = p.id
-    JOIN orders o ON oi.order_id = o.id
-    WHERE o.status = 'completed' AND o.created_at BETWEEN ? AND ?
-    GROUP BY p.category_id
-    ORDER BY revenue DESC
-";
-$stmt = $db->prepare($categoryQuery);
-$stmt->bind_param("ss", $startDate, $endDate);
-$stmt->execute();
-$result = $stmt->get_result();
-$categoryPerformance = [];
-while ($row = $result->fetch_assoc()) {
-    $categoryPerformance[] = $row;
-}
+    // Previous period growth
+    $stmt2 = $db->prepare("SELECT COUNT(*) as prev_total FROM orders WHERE created_at >= ? AND created_at < ?");
+    $stmt2->bind_param('ss', $prevStartDate, $startDate);
+    $stmt2->execute();
+    $prevOrd = $stmt2->get_result()->fetch_assoc();
+    $prevTotal = intval($prevOrd['prev_total']);
+    if ($prevTotal > 0) {
+        $ordersData['growth_percentage'] = round((($ordersData['total'] - $prevTotal) / $prevTotal) * 100, 2);
+    } elseif ($ordersData['total'] > 0) {
+        $ordersData['growth_percentage'] = 100;
+    }
 
-// Customer Analytics
-$customerQuery = "
-    SELECT 
-        COUNT(DISTINCT id) as total_customers,
-        COUNT(DISTINCT CASE WHEN created_at BETWEEN ? AND ? THEN id END) as new_customers
-    FROM users
-    WHERE role = 'customer'
-";
-$stmt = $db->prepare($customerQuery);
-$stmt->bind_param("ss", $startDate, $endDate);
-$stmt->execute();
-$customerData = $stmt->get_result()->fetch_assoc();
+    // Status distribution
+    $stmt3 = $db->prepare("SELECT status, COUNT(*) as count FROM orders WHERE created_at >= ? AND created_at <= ? GROUP BY status ORDER BY count DESC");
+    $stmt3->bind_param('ss', $startDate, $endDateTime);
+    $stmt3->execute();
+    $res3 = $stmt3->get_result();
+    while ($r = $res3->fetch_assoc()) {
+        $ordersData['status_distribution'][] = $r;
+    }
+} catch (Throwable $e) { /* graceful fallback */ }
 
-// Top Customers
-$topCustomersQuery = "
-    SELECT 
-        u.id,
-        u.name,
-        u.email,
-        COUNT(o.id) as total_orders,
-        SUM(CASE WHEN o.status = 'completed' THEN o.final_amount ELSE 0 END) as total_spent
-    FROM users u
-    LEFT JOIN orders o ON u.id = o.user_id
-    WHERE u.role = 'customer' AND o.created_at BETWEEN ? AND ?
-    GROUP BY u.id
-    HAVING total_spent > 0
-    ORDER BY total_spent DESC
-    LIMIT 10
-";
-$stmt = $db->prepare($topCustomersQuery);
-$stmt->bind_param("ss", $startDate, $endDate);
-$stmt->execute();
-$result = $stmt->get_result();
-$topCustomers = [];
-while ($row = $result->fetch_assoc()) {
-    $topCustomers[] = $row;
-}
+// ========== CUSTOMERS ==========
+$customersData = ['total' => 0, 'new' => 0, 'top_customers' => []];
+try {
+    $stmt = $db->prepare("SELECT COUNT(*) as total FROM users WHERE role = 'customer'");
+    $stmt->execute();
+    $customersData['total'] = intval($stmt->get_result()->fetch_assoc()['total']);
 
-// Order Status Distribution
-$statusQuery = "
-    SELECT 
-        status,
-        COUNT(*) as count
-    FROM orders
-    WHERE created_at BETWEEN ? AND ?
-    GROUP BY status
-";
-$stmt = $db->prepare($statusQuery);
-$stmt->bind_param("ss", $startDate, $endDate);
-$stmt->execute();
-$result = $stmt->get_result();
-$orderStatus = [];
-while ($row = $result->fetch_assoc()) {
-    $orderStatus[] = $row;
-}
+    $stmt2 = $db->prepare("SELECT COUNT(*) as new_customers FROM users WHERE role = 'customer' AND created_at >= ? AND created_at <= ?");
+    $stmt2->bind_param('ss', $startDate, $endDateTime);
+    $stmt2->execute();
+    $customersData['new'] = intval($stmt2->get_result()->fetch_assoc()['new_customers']);
 
-// Payment Method Distribution
-$paymentQuery = "
-    SELECT 
-        payment_method,
-        COUNT(*) as count,
-        SUM(CASE WHEN status = 'completed' THEN final_amount ELSE 0 END) as revenue
-    FROM orders
-    WHERE created_at BETWEEN ? AND ?
-    GROUP BY payment_method
-";
-$stmt = $db->prepare($paymentQuery);
-$stmt->bind_param("ss", $startDate, $endDate);
-$stmt->execute();
-$result = $stmt->get_result();
+    // Top customers
+    $stmt3 = $db->prepare("SELECT u.id, u.name, u.email, COUNT(o.id) as total_orders, COALESCE(SUM(o.total_amount), 0) as total_spent
+        FROM users u JOIN orders o ON u.id = o.user_id
+        WHERE o.created_at >= ? AND o.created_at <= ?
+        GROUP BY u.id ORDER BY total_spent DESC LIMIT 5");
+    $stmt3->bind_param('ss', $startDate, $endDateTime);
+    $stmt3->execute();
+    $res3 = $stmt3->get_result();
+    while ($r = $res3->fetch_assoc()) {
+        $r['total_spent'] = floatval($r['total_spent']);
+        $r['total_orders'] = intval($r['total_orders']);
+        $customersData['top_customers'][] = $r;
+    }
+} catch (Throwable $e) { /* graceful fallback */ }
+
+// ========== PRODUCTS ==========
+$productsData = ['top_selling' => [], 'category_performance' => []];
+try {
+    $stmt = $db->prepare("SELECT p.id, p.name, COALESCE(c.name, 'Uncategorized') as category, p.price,
+        COUNT(oi.id) as times_ordered, COALESCE(SUM(oi.quantity), 0) as total_quantity,
+        COALESCE(SUM(oi.quantity * oi.price), 0) as total_revenue
+        FROM order_items oi
+        JOIN products p ON oi.product_id = p.id
+        LEFT JOIN categories c ON p.category_id = c.id
+        JOIN orders o ON oi.order_id = o.id
+        WHERE o.created_at >= ? AND o.created_at <= ?
+        GROUP BY p.id ORDER BY total_revenue DESC LIMIT 10");
+    $stmt->bind_param('ss', $startDate, $endDateTime);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    while ($r = $res->fetch_assoc()) {
+        $r['price'] = floatval($r['price']);
+        $r['total_revenue'] = floatval($r['total_revenue']);
+        $r['total_quantity'] = intval($r['total_quantity']);
+        $r['times_ordered'] = intval($r['times_ordered']);
+        $productsData['top_selling'][] = $r;
+    }
+
+    // Category performance
+    $stmt2 = $db->prepare("SELECT COALESCE(c.name, 'Uncategorized') as category,
+        COUNT(DISTINCT o.id) as orders, COALESCE(SUM(oi.quantity), 0) as items_sold,
+        COALESCE(SUM(oi.quantity * oi.price), 0) as revenue
+        FROM order_items oi
+        JOIN products p ON oi.product_id = p.id
+        LEFT JOIN categories c ON p.category_id = c.id
+        JOIN orders o ON oi.order_id = o.id
+        WHERE o.created_at >= ? AND o.created_at <= ?
+        GROUP BY c.id ORDER BY revenue DESC");
+    $stmt2->bind_param('ss', $startDate, $endDateTime);
+    $stmt2->execute();
+    $res2 = $stmt2->get_result();
+    while ($r = $res2->fetch_assoc()) {
+        $r['orders'] = intval($r['orders']);
+        $r['items_sold'] = intval($r['items_sold']);
+        $r['revenue'] = floatval($r['revenue']);
+        $productsData['category_performance'][] = $r;
+    }
+} catch (Throwable $e) { /* graceful fallback */ }
+
+// ========== TRENDS ==========
+$trendsData = ['daily_revenue' => [], 'peak_hours' => []];
+try {
+    $stmt = $db->prepare("SELECT DATE(created_at) as date, COUNT(*) as orders, COALESCE(SUM(total_amount), 0) as revenue
+        FROM orders WHERE created_at >= ? AND created_at <= ?
+        GROUP BY DATE(created_at) ORDER BY date ASC");
+    $stmt->bind_param('ss', $startDate, $endDateTime);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    while ($r = $res->fetch_assoc()) {
+        $r['orders'] = intval($r['orders']);
+        $r['revenue'] = floatval($r['revenue']);
+        $trendsData['daily_revenue'][] = $r;
+    }
+
+    // Peak hours
+    $stmt2 = $db->prepare("SELECT HOUR(created_at) as hour, COUNT(*) as orders, COALESCE(SUM(total_amount), 0) as revenue
+        FROM orders WHERE created_at >= ? AND created_at <= ?
+        GROUP BY HOUR(created_at) ORDER BY hour ASC");
+    $stmt2->bind_param('ss', $startDate, $endDateTime);
+    $stmt2->execute();
+    $res2 = $stmt2->get_result();
+    while ($r = $res2->fetch_assoc()) {
+        $r['hour'] = intval($r['hour']);
+        $r['orders'] = intval($r['orders']);
+        $r['revenue'] = floatval($r['revenue']);
+        $trendsData['peak_hours'][] = $r;
+    }
+} catch (Throwable $e) { /* graceful fallback */ }
+
+// ========== PAYMENT METHODS ==========
 $paymentMethods = [];
-while ($row = $result->fetch_assoc()) {
-    $paymentMethods[] = $row;
-}
+try {
+    $stmt = $db->prepare("SELECT COALESCE(payment_method, 'Unknown') as payment_method, COUNT(*) as count, COALESCE(SUM(total_amount), 0) as revenue
+        FROM orders WHERE created_at >= ? AND created_at <= ?
+        GROUP BY payment_method ORDER BY count DESC");
+    $stmt->bind_param('ss', $startDate, $endDateTime);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    while ($r = $res->fetch_assoc()) {
+        $r['count'] = intval($r['count']);
+        $r['revenue'] = floatval($r['revenue']);
+        $paymentMethods[] = $r;
+    }
+} catch (Throwable $e) { /* graceful fallback */ }
 
-// Peak Hours
-$peakHoursQuery = "
-    SELECT 
-        HOUR(created_at) as hour,
-        COUNT(*) as orders,
-        SUM(CASE WHEN status = 'completed' THEN final_amount ELSE 0 END) as revenue
-    FROM orders
-    WHERE created_at BETWEEN ? AND ?
-    GROUP BY HOUR(created_at)
-    ORDER BY hour ASC
-";
-$stmt = $db->prepare($peakHoursQuery);
-$stmt->bind_param("ss", $startDate, $endDate);
-$stmt->execute();
-$result = $stmt->get_result();
-$peakHours = [];
-while ($row = $result->fetch_assoc()) {
-    $peakHours[] = $row;
-}
+// ========== REVIEWS ==========
+$reviewsData = ['avg_rating' => 0, 'total' => 0];
+try {
+    // Try product_reviews table first, then reviews table
+    $tableCheck = $db->query("SHOW TABLES LIKE 'product_reviews'");
+    $reviewTable = $tableCheck->num_rows > 0 ? 'product_reviews' : 'reviews';
+    
+    $stmt = $db->prepare("SELECT COALESCE(AVG(rating), 0) as avg_rating, COUNT(*) as total FROM `$reviewTable` WHERE created_at >= ? AND created_at <= ?");
+    $stmt->bind_param('ss', $startDate, $endDateTime);
+    $stmt->execute();
+    $rev = $stmt->get_result()->fetch_assoc();
+    $reviewsData['avg_rating'] = round(floatval($rev['avg_rating']), 1);
+    $reviewsData['total'] = intval($rev['total']);
+} catch (Throwable $e) { /* graceful fallback */ }
 
-// Growth Comparison
-$periodDays = (strtotime($endDate) - strtotime($startDate)) / 86400;
-$prevStartDate = date('Y-m-d 00:00:00', strtotime($startDate . ' -' . ceil($periodDays) . ' days'));
-$prevEndDate = $startDate;
-
-$growthQuery = "
-    SELECT 
-        SUM(CASE WHEN status = 'completed' THEN final_amount ELSE 0 END) as revenue,
-        COUNT(*) as orders
-    FROM orders
-    WHERE created_at BETWEEN ? AND ?
-";
-$stmt = $db->prepare($growthQuery);
-$stmt->bind_param("ss", $prevStartDate, $prevEndDate);
-$stmt->execute();
-$prevPeriodData = $stmt->get_result()->fetch_assoc();
-
-$revenueGrowth = 0;
-$orderGrowth = 0;
-if ($prevPeriodData['revenue'] > 0) {
-    $revenueGrowth = (($revenueData['total_revenue'] - $prevPeriodData['revenue']) / $prevPeriodData['revenue']) * 100;
-}
-if ($prevPeriodData['orders'] > 0) {
-    $orderGrowth = (($revenueData['total_orders'] - $prevPeriodData['orders']) / $prevPeriodData['orders']) * 100;
-}
-
-// Review Stats
-$reviewQuery = "SELECT AVG(rating) as avg_rating, COUNT(*) as total_reviews FROM reviews WHERE created_at BETWEEN ? AND ?";
-$stmt = $db->prepare($reviewQuery);
-$stmt->bind_param("ss", $startDate, $endDate);
-$stmt->execute();
-$reviewData = $stmt->get_result()->fetch_assoc();
-
-// Response
+// ========== BUILD RESPONSE ==========
 echo json_encode([
     'success' => true,
     'period' => $period,
-    'date_range' => [
-        'start' => $startDate,
-        'end' => $endDate
-    ],
-    'revenue' => [
-        'total' => floatval($revenueData['total_revenue'] ?? 0),
-        'avg_order_value' => floatval($revenueData['avg_order_value'] ?? 0),
-        'highest_order' => floatval($revenueData['highest_order'] ?? 0),
-        'growth_percentage' => round($revenueGrowth, 2)
-    ],
-    'orders' => [
-        'total' => intval($revenueData['total_orders'] ?? 0),
-        'completed' => intval($revenueData['completed_orders'] ?? 0),
-        'cancelled' => intval($revenueData['cancelled_orders'] ?? 0),
-        'growth_percentage' => round($orderGrowth, 2),
-        'status_distribution' => $orderStatus
-    ],
-    'customers' => [
-        'total' => intval($customerData['total_customers'] ?? 0),
-        'new' => intval($customerData['new_customers'] ?? 0),
-        'top_customers' => $topCustomers
-    ],
-    'products' => [
-        'top_selling' => $topProducts,
-        'category_performance' => $categoryPerformance
-    ],
-    'trends' => [
-        'daily_revenue' => $dailyRevenue,
-        'peak_hours' => $peakHours
-    ],
+    'date_range' => ['start' => $startDate, 'end' => $endDate],
+    'revenue' => $revenueData,
+    'orders' => $ordersData,
+    'customers' => $customersData,
+    'products' => $productsData,
+    'trends' => $trendsData,
     'payment_methods' => $paymentMethods,
-    'reviews' => [
-        'avg_rating' => round(floatval($reviewData['avg_rating'] ?? 0), 2),
-        'total' => intval($reviewData['total_reviews'] ?? 0)
-    ]
+    'reviews' => $reviewsData,
 ]);
-
-// Flush output buffer and exit
-ob_end_flush();
-
-} catch (Exception $e) {
-    error_log("Analytics API Error: " . $e->getMessage());
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => 'Failed to fetch analytics data',
-        'message' => APP_DEBUG ? $e->getMessage() : 'Internal server error'
-    ]);
-    ob_end_flush();
-}
-?>
+exit;

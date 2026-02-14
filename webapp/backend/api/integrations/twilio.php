@@ -1,13 +1,34 @@
 <?php
-require_once __DIR__ . '/../../includes/config.php';
-require_once __DIR__ . '/../../includes/db.php';
-require_once __DIR__ . '/../../includes/auth.php';
+// Global error handler: always return JSON on error, with CORS
+function twilio_send_cors_headers() {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS,PATCH');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, Origin, Cache-Control, Pragma, ngrok-skip-browser-warning, X-Twilio-Signature');
+    header('Access-Control-Allow-Credentials: true');
+}
+set_exception_handler(function($e){
+    twilio_send_cors_headers();
+    http_response_code(500);
+    echo json_encode(['success'=>false,'message'=>'Internal server error','error'=>$e->getMessage()]);
+    exit;
+});
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    twilio_send_cors_headers();
+    http_response_code(500);
+    echo json_encode(['success'=>false,'message'=>'Internal server error','error'=>"$errstr in $errfile:$errline"]);
+    exit;
+});
+
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../auth.php';
 require_once __DIR__ . '/../audit_log.php';
 
+// Get MySQLi connection (database.php provides PDO as $conn/$pdo, MySQLi via Database class)
+$db = Database::getConnection();
+
+twilio_send_cors_headers();
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Twilio-Signature');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);

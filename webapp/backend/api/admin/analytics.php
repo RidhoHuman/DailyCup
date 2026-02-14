@@ -1,9 +1,32 @@
 <?php
+// Global error handler: always return JSON on error, with CORS
+function send_cors_headers() {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS,PATCH');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, Origin, Cache-Control, Pragma, ngrok-skip-browser-warning');
+    header('Access-Control-Allow-Credentials: true');
+}
+set_exception_handler(function($e){
+    send_cors_headers();
+    http_response_code(500);
+    echo json_encode(['success'=>false,'message'=>'Internal server error','error'=>$e->getMessage()]);
+    exit;
+});
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    send_cors_headers();
+    http_response_code(500);
+    echo json_encode(['success'=>false,'message'=>'Internal server error','error'=>"$errstr in $errfile:$errline"]);
+    exit;
+});
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../auth.php';
 require_once __DIR__ . '/../audit_log.php';
 
+// Get MySQLi connection (database.php provides PDO as $conn/$pdo, MySQLi via Database class)
+$db = Database::getConnection();
+
+send_cors_headers();
 header('Content-Type: application/json');
 
 $user = validateToken();
@@ -15,41 +38,53 @@ $method = $_SERVER['REQUEST_METHOD'];
 if ($action === 'summary') {
     // Recent overall summary (by provider)
     // Include previous 24h for percent change calculation
-    $stmt = $db->prepare(
-        "SELECT r.provider, r.sent_last_24h, r.failed_last_24h, r.retry_scheduled_total, r.avg_retry_count, COALESCE(p.prev_sent,0) AS prev_sent_last_24h
-         FROM analytics_integration_messages_recent r
-         LEFT JOIN (
-             SELECT provider, SUM(CASE WHEN created_at >= (NOW() - INTERVAL 48 HOUR) AND created_at < (NOW() - INTERVAL 24 HOUR) AND direction='outbound' THEN 1 ELSE 0 END) as prev_sent
-             FROM integration_messages GROUP BY provider
-         ) p ON p.provider = r.provider"
-    );
-    $stmt->execute();
+    // Query summary data, handle SQL errors gracefully
     $rows = [];
-    $res = $stmt->get_result();
-    while ($r = $res->fetch_assoc()) { 
-        // compute percent change safely
-        $sent = intval($r['sent_last_24h']);
-        $prev = intval($r['prev_sent_last_24h']);
-        $delta = null;
-        if ($prev === 0 && $sent > 0) { $delta = 100.0; }
-        elseif ($prev === 0 && $sent === 0) { $delta = 0.0; }
-        else { $delta = $prev === 0 ? 0.0 : (($sent - $prev) / max(1,$prev)) * 100.0; }
-        $r['sent_delta_pct'] = round($delta,2);
-        $rows[] = $r; 
-    }
-
-    // Daily trends (last 14 days) for twilio
-    $trendStmt = $db->prepare("SELECT day, total_messages, delivered_count, failed_count, retry_scheduled FROM analytics_integration_messages_daily WHERE provider = 'twilio' ORDER BY day DESC LIMIT 14");
-    $trendStmt->execute();
     $trend = [];
-    $tres = $trendStmt->get_result();
-    while ($r = $tres->fetch_assoc()) { $trend[] = $r; }
-
-    // Orders summary (30 days)
-    $ordersStmt = $db->prepare("SELECT * FROM analytics_orders_summary LIMIT 1");
-    $ordersStmt->execute();
-    $orders = $ordersStmt->get_result()->fetch_assoc();
-
+    $orders = null;
+    try {
+        $stmt = $db->prepare(
+            "SELECT r.provider, r.sent_last_24h, r.failed_last_24h, r.retry_scheduled_total, r.avg_retry_count, COALESCE(p.prev_sent,0) AS prev_sent_last_24h
+             FROM analytics_integration_messages_recent r
+             LEFT JOIN (
+                 SELECT provider, SUM(CASE WHEN created_at >= (NOW() - INTERVAL 48 HOUR) AND created_at < (NOW() - INTERVAL 24 HOUR) AND direction='outbound' THEN 1 ELSE 0 END) as prev_sent
+                 FROM integration_messages GROUP BY provider
+             ) p ON p.provider = r.provider"
+        );
+        if ($stmt && $stmt->execute()) {
+            $res = $stmt->get_result();
+            while ($r = $res->fetch_assoc()) {
+                $sent = intval($r['sent_last_24h']);
+                $prev = intval($r['prev_sent_last_24h']);
+                $delta = null;
+                if ($prev === 0 && $sent > 0) { $delta = 100.0; }
+                elseif ($prev === 0 && $sent === 0) { $delta = 0.0; }
+                else { $delta = $prev === 0 ? 0.0 : (($sent - $prev) / max(1,$prev)) * 100.0; }
+                $r['sent_delta_pct'] = round($delta,2);
+                $rows[] = $r;
+            }
+        }
+    } catch (Throwable $e) {
+        // Log error if needed
+        $rows = [];
+    }
+    try {
+        $trendStmt = $db->prepare("SELECT day, total_messages, delivered_count, failed_count, retry_scheduled FROM analytics_integration_messages_daily WHERE provider = 'twilio' ORDER BY day DESC LIMIT 14");
+        if ($trendStmt && $trendStmt->execute()) {
+            $tres = $trendStmt->get_result();
+            while ($r = $tres->fetch_assoc()) { $trend[] = $r; }
+        }
+    } catch (Throwable $e) {
+        $trend = [];
+    }
+    try {
+        $ordersStmt = $db->prepare("SELECT * FROM analytics_orders_summary LIMIT 1");
+        if ($ordersStmt && $ordersStmt->execute()) {
+            $orders = $ordersStmt->get_result()->fetch_assoc();
+        }
+    } catch (Throwable $e) {
+        $orders = null;
+    }
     echo json_encode(['success'=>true,'summary'=>$rows,'trend'=>$trend,'orders'=>$orders]);
     exit;
 }
@@ -126,20 +161,48 @@ if ($action === 'test_alert') {
 // Admin: refresh materialized analytics table
 if ($action === 'refresh_materialized') {
     if ($method !== 'POST') { http_response_code(405); echo json_encode(['success'=>false,'message'=>'POST required']); exit; }
-    $workerPath = realpath(__DIR__ . '/../../scripts/refresh_analytics_materialized.php');
-    if (!$workerPath) { http_response_code(500); echo json_encode(['success'=>false,'message'=>'Worker not found']); exit; }
+
     $days = isset($_POST['days']) ? intval($_POST['days']) : null;
-    $cmd = escapeshellcmd(PHP_BINARY ?? 'php') . ' ' . escapeshellarg($workerPath);
-    if ($days && $days > 0) {
-        $cmd .= ' ' . escapeshellarg((string)$days);
+
+    try {
+        if ($days && $days > 0) {
+            // Incremental refresh using DB (transaction)
+            $from = date('Y-m-d', strtotime("-{$days} days"));
+            $pdo->beginTransaction();
+            $delStmt = $pdo->prepare('DELETE FROM analytics_integration_messages_daily_mat WHERE day >= :from');
+            $delStmt->execute([':from' => $from]);
+
+            $insSql = "INSERT INTO analytics_integration_messages_daily_mat (provider, day, channel, total_messages, delivered_count, failed_count, retry_scheduled, avg_retry_count)
+                SELECT provider, DATE(created_at) as day, channel, SUM(CASE WHEN direction = 'outbound' THEN 1 ELSE 0 END) as total_messages, SUM(CASE WHEN status = 'delivered' THEN 1 ELSE 0 END) as delivered_count, SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed_count, SUM(CASE WHEN status = 'retry_scheduled' THEN 1 ELSE 0 END) as retry_scheduled, AVG(COALESCE(retry_count,0)) as avg_retry_count
+                FROM integration_messages
+                WHERE DATE(created_at) >= :from
+                GROUP BY provider, DATE(created_at), channel";
+            $ins = $pdo->prepare($insSql);
+            $ins->execute([':from' => $from]);
+            $pdo->commit();
+
+            AuditLog::log('ANALYTICS_MATERIALIZED_REFRESH_INCREMENTAL', ['days'=>$days,'from'=>$from,'updated_at'=>date('Y-m-d H:i:s')]);
+            echo json_encode(['success'=>true,'message'=>'Incremental refresh complete','days'=>$days]);
+            exit;
+        }
+
+        // Full refresh performed in-process (no external exec)
+        $pdo->exec('TRUNCATE TABLE analytics_integration_messages_daily_mat');
+        $insSql = "INSERT INTO analytics_integration_messages_daily_mat (provider, day, channel, total_messages, delivered_count, failed_count, retry_scheduled, avg_retry_count)
+                SELECT provider, DATE(created_at) as day, channel, SUM(CASE WHEN direction = 'outbound' THEN 1 ELSE 0 END) as total_messages, SUM(CASE WHEN status = 'delivered' THEN 1 ELSE 0 END) as delivered_count, SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed_count, SUM(CASE WHEN status = 'retry_scheduled' THEN 1 ELSE 0 END) as retry_scheduled, AVG(COALESCE(retry_count,0)) as avg_retry_count
+                FROM integration_messages
+                GROUP BY provider, DATE(created_at), channel";
+        $pdo->exec($insSql);
+        AuditLog::log('ANALYTICS_MATERIALIZED_REFRESH', ['updated_at'=>date('Y-m-d H:i:s')]);
+        echo json_encode(['success'=>true,'message'=>'Refreshed materialized analytics table']);
+        exit;
+    } catch (Exception $e) {
+        try { if ($pdo->inTransaction()) $pdo->rollBack(); } catch (Exception $ex) {}
+        AuditLog::log('ANALYTICS_MATERIALIZED_REFRESH_FAILED', ['message'=>$e->getMessage(),'days'=>$days], $user['id'] ?? null, 'error');
+        http_response_code(500);
+        echo json_encode(['success'=>false,'message'=>'Failed refreshing materialized analytics','error'=>$e->getMessage()]);
+        exit;
     }
-    $cmd .= ' 2>&1';
-    $out = [];
-    $code = 0;
-    exec($cmd, $out, $code);
-    AuditLog::log('ANALYTICS_MATERIALIZED_RUN_MANUAL', ['by'=>$user['id'],'exit_code'=>$code,'output'=>array_slice($out,0,20),'days'=>$days], $user['id']);
-    echo json_encode(['success'=>true,'exit_code'=>$code,'output'=>implode("\n", array_slice($out,0,200))]);
-    exit;
 }
 
 http_response_code(400);

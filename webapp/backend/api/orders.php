@@ -214,7 +214,8 @@ try {
         
         echo json_encode([
             'success' => true,
-            'data' => $orders
+            'data' => $orders,
+            'orders' => $orders
         ]);
         
     } else {
@@ -287,6 +288,7 @@ try {
         
         echo json_encode([
             'success' => true,
+            'data' => $orders,
             'orders' => $orders,
             'filters' => [
                 'status' => $status,

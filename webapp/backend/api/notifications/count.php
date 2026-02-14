@@ -24,6 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 // Authenticate user
 $user = JWT::getUser();
 if (!$user) {
+    // Debug log to help trace CI/local test tokens
+    error_log('[notifications/count.php] JWT::getUser returned null (unauthorized)');
     http_response_code(401);
     echo json_encode(['error' => 'Unauthorized', 'count' => 0]);
     exit;

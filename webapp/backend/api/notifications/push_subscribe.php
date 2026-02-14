@@ -13,32 +13,19 @@ header('Content-Type: application/json');
 // Get request method
 $method = $_SERVER['REQUEST_METHOD'];
 
-// Verify JWT token
-$headers = getallheaders();
-$token = null;
-
-// Check for Authorization header (case-insensitive)
-foreach ($headers as $key => $value) {
-    if (strtolower($key) === 'authorization') {
-        $token = str_replace('Bearer ', '', $value);
-        break;
-    }
-}
-
-if (!$token) {
-    http_response_code(401);
-    echo json_encode(['error' => 'No token provided']);
-    exit;
-}
-
-// Verify JWT token using JWT::verify()
-$decoded = JWT::verify($token);
-if (!$decoded || !isset($decoded['user_id'])) {
+// Authenticate user via JWT helper (supports Authorization header, ci-* fallback)
+$user = JWT::getUser();
+if (!$user) {
     http_response_code(401);
     echo json_encode(['error' => 'Invalid or expired token']);
     exit;
 }
-$userId = $decoded['user_id'];
+$userId = isset($user['user_id']) ? (int)$user['user_id'] : (isset($user['id']) ? (int)$user['id'] : null);
+if (!$userId) {
+    http_response_code(401);
+    echo json_encode(['error' => 'Invalid token payload']);
+    exit;
+}
 
 // Use $pdo from database.php (already connected)
 if (!isset($pdo)) {

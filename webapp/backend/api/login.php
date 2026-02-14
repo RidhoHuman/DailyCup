@@ -13,6 +13,7 @@ require_once __DIR__ . '/cors.php';
 // CORS handler already exits for OPTIONS, so code below only runs for actual requests
 
 require_once __DIR__ . '/input_sanitizer.php';
+require_once __DIR__ . '/config.php';
 
 header('Content-Type: application/json');
 

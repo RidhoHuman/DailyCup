@@ -17,22 +17,7 @@ if (strtolower(getenv('DEV_VERBOSE') ?: '') === 'true') {
     AuditLog::log('DEBUG_HEADERS', ['auth_header'=>$mask($authRaw),'token_param'=>$mask($tokenParam)], $user['id'] ?? null, 'warning');
 }
 
-// Fallback: accept token via query param or env for local/CI when Authorization header is stripped
-if (!$user) {
-    // Allow explicit dev bypass via query param (dev-only, local testing)
-    if (isset($_GET['dev_bypass']) && $_GET['dev_bypass'] == '1') {
-        $user = ['id' => 'dev', 'role' => 'admin', 'email' => 'dev@example.com'];
-    } else {
-        $tok = $_GET['token'] ?? (getenv('BACKEND_AUTH_TOKEN') ?: null);
-        if ($tok) {
-            require_once __DIR__ . '/../../api/jwt.php';
-            $u = JWT::verify($tok);
-            if ($u && (($u['role'] ?? '') === 'admin')) {
-                $user = $u;
-            }
-        }
-    }
-}
+// Strict mode: tidak ada fallback dev, hanya JWT valid yang diterima
 
 if (!$user || ($user['role'] ?? '') !== 'admin') { http_response_code(403); echo json_encode(['success'=>false,'message'=>'Admin access required']); exit; }
 

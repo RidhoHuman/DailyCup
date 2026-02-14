@@ -4,10 +4,17 @@
  * Endpoint: GET /api/admin/geocode/failed_jobs.php
  */
 require_once __DIR__ . '/../../config.php';
-require_once __DIR__ . '/../../utils/admin_notifier.php'; // ensure dependencies
+require_once __DIR__ . '/../../../config/database.php';
+require_once __DIR__ . '/../../../utils/admin_notifier.php'; // correct path to shared utils
+
+// Ensure JSON error responses (CORS is handled by Apache .htaccess to avoid duplicate headers)
+set_exception_handler(function($e){ http_response_code(500); echo json_encode(['success'=>false,'error'=>$e->getMessage()]); exit; });
+set_error_handler(function($errno,$errstr,$errfile,$errline){ http_response_code(500); echo json_encode(['success'=>false,'error'=>"$errstr in $errfile:$errline"]); exit; });
+
+header('Content-Type: application/json');
 
 // Check admin auth (adjust based on project auth mechanism)
-$headers = getallheaders();
+$headers = function_exists('getallheaders') ? getallheaders() : [];
 $token = $headers['Authorization'] ?? null;
 // For brevity, assuming middleware/gateway handles auth or we rely on session. 
 // REAL IMPLEMENTATION SHOULD CHECK AUTH HERE.

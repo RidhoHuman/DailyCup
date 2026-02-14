@@ -11,10 +11,15 @@ function load_env($path = __DIR__ . '/.env') {
         $key = trim($key);
         $val = trim($val);
         // Strip optional quotes
-        $val = preg_replace('/^\"(.*)\"$/', '$1', $val);
+        $val = preg_replace('/^"(.*)"$/', '$1', $val);
         $val = preg_replace("/^'(.*)'$/", '$1', $val);
         putenv("$key=$val");
         $_ENV[$key] = $val;
     }
 }
 load_env();
+
+// Also define JWT_SECRET constant for use by JWT class if not already defined
+if (!defined('JWT_SECRET') && getenv('JWT_SECRET')) {
+    define('JWT_SECRET', getenv('JWT_SECRET'));
+}
