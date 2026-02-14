@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ShoppingCart, Heart, Share2, Star, Check } from 'lucide-react';
+import { getImageUrl } from '@/lib/storage';
 import StarRating from '@/components/StarRating';
 import ReviewsList from '@/components/ReviewsList';
 import { SocialShare } from '@/components/SocialShare';
@@ -143,7 +144,7 @@ export default function ProductDetailPage() {
             <div className="relative">
               <div className="aspect-square rounded-xl overflow-hidden bg-gray-100">
                 <img
-                  src={product.image || '/images/placeholder-product.jpg'}
+                  src={getImageUrl(product.image) || '/images/placeholder-product.jpg'}
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />

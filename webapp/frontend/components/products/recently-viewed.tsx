@@ -4,6 +4,7 @@ import { formatCurrency } from '@/lib/utils';
 import { Card } from '@/components/ui/card';
 import { WishlistButton } from '@/components/wishlist/wishlist-button';
 import Image from 'next/image';
+import { getImageUrl } from '@/lib/storage';
 
 interface Product {
   id: string;
@@ -67,7 +68,7 @@ export function RecentlyViewed({
                 >
                   {product.image ? (
                     <Image
-                      src={product.image}
+                      src={getImageUrl(product.image) || '/assets/image/cup.png'}
                       alt={product.name}
                       fill
                       className="object-cover transition-transform group-hover:scale-105"
@@ -189,7 +190,7 @@ export function ProductRecommendations({
             >
               {product.image ? (
                 <Image
-                  src={product.image}
+                  src={getImageUrl(product.image) || '/assets/image/cup.png'}
                   alt={product.name}
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-110"

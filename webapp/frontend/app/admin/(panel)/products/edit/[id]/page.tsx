@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { api } from "@/lib/api-client";
 import ImageUpload from "@/components/ImageUpload";
+import { getImageUrl } from '@/lib/storage';
 
 interface Category {
   id: number;
@@ -259,6 +260,8 @@ export default function EditProductPage() {
               resourceId={productId}
               currentImage={currentImageUrl}
               onUploadSuccess={(url) => {
+                // Immediately show uploaded image in the editor
+                setCurrentImageUrl(getImageUrl(url) || url);
                 alert(`Image uploaded successfully! URL: ${url}`);
                 // Refresh product data to show new image
                 fetchProduct();

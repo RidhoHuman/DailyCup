@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/stores/auth-store';
+import { getImageUrl } from '@/lib/storage';
 
 interface Product {
   id: number;
@@ -123,7 +124,7 @@ export default function ProductRecommendations({
           >
             <div className="relative h-48 bg-gray-100 overflow-hidden">
               <img
-                src={product.image || '/images/placeholder-product.jpg'}
+                src={getImageUrl(product.image) || '/images/placeholder-product.jpg'}
                 alt={product.name}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
               />

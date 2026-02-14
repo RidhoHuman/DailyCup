@@ -216,6 +216,13 @@ export default function HappyHourManagementPage() {
     );
   }
 
+  function getImageUrl(image: string): string {
+    if (!image) return '/assets/image/cup.png';
+    if (image.startsWith('http') || image.startsWith('/')) return image;
+    // Assume image is a filename stored in /uploads/products/
+    return `/uploads/products/${image}`;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -300,7 +307,7 @@ export default function HappyHourManagementPage() {
                       <div key={product.id} className="flex items-center gap-2 text-sm">
                         <div className="w-8 h-8 bg-gray-200 rounded overflow-hidden flex-shrink-0">
                           {product.image && (
-                            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                            <img src={getImageUrl(product.image) || '/assets/image/cup.png'} alt={product.name} className="w-full h-full object-cover" />
                           )}
                         </div>
                         <span className="text-gray-700 truncate">{product.name}</span>

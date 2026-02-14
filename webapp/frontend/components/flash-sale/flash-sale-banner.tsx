@@ -4,6 +4,7 @@ import { useState, useEffect, useSyncExternalStore, useCallback } from 'react';
 import Image from 'next/image';
 import { cn, formatCurrency } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { getImageUrl } from '@/lib/storage';
 
 interface FlashSaleProduct {
   id: string;
@@ -145,7 +146,7 @@ export function FlashSaleBanner({
                 <div className="relative aspect-square bg-gray-100 dark:bg-gray-700">
                   {product.image ? (
                     <Image
-                      src={product.image}
+                      src={getImageUrl(product.image) || '/assets/image/cup.png'}
                       alt={product.name}
                       fill
                       className="object-cover"

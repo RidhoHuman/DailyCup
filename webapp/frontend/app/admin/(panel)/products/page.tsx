@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api-client';
+import { getImageUrl } from '@/lib/storage';
 
 interface Product {
   id: number;
@@ -101,7 +102,7 @@ export default function AdminProductsPage() {
                           <div className="w-10 h-10 rounded-lg bg-gray-100 relative overflow-hidden">
                             {product.image ? (
                               <Image 
-                                src={product.image.startsWith('http') || product.image.startsWith('/') ? product.image : `/uploads/products/${product.image}`}
+                                src={getImageUrl(product.image) || '/assets/image/cup.png'}
                                 alt={product.name} 
                                 fill 
                                 className="object-cover" 

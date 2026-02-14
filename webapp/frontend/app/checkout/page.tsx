@@ -11,6 +11,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { api as apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import { getImageUrl } from '@/lib/storage';
 
 // Define form data type for checkout
 interface CheckoutFormData {
@@ -282,7 +283,7 @@ export default function CheckoutPage() {
                     <div key={item.id} className="flex gap-4">
                         <div className="w-16 h-16 bg-gray-100 rounded-lg relative overflow-hidden flex-shrink-0">
                              {item.product.image ? (
-                                <Image src={item.product.image?.startsWith('http') || item.product.image?.startsWith('/') ? item.product.image : `/uploads/products/${item.product.image}`} alt={item.product.name} fill className="object-cover" />
+                                <Image src={getImageUrl(item.product.image) || '/assets/image/cup.png'} alt={item.product.name} fill className="object-cover" />
                              ) : (
                                 <div className="w-full h-full flex items-center justify-center text-gray-400">☕</div>
                              )}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Product } from '@/utils/api';
+import { getImageUrl } from '@/lib/storage';
 
 interface ProductModifier {
   id: number;
@@ -155,7 +156,7 @@ export default function AddToCartModal({
           <div className="flex gap-4">
             {product.image && (
               <img
-                src={product.image}
+                src={getImageUrl(product.image) || '/assets/image/cup.png'}
                 alt={product.name}
                 className="w-20 h-20 object-cover rounded-lg"
               />

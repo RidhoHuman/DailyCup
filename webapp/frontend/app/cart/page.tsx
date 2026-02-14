@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { getImageUrl } from '@/lib/storage';
 
 export default function CartPage() {
   const { state, removeItem, updateQuantity, clearCart } = useCart();
@@ -121,7 +122,7 @@ export default function CartPage() {
                   <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
                     {item.product.image ? (
                       <Image
-                        src={item.product.image?.startsWith('http') || item.product.image?.startsWith('/') ? item.product.image : `/uploads/products/${item.product.image}`}
+                        src={getImageUrl(item.product.image) || '/assets/image/cup.png'}
                         alt={item.product.name}
                         width={80}
                         height={80}
