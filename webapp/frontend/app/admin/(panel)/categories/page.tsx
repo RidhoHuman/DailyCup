@@ -180,7 +180,7 @@ export default function CategoriesPage() {
                   type="category"
                   resourceId={editingId ? String(editingId) : "new"}
                   currentImage={undefined}
-                  onUploadSuccess={(url) => {
+                  onUploadSuccess={() => {
                     alert('Category image uploaded successfully!');
                     fetchCategories();
                   }}

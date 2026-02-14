@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { api, endpoints } from '@/lib/api-client';
 
 export default function CRMReports() {
@@ -13,7 +13,7 @@ export default function CRMReports() {
   const [to, setTo] = useState<string>(() => new Date().toISOString().slice(0,10));
   const [loading, setLoading] = useState(false);
 
-  const fetchReports = async () => {
+  const fetchReports = useCallback(async () => {
     setLoading(true);
     try {
       const q = new URLSearchParams(); q.set('from', from); q.set('to', to);
@@ -21,9 +21,9 @@ export default function CRMReports() {
       if (res.success) { setTopCustomers(res.top_customers || []); setTopProducts(res.top_products || []); }
     } catch (e: unknown) { console.error(e); }
     setLoading(false);
-  };
+  }, [from, to]);
 
-  useEffect(()=>{ fetchReports(); }, []);
+  useEffect(()=>{ fetchReports(); }, [fetchReports]);
 
   return (
     <div className="p-6">
@@ -34,7 +34,7 @@ export default function CRMReports() {
           <input type="date" className="p-2 border" value={from} onChange={(e)=>setFrom(e.target.value)} />
           <label className="text-sm">To</label>
           <input type="date" className="p-2 border" value={to} onChange={(e)=>setTo(e.target.value)} />
-          <button className="px-3 py-1 bg-blue-600 text-white rounded" onClick={fetchReports}>Refresh</button>
+          <button className="px-3 py-1 bg-blue-600 text-white rounded" onClick={fetchReports} disabled={loading}>{loading ? 'Loading...' : 'Refresh'}</button>
         </div>
       </div>
 

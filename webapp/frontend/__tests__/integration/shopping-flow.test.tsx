@@ -3,8 +3,7 @@
  * Tests complete user journey from browsing to checkout
  */
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { CartProvider } from '@/contexts/CartContext'
 import apiClient from '@/lib/api-client'
@@ -42,7 +41,6 @@ jest.mock('@/lib/api-client', () => ({
 }))
 
 describe('Shopping Flow Integration Tests', () => {
-  const user = userEvent.setup()
 
   beforeEach(() => {
     localStorage.clear()
@@ -89,7 +87,7 @@ describe('Shopping Flow Integration Tests', () => {
       localStorage.setItem('dailycup_cart', JSON.stringify(mockCart))
 
       // Simulate page refresh by re-rendering
-      const { rerender } = render(
+      render(
         <CartProvider>
           <div>Test Component</div>
         </CartProvider>

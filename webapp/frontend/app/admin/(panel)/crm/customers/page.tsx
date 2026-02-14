@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { api, endpoints } from '@/lib/api-client';
 
 export default function CustomersPage() {
@@ -69,6 +69,11 @@ export default function CustomersPage() {
       <div className="bg-white p-4 rounded mb-4">
         <div className="flex gap-3 items-center">
           <input placeholder="Search name, email, phone" className="p-2 border flex-1" value={search} onChange={(e)=>setSearch(e.target.value)} />
+          <select className="p-2 border" value={limit} onChange={(e)=>{ setLimit(Number(e.target.value)); setPage(1); }}>
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+          </select>
           <select className="p-2 border" value={segment} onChange={(e)=>{ setSegment(e.target.value); setPage(1); }}>
             <option value="">All</option>
             <option value="new">New (&lt;30d)</option>

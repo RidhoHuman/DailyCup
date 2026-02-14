@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { api } from "@/lib/api-client";
 
 interface Coupon {
@@ -40,10 +39,6 @@ export default function AdminCouponsPage() {
     is_active: true
   });
 
-  useEffect(() => {
-    fetchCoupons();
-  }, []);
-
   const fetchCoupons = async () => {
     try {
       setLoading(true);
@@ -60,6 +55,10 @@ export default function AdminCouponsPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchCoupons();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
