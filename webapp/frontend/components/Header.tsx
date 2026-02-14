@@ -28,9 +28,7 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-[#a97456] rounded-full flex items-center justify-center">
-                <i className="bi bi-cup text-white"></i>
-              </div>
+              <img src="/assets/image/cup.png" alt="DailyCup" className="w-8 h-8 rounded-full object-cover" />
               <span className="text-xl font-bold text-black dark:text-white">DailyCup</span>
             </Link>
 

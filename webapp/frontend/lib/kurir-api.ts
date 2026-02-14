@@ -3,6 +3,9 @@
  * Uses the same base api-client but reads token from kurir store
  */
 
+import type { KurirUser } from '@/lib/stores/kurir-store';
+import type { Order } from '@/types/delivery';
+
 const API_BASE = '/api/kurir';
 
 function getKurirToken(): string | null {
@@ -47,17 +50,17 @@ async function kurirFetch<T>(endpoint: string, options: RequestInit = {}): Promi
 export const kurirApi = {
   // Auth
   login: (phone: string, password: string) =>
-    kurirFetch<{ success: boolean; message: string; user: any; token: string }>('login.php', {
+    kurirFetch<{ success: boolean; message: string; user: KurirUser; token: string }>('login.php', {
       method: 'POST', body: JSON.stringify({ phone, password }),
     }),
 
   register: (data: { name: string; phone: string; password: string; email?: string; vehicle_type?: string; vehicle_number?: string; invitation_code?: string }) =>
-    kurirFetch<{ success: boolean; message: string; user: any; token: string }>('register.php', {
+    kurirFetch<{ success: boolean; message: string; user: KurirUser; token: string }>('register.php', {
       method: 'POST', body: JSON.stringify(data),
     }),
 
   // Profile
-  getProfile: () => kurirFetch<{ success: boolean; data: any }>('me.php'),
+  getProfile: () => kurirFetch<{ success: boolean; data: { stats?: { activeOrders?: number; todayDeliveries?: number; todayEarnings?: number }; user?: KurirUser } }>('me.php'),
   updateProfile: (data: Record<string, string>) =>
     kurirFetch<{ success: boolean; message: string }>('me.php', { method: 'PUT', body: JSON.stringify(data), }),
   updateStatus: (status: 'available' | 'offline') =>
@@ -67,11 +70,11 @@ export const kurirApi = {
 
   // Orders
   getOrders: (status = 'active', page = 1, limit = 10) =>
-    kurirFetch<{ success: boolean; data: any[]; pagination: any }>(`orders.php?status=${status}&page=${page}&limit=${limit}`),
+    kurirFetch<{ success: boolean; data: Order[]; pagination: { page: number; per_page: number; total: number } }>(`orders.php?status=${status}&page=${page}&limit=${limit}`),
   getOrderDetail: (orderId: string) =>
-    kurirFetch<{ success: boolean; data: any }>(`order_detail.php?order_id=${orderId}`),
+    kurirFetch<{ success: boolean; data: Order }>(`order_detail.php?order_id=${orderId}`),
   updateOrderStatus: (orderId: string | number, status: string) =>
-    kurirFetch<{ success: boolean; message: string; data: any }>('update_status.php', {
+    kurirFetch<{ success: boolean; message: string; data?: Partial<Order> }>('update_status.php', {
       method: 'POST', body: JSON.stringify({ order_id: orderId, status }),
     }),
 
@@ -79,10 +82,10 @@ export const kurirApi = {
   getAvailableOrders: (page = 1, limit = 10) =>
     kurirFetch<{ 
       success: boolean; 
-      data: any[]; 
+      data: Order[]; 
       kurir_status: string;
       active_orders_count: number;
-      pagination: any 
+      pagination: { page: number; per_page: number; total: number };
     }>(`available_orders.php?page=${page}&limit=${limit}`),
   
   // Claim an order
@@ -90,7 +93,7 @@ export const kurirApi = {
     kurirFetch<{ 
       success: boolean; 
       message: string; 
-      order?: any;
+      order?: Order;
       active_orders_count?: number;
       error?: string;
     }>('claim_order.php', {

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/stores/auth-store';
+import { getImageUrl } from '@/lib/storage';
 
 export default function CartSidebar() {
   const router = useRouter();
@@ -106,7 +107,7 @@ export default function CartSidebar() {
             <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
               {item.product.image ? (
                 <Image
-                  src={item.product.image?.startsWith('http') || item.product.image?.startsWith('/') ? item.product.image : `/uploads/products/${item.product.image}`}
+                  src={getImageUrl(item.product.image) || '/assets/image/cup.png'}
                   alt={item.product.name}
                   width={64}
                   height={64}

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { kurirApi } from '@/lib/kurir-api';
+import { getErrorMessage } from '@/lib/utils';
 
 interface LocationBroadcastOptions {
   enabled: boolean;
@@ -91,11 +92,11 @@ export function useKurirLocationBroadcast(options: LocationBroadcastOptions) {
               accuracy: accuracy ? `${accuracy.toFixed(0)}m` : 'N/A',
               speed: speed ? `${(speed * 3.6).toFixed(1)} km/h` : 'N/A',
             });
-          } catch (error: any) {
-            console.error('[Location Broadcast] Failed to send location:', error);
+          } catch (error: unknown) {
+            console.error('[Location Broadcast] Failed to send location:', getErrorMessage(error));
             setState(prev => ({
               ...prev,
-              error: error.message || 'Failed to send location',
+              error: getErrorMessage(error),
             }));
           }
         },

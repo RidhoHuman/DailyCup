@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { fetchProducts, Product } from '../utils/api';
 import AddToCartButton from './AddToCartButton';
 import { SocialShare } from './SocialShare';
+import { getImageUrl } from '@/lib/storage';
 
 export default function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -114,7 +115,7 @@ export default function FeaturedProducts() {
                 </div>
                 {product.image ? (
                   <Image
-                    src={product.image?.startsWith('http') || product.image?.startsWith('/') ? product.image : `/uploads/products/${product.image}`}
+                    src={getImageUrl(product.image) || '/assets/image/cup.png'}
                     alt={product.name}
                     fill
                     className="object-cover"

@@ -5,8 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
-import { useAuthStore, useAuthHydration } from "@/lib/stores/auth-store";
-import { api as apiClient } from "@/lib/api-client";
+import { useAuthStore, useAuthHydration } from "@/lib/stores/auth-store";import type { User } from '@/lib/stores/auth-store';
+import { getErrorMessage } from '@/lib/utils';import { api as apiClient } from "@/lib/api-client";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -40,7 +40,7 @@ export default function ProfilePage() {
     const fetchProfile = async () => {
       try {
         setIsLoadingProfile(true);
-        const response = await apiClient.get<{success: boolean; user: any}>('/me.php', { requiresAuth: true });
+        const response = await apiClient.get<{success: boolean; user: User}>('/me.php', { requiresAuth: true });
         
         if (response.success && response.user) {
           const userData = {
@@ -65,8 +65,8 @@ export default function ProfilePage() {
             profilePicture: response.user.profilePicture
           });
         }
-      } catch (error) {
-        console.error("Failed to fetch profile:", error);
+      } catch (error: unknown) {
+        console.error("Failed to fetch profile:", getErrorMessage(error));
       } finally {
         setIsLoadingProfile(false);
       }
@@ -219,9 +219,9 @@ export default function ProfilePage() {
         alert("Password changed successfully!");
         setTimeout(() => setPasswordSuccess(false), 3000);
       }
-    } catch (error: any) {
-      console.error("Change password error:", error);
-      const errorMsg = error?.response?.data?.message || error?.message || "Failed to change password";
+    } catch (error: unknown) {
+      console.error("Change password error:", getErrorMessage(error));
+      const errorMsg = (error as any)?.response?.data?.message || getErrorMessage(error) || "Failed to change password";
       setPasswordErrors({ general: errorMsg });
     } finally {
       setIsChangingPassword(false);

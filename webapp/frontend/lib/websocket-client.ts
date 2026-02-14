@@ -9,7 +9,7 @@ export class OrderTrackingWebSocket {
   private maxReconnectAttempts = 5;
   private reconnectDelay = 3000;
   private subscriptions = new Set<string>();
-  private listeners = new Map<string, Set<(data: any) => void>>();
+  private listeners = new Map<string, Set<(data: unknown) => void>>();
 
   constructor(private url: string = 'ws://localhost:8080') {}
 
@@ -70,20 +70,22 @@ export class OrderTrackingWebSocket {
     }, this.reconnectDelay);
   }
 
-  private handleMessage(data: any) {
+  private handleMessage(data: unknown) {
     console.log('[WS] Message received:', data);
+    const payload = (data as Record<string, unknown>) || {};
+    const type = typeof payload.type === 'string' ? payload.type : undefined;
 
-    switch (data.type) {
+    switch (type) {
       case 'connected':
-        console.log('[WS]', data.message);
+        console.log('[WS]', payload.message as string);
         break;
 
       case 'subscribed':
-        console.log(`[WS] Subscribed to order ${data.order_id}`);
+        console.log(`[WS] Subscribed to order ${(payload.order_id as string) || ''}`);
         break;
 
       case 'order_update':
-        this.notifyListeners(data.order_id, data.data);
+        this.notifyListeners((payload.order_id as string) || '', payload.data);
         break;
 
       case 'pong':
@@ -91,7 +93,7 @@ export class OrderTrackingWebSocket {
         break;
 
       default:
-        console.log('[WS] Unknown message type:', data.type);
+        console.log('[WS] Unknown message type:', payload.type);
     }
   }
 
@@ -121,7 +123,7 @@ export class OrderTrackingWebSocket {
     }));
   }
 
-  onOrderUpdate(orderId: string, callback: (data: any) => void) {
+  onOrderUpdate(orderId: string, callback: (data: unknown) => void) {
     if (!this.listeners.has(orderId)) {
       this.listeners.set(orderId, new Set());
     }
@@ -133,7 +135,7 @@ export class OrderTrackingWebSocket {
     };
   }
 
-  private notifyListeners(orderId: string, data: any) {
+  private notifyListeners(orderId: string, data: unknown) {
     const callbacks = this.listeners.get(orderId);
     if (callbacks) {
       callbacks.forEach(callback => {

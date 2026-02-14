@@ -36,8 +36,13 @@ function getAuthToken(): string | null {
     const authData = localStorage.getItem('dailycup-auth');
     if (authData) {
       const parsed = JSON.parse(authData);
-      // Zustand persist stores data in { state: { ... } } structure
-      return parsed?.state?.token || parsed?.token || null;
+      const token = parsed?.state?.token || parsed?.token || null;
+      // Helpful debug in dev to show when ci-* tokens are used by Playwright
+      if (token && token.startsWith && token.startsWith('ci-') && (process.env.NODE_ENV === 'development' || true)) {
+        // eslint-disable-next-line no-console
+        console.debug('[api-client] using test token:', token);
+      }
+      return token;
     }
   } catch (error) {
     console.error('Error reading auth token:', error);

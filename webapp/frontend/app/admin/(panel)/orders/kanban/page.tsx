@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api-client";
+import { getErrorMessage } from '@/lib/utils';
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { useRouter } from "next/navigation";
 
@@ -99,8 +100,8 @@ export default function OrderKanbanPage() {
         alert('Status updated successfully!');
         fetchOrders();
       }
-    } catch (error: any) {
-      alert(`Failed to update status: ${error?.message || 'Unknown error'}`);
+    } catch (error: unknown) {
+      alert(`Failed to update status: ${getErrorMessage(error) || 'Unknown error'}`);
     }
   };
 
@@ -119,8 +120,8 @@ export default function OrderKanbanPage() {
         setSelectedOrder(null);
         fetchOrders();
       }
-    } catch (error: any) {
-      alert(`Failed to assign courier: ${error?.message || 'Unknown error'}`);
+    } catch (error: unknown) {
+      alert(`Failed to assign courier: ${getErrorMessage(error) || 'Unknown error'}`);
     }
   };
 

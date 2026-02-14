@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { api } from '@/lib/api-client';
+import { getErrorMessage } from '@/lib/utils';
 import type { Order, OrderItem, OrderStatusLog, DeliveryHistory, Kurir } from '@/types/delivery';
 import OrderStatusBadge from '@/components/admin/OrderStatusBadge';
 import DeliveryTimeline from '@/components/admin/DeliveryTimeline';
@@ -15,9 +16,9 @@ export default function OrderDetailPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const [items, setItems] = useState<OrderItem[]>([]);
   const [history, setHistory] = useState<OrderStatusLog[]>([]);
-  const [deliveryHistory, setDeliveryHistory] = useState<DeliveryHistory[]>([]);
-  const [kurirLocation, setKurirLocation] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+const [deliveryHistory, setDeliveryHistory] = useState<DeliveryHistory[]>([]);
+const [kurirLocation, setKurirLocation] = useState<{ lat: number; lng: number } | null>(null);
+const [loading, setLoading] = useState(true);
   const [availableKurirs, setAvailableKurirs] = useState<Kurir[]>([]);
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [assignLoading, setAssignLoading] = useState(false);
@@ -34,15 +35,22 @@ export default function OrderDetailPage() {
 
   const fetchOrderDetail = async () => {
     try {
-      const response: any = await api.get(`/get_order_detail.php?order_id=${orderId}`);
+      const response = await api.get<{
+        success: boolean;
+        order: Order;
+        items: OrderItem[];
+        history: OrderStatusLog[];
+        delivery_history?: DeliveryHistory[];
+        kurir_location?: { lat: number; lng: number } | null;
+      }>(`/get_order_detail.php?order_id=${orderId}`);
       if (response.success) {
         setOrder(response.order);
-        setItems(response.items);
-        setHistory(response.history);
+        setItems(response.items || []);
+        setHistory(response.history || []);
         setDeliveryHistory(response.delivery_history || []);
-        setKurirLocation(response.kurir_location);
+        setKurirLocation(response.kurir_location || null);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to fetch order detail:', error);
     } finally {
       setLoading(false);
@@ -51,12 +59,12 @@ export default function OrderDetailPage() {
 
   const fetchAvailableKurirs = async () => {
     try {
-      const response: any = await api.get('/get_kurir_list.php?status=available');
+      const response = await api.get<{ success: boolean; kurirs: Kurir[] }>('/get_kurir_list.php?status=available');
       if (response.success) {
-        setAvailableKurirs(response.kurirs);
+        setAvailableKurirs(response.kurirs || []);
       }
-    } catch (error) {
-      console.error('Failed to fetch kurirs:', error);
+    } catch (error: unknown) {
+      console.error('Failed to fetch kurirs:', getErrorMessage(error));
     }
   };
 
@@ -65,7 +73,7 @@ export default function OrderDetailPage() {
     
     setAssignLoading(true);
     try {
-      const response: any = await api.post('/manual_assign_kurir.php', {
+      const response = await api.post<{ success: boolean; message?: string }>('/manual_assign_kurir.php', {
         order_id: order?.id,
         kurir_id: kurirId,
         notes: 'Manually assigned by admin'
@@ -77,8 +85,8 @@ export default function OrderDetailPage() {
         fetchOrderDetail();
         fetchAvailableKurirs();
       }
-    } catch (error: any) {
-      alert('❌ Gagal: ' + (error.message || 'Unknown error'));
+    } catch (error: unknown) {
+      alert('❌ Gagal: ' + (getErrorMessage(error) || 'Unknown error'));
     } finally {
       setAssignLoading(false);
     }
@@ -189,16 +197,17 @@ export default function OrderDetailPage() {
                       onClick={async () => {
                         if (!confirm('Run geocode now for this order?')) return;
                         try {
-                          const res: any = await api.get(`/geocode_order.php?order_id=${order.id}`);
-                          if (res.success) {
-                            alert('Geocoded: ' + res.lat + ', ' + res.lon);
+                          const res = await api.get<unknown>(`/geocode_order.php?order_id=${order.id}`);
+                          const r = res as { success?: boolean; lat?: number; lon?: number; message?: string; raw?: unknown };
+                          if (r.success) {
+                            alert('Geocoded: ' + r.lat + ', ' + r.lon);
                             fetchOrderDetail();
                           } else {
-                            alert('Geocode failed: ' + (res.message || JSON.stringify(res.raw)));
+                            alert('Geocode failed: ' + (r.message || JSON.stringify(r.raw)));
                             fetchOrderDetail();
                           }
-                        } catch (err: any) {
-                          alert('Request failed: ' + (err.message || err));
+                        } catch (err: unknown) {
+                          alert('Request failed: ' + getErrorMessage(err));
                         }
                       }}
                       className="ml-auto px-3 py-1 rounded bg-indigo-600 text-white text-sm hover:bg-indigo-700"
@@ -361,7 +370,7 @@ export default function OrderDetailPage() {
                   {kurirLocation && (
                     <button
                       onClick={() => window.open(
-                        `https://maps.google.com/?q=${kurirLocation.latitude},${kurirLocation.longitude}`,
+                        `https://maps.google.com/?q=${kurirLocation.lat},${kurirLocation.lng}`,
                         '_blank'
                       )}
                       className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"

@@ -19,6 +19,10 @@ test('profile edit validation and save', async ({ page }) => {
 
   // Force reload so persisted auth in localStorage hydrates into Zustand store
   await page.reload();
+  await page.waitForLoadState('networkidle');
+
+  // Wait for Profile link to be visible
+  await expect(page.getByRole('link', { name: 'Profile' })).toBeVisible({ timeout: 10000 });
 
   await page.getByRole('link', { name: 'Profile' }).click();
   await expect(page).toHaveURL(/\/profile|\/account|\/dashboard/);

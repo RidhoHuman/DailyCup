@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api-client";
+import { getErrorMessage } from '@/lib/utils';
 import toast from "react-hot-toast";
 
 interface Kurir {
@@ -80,8 +81,8 @@ export default function KurirManagementPage() {
       }, { requiresAuth: true });
       toast.success(`${kurir.name} berhasil disetujui!`);
       fetchData();
-    } catch (error: any) {
-      toast.error(error.message || 'Gagal menyetujui kurir');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error) || 'Gagal menyetujui kurir');
     } finally {
       setActionLoading(null);
     }
@@ -97,8 +98,8 @@ export default function KurirManagementPage() {
       }, { requiresAuth: true });
       toast.success(`${kurir.name} berhasil di-suspend`);
       fetchData();
-    } catch (error: any) {
-      toast.error(error.message || 'Gagal suspend kurir');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error) || 'Gagal suspend kurir');
     } finally {
       setActionLoading(null);
     }
@@ -109,8 +110,8 @@ export default function KurirManagementPage() {
       await api.put(`/kurir.php?id=${kurirId}`, { status: newStatus }, { requiresAuth: true });
       toast.success('Status kurir diperbarui');
       fetchData();
-    } catch (error: any) {
-      toast.error(error.message || 'Gagal update status');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error) || 'Gagal update status');
     }
   };
 

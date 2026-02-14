@@ -74,16 +74,16 @@ export default function AdminDashboardPage() {
           completed: number;
           cancelled: number;
           growth_percentage: number;
-          status_distribution: any[];
+          status_distribution: { status: string; count: number }[];
         };
         customers: {
           total: number;
           new: number;
-          top_customers: any[];
+          top_customers: { id: number; name: string; total_spend: number; orders_count: number }[];
         };
         products: {
           top_selling: TopProduct[];
-          category_performance: any[];
+          category_performance: { category: string; total_revenue: number; items_sold: number }[];
         };
       }>('/analytics.php?period=30days', { requiresAuth: true });
 
@@ -110,7 +110,7 @@ export default function AdminDashboardPage() {
         
         // Calculate pending orders from status distribution
         const pendingCount = (orders.status_distribution || []).find(
-          (s: any) => s.status === 'pending'
+          (s: { status: string }) => s.status === 'pending'
         )?.count || 0;
         
         setStats({
@@ -142,7 +142,7 @@ export default function AdminDashboardPage() {
       // Calculate pending orders count
       const pendingCount = analyticsRes.success
         ? (analyticsRes.orders.status_distribution || []).find(
-            (s: any) => s.status === 'pending'
+            (s: { status: string }) => s.status === 'pending'
           )?.count || 0
         : 0;
       

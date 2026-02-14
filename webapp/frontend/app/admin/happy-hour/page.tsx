@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import api from '@/lib/api-client';
 import { useAuthStore } from '@/lib/stores/auth-store';
+import { getErrorMessage } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 
 // TypeScript interfaces
@@ -157,9 +158,9 @@ export default function HappyHourManagementPage() {
         setShowModal(false);
         fetchSchedules();
       }
-    } catch (error: any) {
-      console.error('Error saving schedule:', error);
-      alert(error?.message || 'Gagal menyimpan jadwal');
+    } catch (error: unknown) {
+      console.error('Error saving schedule:', getErrorMessage(error));
+      alert(getErrorMessage(error) || 'Gagal menyimpan jadwal');
     }
   };
 

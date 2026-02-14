@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api-client";
+import { getErrorMessage } from '@/lib/utils';
 import Link from "next/link";
 
 interface GDPRRequest {
@@ -62,9 +63,9 @@ export default function CustomerGDPRPage() {
         setExportReason('');
         await fetchRequests();
       }
-    } catch (error: any) {
-      console.error('Failed to request export:', error);
-      alert(error.response?.data?.message || 'Failed to submit request');
+    } catch (error: unknown) {
+      console.error('Failed to request export:', getErrorMessage(error));
+      alert(getErrorMessage(error) || 'Failed to submit request');
     } finally {
       setSubmitting(false);
     }
@@ -97,9 +98,9 @@ export default function CustomerGDPRPage() {
         setDeleteConfirm('');
         await fetchRequests();
       }
-    } catch (error: any) {
-      console.error('Failed to request deletion:', error);
-      alert(error.response?.data?.message || 'Failed to submit request');
+    } catch (error: unknown) {
+      console.error('Failed to request deletion:', getErrorMessage(error));
+      alert(getErrorMessage(error) || 'Failed to submit request');
     } finally {
       setSubmitting(false);
     }

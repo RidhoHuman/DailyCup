@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api-client';
+import { getErrorMessage } from '@/lib/utils';
 import {
   TrendingUp,
   TrendingDown,
@@ -102,9 +103,9 @@ export default function HappyHourAnalyticsPage() {
       } else {
         setError('Failed to load analytics data');
       }
-    } catch (err: any) {
-      console.error('Error fetching analytics:', err);
-      setError(err.response?.data?.error || 'Failed to load analytics');
+    } catch (err: unknown) {
+      console.error('Error fetching analytics:', getErrorMessage(err));
+      setError(getErrorMessage(err) || 'Failed to load analytics');
     } finally {
       setLoading(false);
     }

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { api } from '@/lib/api-client';
+import { getErrorMessage } from '@/lib/utils';
 import type { Order } from '@/types/delivery';
 import OrderStatusBadge from '@/components/admin/OrderStatusBadge';
 
@@ -20,12 +21,13 @@ export default function CODApprovalPanel() {
 
   const fetchPendingOrders = async () => {
     try {
-      const response: any = await api.get('/get_pending_cod_orders.php');
-      if (response.success) {
-        setOrders(response.orders);
+      const response = await api.get<unknown>('/get_pending_cod_orders.php');
+      const r = response as { success?: boolean; orders?: Order[] };
+      if (r.success) {
+        setOrders(r.orders || []);
       }
-    } catch (error) {
-      console.error('Failed to fetch pending orders:', error);
+    } catch (error: unknown) {
+      console.error('Failed to fetch pending orders:', getErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -36,18 +38,19 @@ export default function CODApprovalPanel() {
     
     setActionLoading(true);
     try {
-      const response: any = await api.post('/admin_confirm_cod.php', {
+      const response = await api.post<unknown>('/admin_confirm_cod.php', {
         order_id: orderId,
         action: 'approve'
       });
+      const r = response as { success?: boolean; kurir_name?: string };
       
-      if (response.success) {
-        alert(`✅ Pesanan disetujui! Kurir: ${response.kurir_name}`);
+      if (r.success) {
+        alert(`✅ Pesanan disetujui! Kurir: ${r.kurir_name}`);
         fetchPendingOrders();
         setSelectedOrder(null);
       }
-    } catch (error: any) {
-      alert('❌ Gagal: ' + (error.message || 'Unknown error'));
+    } catch (error: unknown) {
+      alert('❌ Gagal: ' + (getErrorMessage(error) || 'Unknown error'));
     } finally {
       setActionLoading(false);
     }
@@ -59,20 +62,21 @@ export default function CODApprovalPanel() {
     
     setActionLoading(true);
     try {
-      const response: any = await api.post('/admin_confirm_cod.php', {
+      const response = await api.post<unknown>('/admin_confirm_cod.php', {
         order_id: orderId,
         action: 'reject',
         reason,
         is_fraud: isFraud
       });
+      const r = response as { success?: boolean };
       
-      if (response.success) {
+      if (r.success) {
         alert(isFraud ? '✅ Pesanan ditolak & user diblacklist!' : '✅ Pesanan ditolak!');
         fetchPendingOrders();
         setSelectedOrder(null);
       }
-    } catch (error: any) {
-      alert('❌ Gagal: ' + (error.message || 'Unknown error'));
+    } catch (error: unknown) {
+      alert('❌ Gagal: ' + (getErrorMessage(error) || 'Unknown error'));
     } finally {
       setActionLoading(false);
     }

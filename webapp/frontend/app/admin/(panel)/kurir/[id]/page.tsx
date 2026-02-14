@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { api } from "@/lib/api-client";
+import { getErrorMessage } from '@/lib/utils';
 import toast from "react-hot-toast";
 
 interface Kurir {
@@ -58,9 +59,9 @@ export default function KurirDetailPage() {
         toast.error("Kurir tidak ditemukan");
         router.push("/admin/kurir");
       }
-    } catch (error: any) {
-      console.error("Error fetching kurir:", error);
-      toast.error(error.message || "Gagal memuat data kurir");
+    } catch (error: unknown) {
+      console.error("Error fetching kurir:", getErrorMessage(error));
+      toast.error(getErrorMessage(error) || "Gagal memuat data kurir");
       router.push("/admin/kurir");
     } finally {
       setLoading(false);
@@ -78,8 +79,8 @@ export default function KurirDetailPage() {
       );
       toast.success("Status berhasil diupdate");
       fetchKurirDetail();
-    } catch (error: any) {
-      toast.error(error.message || "Gagal update status");
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error) || "Gagal update status");
     } finally {
       setActionLoading(false);
     }
@@ -102,8 +103,8 @@ export default function KurirDetailPage() {
       );
       toast.success(`Kurir berhasil di-${action}`);
       fetchKurirDetail();
-    } catch (error: any) {
-      toast.error(error.message || `Gagal ${action} kurir`);
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error) || `Gagal ${action} kurir`);
     } finally {
       setActionLoading(false);
     }

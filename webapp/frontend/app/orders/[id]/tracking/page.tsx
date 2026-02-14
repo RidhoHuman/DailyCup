@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { api } from '@/lib/api-client';
 import { Package, Truck, CheckCircle, Clock, User, Phone, MapPin, DollarSign, FileText } from 'lucide-react';
+import { getErrorMessage } from '@/lib/utils';
 
 interface CODTracking {
   id: number;
@@ -52,16 +53,17 @@ export default function CODTrackingPage() {
     try {
       setLoading(true);
       setError('');
-      const response = await api.get(`/cod_tracking.php?order_id=${orderId}`) as any;
+      const response = await api.get<unknown>(`/cod_tracking.php?order_id=${orderId}`);
+      const r = response as { data?: { success?: boolean; data?: CODTracking; message?: string } };
       
-      if (response.data.success) {
-        setTracking(response.data.data);
+      if (r.data?.success) {
+        setTracking(r.data.data || null);
       } else {
-        setError(response.data.message || 'Failed to load tracking info');
+        setError(r.data?.message || 'Failed to load tracking info');
       }
-    } catch (err: any) {
-      console.error('Error fetching COD tracking:', err);
-      setError(err.response?.data?.message || 'Failed to load tracking information');
+    } catch (err: unknown) {
+      console.error('Error fetching COD tracking:', getErrorMessage(err));
+      setError((err as any)?.response?.data?.message || 'Failed to load tracking information');
     } finally {
       setLoading(false);
     }

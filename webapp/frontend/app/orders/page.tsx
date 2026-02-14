@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Header from "../../components/Header";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import api from "@/lib/api-client";
+import { getErrorMessage } from '@/lib/utils';
 
 interface Order {
   id: string;
@@ -37,27 +38,30 @@ export default function OrdersPage() {
       }
 
       try {
-        const response = await api.get<{ data: { orders: any[] } }>('/orders/user_orders.php', { requiresAuth: true });
+        const response = await api.get<{ data: { orders: unknown[] } }>('/orders/user_orders.php', { requiresAuth: true });
         
         if (response.data && response.data.orders) {
           // Transform API response to match our interface
-          const transformedOrders: Order[] = response.data.orders.map((order: any) => ({
-            id: order.order_id || order.id,
-            date: order.created_at || order.date,
-            status: order.status,
-            total: parseFloat(order.total_amount || order.total || 0),
-            items: order.items || []
-          }));
+          const transformedOrders: Order[] = response.data.orders.map((order: unknown) => {
+            const o = order as Record<string, unknown>;
+            return {
+              id: String(o.order_id ?? o.id ?? ''),
+              date: String(o.created_at ?? o.date ?? ''),
+              status: (o.status as Order['status']) ?? 'pending',
+              total: Number(o.total_amount ?? o.total ?? 0),
+              items: (o.items as Order['items']) || []
+            } as Order;
+          });
           
           setOrders(transformedOrders);
         }
-      } catch (err: any) {
-        console.error('Failed to fetch orders:', err);
-        setError(err.message || 'Failed to load orders');
+      } catch (err: unknown) {
+        console.error('Failed to fetch orders:', getErrorMessage(err));
+        setError(getErrorMessage(err) || 'Failed to load orders');
       } finally {
         setLoading(false);
       }
-    };
+    }; 
 
     fetchOrders();
   }, [isAuthenticated]);

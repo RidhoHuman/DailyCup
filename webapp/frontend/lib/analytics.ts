@@ -24,7 +24,8 @@ export const trackPageView = (url: string) => {
 }
 
 // E-commerce events
-export const trackPurchase = (transactionId: string, value: number, items: any[]) => {
+export interface GAItem { id?: string; name?: string; price?: number; quantity?: number; [key: string]: unknown }
+export const trackPurchase = (transactionId: string, value: number, items: GAItem[]) => {
   if (typeof window !== 'undefined' && (window as any).gtag) {
     ;(window as any).gtag('event', 'purchase', {
       transaction_id: transactionId,
@@ -35,7 +36,7 @@ export const trackPurchase = (transactionId: string, value: number, items: any[]
   }
 }
 
-export const trackAddToCart = (item: any, value: number) => {
+export const trackAddToCart = (item: GAItem, value: number) => {
   if (typeof window !== 'undefined' && (window as any).gtag) {
     ;(window as any).gtag('event', 'add_to_cart', {
       currency: 'IDR',
@@ -45,17 +46,17 @@ export const trackAddToCart = (item: any, value: number) => {
   }
 }
 
-export const trackViewItem = (item: any) => {
+export const trackViewItem = (item: GAItem) => {
   if (typeof window !== 'undefined' && (window as any).gtag) {
     ;(window as any).gtag('event', 'view_item', {
       currency: 'IDR',
-      value: item.price,
+      value: (item.price as number) || 0,
       items: [item],
     })
   }
 }
 
-export const trackBeginCheckout = (value: number, items: any[]) => {
+export const trackBeginCheckout = (value: number, items: GAItem[]) => {
   if (typeof window !== 'undefined' && (window as any).gtag) {
     ;(window as any).gtag('event', 'begin_checkout', {
       currency: 'IDR',
@@ -63,4 +64,4 @@ export const trackBeginCheckout = (value: number, items: any[]) => {
       items: items,
     })
   }
-}
+} 

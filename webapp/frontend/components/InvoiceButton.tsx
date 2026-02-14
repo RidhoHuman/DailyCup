@@ -36,7 +36,7 @@ export default function InvoiceButton({
     setLoading(true);
     try {
       // Get invoice data
-      const response = await api.get<{success: boolean; invoice: any}>(
+      const response = await api.get<{success: boolean; invoice: Record<string, unknown>}>(
         `/invoice.php?order_id=${orderId}&format=json`,
         { requiresAuth: true }
       );

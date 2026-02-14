@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api-client";
+import { getErrorMessage } from '@/lib/utils';
 import toast from "react-hot-toast";
 import Link from "next/link";
 
@@ -84,8 +85,8 @@ export default function KurirInvitationsPage() {
       } else {
         toast.error(res.message || 'Gagal membuat undangan');
       }
-    } catch (error: any) {
-      toast.error(error.message || 'Gagal membuat undangan');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error) || 'Gagal membuat undangan');
     } finally {
       setCreating(false);
     }
@@ -104,8 +105,8 @@ export default function KurirInvitationsPage() {
       await api.delete(`/delete_kurir_invitation.php?id=${id}`, { requiresAuth: true });
       toast.success('Undangan dihapus');
       fetchInvitations();
-    } catch (error: any) {
-      toast.error(error.message || 'Gagal menghapus undangan');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error) || 'Gagal menghapus undangan');
     }
   };
 

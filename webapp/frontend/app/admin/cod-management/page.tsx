@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api-client';
+import { getErrorMessage } from '@/lib/utils';
 import { Package, Truck, CheckCircle, Clock, Phone, MapPin, DollarSign, Search, Filter, Eye, Edit } from 'lucide-react';
 import Link from 'next/link';
 
@@ -29,6 +30,15 @@ interface UpdateModalData {
   currentStatus?: string;
 }
 
+interface UpdateForm {
+  status?: string;
+  courier_name?: string;
+  courier_phone?: string;
+  tracking_number?: string;
+  payment_amount?: string | number;
+  payment_notes?: string;
+}
+
 export default function CODManagementPage() {
   const [orders, setOrders] = useState<CODOrder[]>([]);
   const [filteredOrders, setFilteredOrders] = useState<CODOrder[]>([]);
@@ -41,7 +51,7 @@ export default function CODManagementPage() {
   
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [updateModalData, setUpdateModalData] = useState<UpdateModalData | null>(null);
-  const [updateForm, setUpdateForm] = useState<any>({});
+  const [updateForm, setUpdateForm] = useState<UpdateForm>({});
   const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
@@ -56,16 +66,16 @@ export default function CODManagementPage() {
     try {
       setLoading(true);
       setError('');
-      const response = await api.get('/cod_tracking.php?all=1') as any;
+      const response = await api.get('/cod_tracking.php?all=1') as { data?: { success?: boolean; data?: CODOrder[]; message?: string } };
       
       if (response?.data?.success) {
         setOrders(response.data.data || []);
       } else {
         setError(response?.data?.message || 'Failed to load COD orders');
       }
-    } catch (err: any) {
-      console.error('Error fetching COD orders:', err);
-      setError(err.response?.data?.message || 'Failed to load COD orders');
+    } catch (err: unknown) {
+      console.error('Error fetching COD orders:', getErrorMessage(err));
+      setError(getErrorMessage(err) || 'Failed to load COD orders');
     } finally {
       setLoading(false);
     }
@@ -111,24 +121,24 @@ export default function CODManagementPage() {
 
     try {
       setUpdating(true);
-      const payload: any = {
+      const payload: Record<string, unknown> = {
         order_id: updateModalData.orderId,
         action: updateModalData.action,
         ...updateForm,
       };
 
-      const response = await api.post('/cod_tracking.php', payload) as any;
+      const response = await api.post('/cod_tracking.php', payload) as { data?: { success?: boolean; message?: string } };
       
-      if (response.data.success) {
+      if (response?.data?.success) {
         alert('COD tracking updated successfully!');
         setShowUpdateModal(false);
         fetchCODOrders();
       } else {
-        alert(response.data.message || 'Update failed');
+        alert(response?.data?.message ?? 'Update failed');
       }
-    } catch (err: any) {
-      console.error('Error updating COD tracking:', err);
-      alert(err.response?.data?.message || 'Failed to update tracking');
+    } catch (err: unknown) {
+      console.error('Error updating COD tracking:', getErrorMessage(err));
+      alert(getErrorMessage(err) || 'Failed to update tracking');
     } finally {
       setUpdating(false);
     }
@@ -502,3 +512,5 @@ export default function CODManagementPage() {
     </div>
   );
 }
+
+

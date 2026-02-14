@@ -180,3 +180,12 @@ export function calculateLoyaltyPoints(orderTotal: number): number {
 export function calculatePointsDiscount(points: number): number {
   return Math.floor(points / 100) * 5000;
 }
+/**
+ * Convert unknown error to readable message (use in catch blocks)
+ */
+export function getErrorMessage(err: unknown): string {
+  if (!err) return 'Unknown error';
+  if (err instanceof Error) return err.message;
+  if (typeof err === 'string') return err;
+  try { return JSON.stringify(err); } catch { return 'Unknown error'; }
+}

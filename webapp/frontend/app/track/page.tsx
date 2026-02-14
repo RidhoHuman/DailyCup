@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import { api } from '@/lib/api-client';
+import { getErrorMessage } from '@/lib/utils';
 
 export default function TrackOrderPage() {
   const router = useRouter();
@@ -24,7 +25,7 @@ export default function TrackOrderPage() {
 
     try {
       // Validate order exists
-      const response: any = await api.get(`/orders/track_order.php?order_number=${orderNumber.trim()}`);
+      const response = await api.get<{ success: boolean; order?: { id: string } }>(`/orders/track_order.php?order_number=${orderNumber.trim()}`);
       
       if (response.success && response.order) {
         // Redirect to order detail page
@@ -32,8 +33,8 @@ export default function TrackOrderPage() {
       } else {
         setError('Order not found. Please check your order number.');
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to track order. Please try again.');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err) || 'Failed to track order. Please try again.');
     } finally {
       setLoading(false);
     }

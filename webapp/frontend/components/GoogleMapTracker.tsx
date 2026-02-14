@@ -15,19 +15,19 @@ interface MapTrackerProps {
 
 declare global {
   interface Window {
-    google: any;
-    initMap: () => void;
+    // permissive fallback so the file compiles without @types/google.maps
+    google?: any;
+    initMap?: () => void;
   }
 }
 
 export default function GoogleMapTracker({ 
   courierLocation, 
-  customerLocation,
-  orderId 
+  customerLocation
 }: MapTrackerProps) {
   const mapRef = useRef<HTMLDivElement>(null);
-  const [map, setMap] = useState<any>(null);
-  const [courierMarker, setCourierMarker] = useState<any>(null);
+  const [map, setMap] = useState<any | null>(null);
+  const [courierMarker, setCourierMarker] = useState<any | null>(null);
   const [apiKeyMissing, setApiKeyMissing] = useState(false);
 
   // Dummy locations for demonstration

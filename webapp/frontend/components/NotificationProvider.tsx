@@ -10,7 +10,7 @@ interface PreferenceResponse {
   data?: {
     preferences?: {
       push_enabled?: boolean;
-      [key: string]: any;
+      [key: string]: unknown;
     };
   };
 }

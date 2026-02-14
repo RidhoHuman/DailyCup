@@ -6,7 +6,7 @@ import api from '@/lib/api-client';
 
 interface Setting {
   key: string;
-  value: any;
+  value: unknown;
   type: string;
   label: string;
   description: string;
@@ -20,12 +20,22 @@ interface SettingsByCategory {
 
 export default function AdminSettingsPage() {
   const [settingsByCategory, setSettingsByCategory] = useState<SettingsByCategory>({});
-  const [originalValues, setOriginalValues] = useState<Record<string, any>>({});
-  const [changedValues, setChangedValues] = useState<Record<string, any>>({});
+  const [originalValues, setOriginalValues] = useState<Record<string, unknown>>({});
+  const [changedValues, setChangedValues] = useState<Record<string, unknown>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const getErrorMessage = (err: unknown): string | null => {
+    if (!err) return null;
+    if (typeof err === 'string') return err;
+    if (err instanceof Error) return err.message;
+    if (typeof err === 'object' && err !== null && 'message' in err && typeof (err as any).message === 'string') {
+      return (err as any).message;
+    }
+    return null;
+  };
 
   useEffect(() => {
     fetchSettings();
@@ -43,14 +53,14 @@ export default function AdminSettingsPage() {
         setSettingsByCategory(response.data.by_category);
         setOriginalValues(response.data.settings);
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to load settings');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err) || 'Failed to load settings');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleValueChange = (key: string, value: any) => {
+  const handleValueChange = (key: string, value: unknown) => {
     setChangedValues(prev => ({
       ...prev,
       [key]: value
@@ -68,7 +78,7 @@ export default function AdminSettingsPage() {
     setSuccessMessage(null);
 
     try {
-      const response = await api.post<{ data: { updated: string[]; failed: any[] }; message: string }>(
+      const response = await api.post<{ data: { updated: string[]; failed: Record<string, unknown>[] }; message: string }>(
         '/admin/settings/update.php',
         { settings: changedValues },
         { requiresAuth: true }
@@ -79,8 +89,8 @@ export default function AdminSettingsPage() {
         setChangedValues({});
         fetchSettings(); // Reload to get updated values
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to save settings');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err) || 'Failed to save settings');
     } finally {
       setSaving(false);
     }
@@ -115,39 +125,59 @@ export default function AdminSettingsPage() {
       hasChanged ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
     }`;
 
+    const toSafeString = (v: unknown) => {
+      if (v === undefined || v === null) return '';
+      if (typeof v === 'string') return v;
+      if (typeof v === 'number' || typeof v === 'boolean') return String(v);
+      try {
+        return JSON.stringify(v);
+      } catch {
+        return String(v);
+      }
+    };
+
     switch (setting.type) {
-      case 'textarea':
+      case 'textarea': {
+        const safeValue = toSafeString(value);
         return (
           <textarea
-            value={value || ''}
+            value={safeValue}
             onChange={(e) => handleValueChange(setting.key, e.target.value)}
             className={baseClass}
             rows={3}
             placeholder={setting.description}
           />
         );
-      
-      case 'number':
+      }
+
+      case 'number': {
+        const safeValue = value === undefined || value === null ? '' : typeof value === 'number' ? value : String(value);
         return (
           <input
             type="number"
-            value={value || ''}
-            onChange={(e) => handleValueChange(setting.key, parseFloat(e.target.value) || 0)}
+            value={safeValue as string | number}
+            onChange={(e) => {
+              const v = e.target.value;
+              handleValueChange(setting.key, v === '' ? '' : parseFloat(v));
+            }}
             className={baseClass}
             placeholder={setting.description}
           />
         );
-      
-      default:
+      }
+
+      default: {
+        const safeValue = toSafeString(value);
         return (
           <input
             type={setting.type === 'email' ? 'email' : setting.type === 'url' ? 'url' : 'text'}
-            value={value || ''}
+            value={safeValue}
             onChange={(e) => handleValueChange(setting.key, e.target.value)}
             className={baseClass}
             placeholder={setting.description}
           />
         );
+      }
     }
   };
 

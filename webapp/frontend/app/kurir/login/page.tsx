@@ -6,6 +6,7 @@ import { useKurirStore } from '@/lib/stores/kurir-store';
 import { kurirApi } from '@/lib/kurir-api';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '@/lib/utils';
 
 export default function KurirLoginPage() {
   const router = useRouter();
@@ -33,8 +34,8 @@ export default function KurirLoginPage() {
       } else {
         setError(res.message || 'Login gagal');
       }
-    } catch (err: any) {
-      setError(err.message || 'Login gagal. Periksa koneksi Anda.');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err) || 'Login gagal. Periksa koneksi Anda.');
     } finally {
       setIsLoading(false);
     }

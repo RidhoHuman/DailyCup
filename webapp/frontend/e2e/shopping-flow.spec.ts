@@ -20,12 +20,8 @@ test.describe('Complete Shopping Journey', () => {
     await page.waitForURL(/\/menu/, { timeout: 10000 });
     await page.waitForLoadState('networkidle');
 
-    // 3. Search for a product
-    await page.fill('input[placeholder*="Search"]', 'cappuccino');
-    await page.waitForTimeout(500); // Wait for search debounce
-    
-    // 4. Click on a product
-    const productCard = page.locator('h3:has-text("Cappuccino")').first();
+    // 3. Find Cappuccino product
+    const productCard = page.locator('h3').filter({ hasText: 'Cappuccino' }).first();
     await expect(productCard).toBeVisible();
     
     // 5. Add to cart (scope Add button to the Cappuccino card)

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import apiClient from '@/lib/api-client';
+import { getErrorMessage } from '@/lib/utils';
 
 interface CodTracking {
   id: number;
@@ -93,9 +94,9 @@ export default function CodTrackingCard({ orderId, isAdmin = false }: CodTrackin
       } else {
         setError(response.message || 'Gagal memuat tracking');
       }
-    } catch (err: any) {
-      console.error('Error loading COD tracking:', err);
-      setError(err.response?.data?.message || 'Gagal memuat tracking');
+    } catch (err: unknown) {
+      console.error('Error loading COD tracking:', getErrorMessage(err));
+      setError(getErrorMessage(err) || 'Gagal memuat tracking');
     } finally {
       setLoading(false);
     }
@@ -114,8 +115,8 @@ export default function CodTrackingCard({ orderId, isAdmin = false }: CodTrackin
         await loadTracking(); // Reload tracking info
         alert('Status berhasil diperbarui');
       }
-    } catch (err: any) {
-      alert(err.response?.data?.message || 'Gagal memperbarui status');
+    } catch (err: unknown) {
+      alert(getErrorMessage(err) || 'Gagal memperbarui status');
     }
   };
 
@@ -132,8 +133,8 @@ export default function CodTrackingCard({ orderId, isAdmin = false }: CodTrackin
         await loadTracking();
         alert('Pembayaran berhasil dikonfirmasi');
       }
-    } catch (err: any) {
-      alert(err.response?.data?.message || 'Gagal konfirmasi pembayaran');
+    } catch (err: unknown) {
+      alert(getErrorMessage(err) || 'Gagal konfirmasi pembayaran');
     }
   };
 

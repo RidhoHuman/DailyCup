@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react';
 import { Star, MessageSquare, TrendingUp, Filter } from 'lucide-react';
 import ReviewCard from './ReviewCard';
 import ReviewForm from './ReviewForm';
+import type { ReviewFormData } from './ReviewForm';
 import StarRating from './StarRating';
 import api from '@/lib/api-client';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '@/lib/utils';
 
 interface Review {
   id: number;
@@ -87,20 +89,26 @@ export default function ReviewsList({ productId, productName }: ReviewsListProps
     }
   };
 
-  const handleSubmitReview = async (reviewData: any) => {
+  const handleSubmitReview = async (reviewData: ReviewFormData) => {
     try {
-      const response = await api.post('/reviews.php', reviewData) as ReviewSubmitResponse;
+      const response = await api.post('/reviews.php', reviewData as unknown as Record<string, unknown>) as ReviewSubmitResponse;
       
       if (response.data.success) {
         toast.success('Review submitted successfully!');
         setShowReviewForm(false);
         fetchReviews(); // Refresh reviews
       }
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        toast.error(error.response.data.error);
-      } else {
-        toast.error('Failed to submit review');
+    } catch (error: unknown) {
+      const msg = getErrorMessage(error);
+      try {
+        const resp = (error as any)?.response?.data; // narrow only for runtime check
+        if (resp?.error) {
+          toast.error(String(resp.error));
+        } else {
+          toast.error(msg || 'Failed to submit review');
+        }
+      } catch {
+        toast.error(msg || 'Failed to submit review');
       }
       throw error;
     }

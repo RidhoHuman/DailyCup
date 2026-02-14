@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '../utils/api';
+import { getImageUrl } from '@/lib/storage';
 import AddToCartButton from './AddToCartButton';
 import { WishlistButton } from './wishlist/wishlist-button';
 import StarRating from './StarRating';
@@ -102,7 +103,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
         {product.image ? (
           <Image
-            src={product.image?.startsWith('http') || product.image?.startsWith('/') ? product.image : `/uploads/products/${product.image}`}
+            src={getImageUrl(product.image) || '/assets/image/cup.png'}
             alt={product.name}
             fill
             className="object-cover"

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { api } from "@/lib/api-client";
+import { getErrorMessage } from '@/lib/utils';
 import toast from "react-hot-toast";
 
 interface KurirForm {
@@ -39,7 +40,7 @@ export default function KurirEditPage() {
   const fetchKurirDetail = async () => {
     try {
       setLoading(true);
-      const response = await api.get<{ success: boolean; kurir: any }>(
+      const response = await api.get<{ success: boolean; kurir: Record<string, unknown> }>(
         `/kurir.php?id=${id}`,
         { requiresAuth: true }
       );
@@ -58,9 +59,9 @@ export default function KurirEditPage() {
         toast.error("Kurir tidak ditemukan");
         router.push("/admin/kurir");
       }
-    } catch (error: any) {
-      console.error("Error fetching kurir:", error);
-      toast.error(error.message || "Gagal memuat data kurir");
+    } catch (error: unknown) {
+      console.error("Error fetching kurir:", getErrorMessage(error));
+      toast.error(getErrorMessage(error) || "Gagal memuat data kurir");
       router.push("/admin/kurir");
     } finally {
       setLoading(false);
@@ -123,9 +124,9 @@ export default function KurirEditPage() {
       } else {
         toast.error(response.message || "Gagal update data kurir");
       }
-    } catch (error: any) {
-      console.error("Error updating kurir:", error);
-      toast.error(error.message || "Gagal update data kurir");
+    } catch (error: unknown) {
+      console.error("Error updating kurir:", getErrorMessage(error));
+      toast.error(getErrorMessage(error) || "Gagal update data kurir");
     } finally {
       setSaving(false);
     }

@@ -58,7 +58,7 @@ export default function DeliveryRecapPage() {
     try {
       const res = await api.get<{
         success: boolean;
-        stats: any;
+        stats: DeliveryStats;
         top_kurirs: KurirPerformance[];
       }>(`/get_delivery_stats.php?period=${period}`, { requiresAuth: true });
 

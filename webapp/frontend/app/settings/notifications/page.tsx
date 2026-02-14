@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Bell, BellOff, Mail, Clock, ShoppingBag, CreditCard, Gift, MessageSquare, Shield } from 'lucide-react';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import api from '@/lib/api-client';
+import { getErrorMessage } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import pushManager from '@/lib/pushManager';
 
@@ -151,9 +152,9 @@ export default function NotificationSettings() {
             }
 
             await updatePreference('push_enabled', !pushSubscribed);
-        } catch (error: any) {
-            console.error('Push toggle error:', error);
-            toast.error(error.message || 'Gagal mengubah pengaturan push');
+        } catch (error: unknown) {
+            console.error('Push toggle error:', getErrorMessage(error));
+            toast.error(getErrorMessage(error) || 'Gagal mengubah pengaturan push');
         }
     };
 

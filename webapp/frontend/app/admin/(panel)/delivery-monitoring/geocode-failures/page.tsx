@@ -111,15 +111,16 @@ export default function GeocodeFailuresPage() {
           
           const marker = L.marker([manualCoords.lat, manualCoords.lng]).addTo(map);
           
-          map.on('click', (e: any) => {
+          map.on('click', (e: { latlng: { lat: number; lng: number } }) => {
             const { lat, lng } = e.latlng;
             setManualCoords({ lat, lng });
             marker.setLatLng(e.latlng);
           });
           
           // Store map instance for cleanup
-          (mapElement as any).__leaflet_map = map;
-          (mapElement as any).__leaflet_marker = marker;
+          const _el = mapElement as HTMLElement & { __leaflet_map?: unknown; __leaflet_marker?: unknown };
+          _el.__leaflet_map = map;
+          _el.__leaflet_marker = marker;
         } else if (mapElement && mapElement.hasChildNodes()) {
           // Update existing map
           const map = (mapElement as any).__leaflet_map;

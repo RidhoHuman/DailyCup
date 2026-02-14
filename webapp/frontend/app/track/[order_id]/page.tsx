@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { api } from "@/lib/api-client";
 import Header from "@/components/Header";
 import LeafletMapTracker from "@/components/LeafletMapTracker";
+import { getErrorMessage } from '@/lib/utils';
 
 interface OrderTracking {
   order: {
@@ -161,16 +162,16 @@ export default function OrderTrackerPage() {
 
   const fetchTracking = async () => {
     try {
-      const response = await api.get<{success: boolean} & OrderTracking>(
+      const response = await api.get<{success: boolean; order?: OrderTracking['order']; courier?: OrderTracking['courier']; status_history?: OrderTracking['status_history']; items?: OrderTracking['items'] }>(
         `/orders/tracking.php?order_id=${orderId}`,
         { requiresAuth: false }
       );
       
       if (response.success) {
-        setTracking(response);
+        setTracking(response as unknown as OrderTracking);
       }
-    } catch (error) {
-      console.error('Failed to fetch tracking:', error);
+    } catch (error: unknown) {
+      console.error('Failed to fetch tracking:', getErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -192,8 +193,8 @@ export default function OrderTrackerPage() {
           alert(`📱 SIMULATED OTP: ${response.simulated_otp}\n\nDalam sistem produksi, kode ini akan dikirim via WhatsApp.`);
         }
       }
-    } catch (error: any) {
-      alert(error?.message || 'Failed to generate OTP');
+    } catch (error: unknown) {
+      alert(getErrorMessage(error) || 'Failed to generate OTP');
     }
   };
 
@@ -211,8 +212,8 @@ export default function OrderTrackerPage() {
         setOtpInput('');
         fetchTracking();
       }
-    } catch (error: any) {
-      setOtpError(error?.message || 'Invalid OTP');
+    } catch (error: unknown) {
+      setOtpError(getErrorMessage(error) || 'Invalid OTP');
     }
   };
 

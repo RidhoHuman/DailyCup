@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 // Script to generate VAPID keys for Web Push Notifications
 // Run: node scripts/generate-vapid-keys.js
 

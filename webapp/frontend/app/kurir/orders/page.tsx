@@ -30,10 +30,25 @@ export default function KurirOrderHistoryPage() {
     try {
       const res = await kurirApi.getOrders(status, pageNum, 15);
       if (res.success) {
-        const items = res.data || [];
+        const raw = res.data || [];
+        const items: OrderItem[] = (raw as any[]).map(o => ({
+          orderNumber: o.orderNumber ?? o.order_number ?? '',
+          status: o.status ?? '',
+          customerName: o.customerName ?? o.customer_name ?? '',
+          deliveryAddress: o.deliveryAddress ?? o.delivery_address ?? '',
+          totalAmount: Number(o.totalAmount ?? o.total ?? 0),
+          isCOD: Boolean(o.isCOD ?? o.is_cod ?? false),
+          itemCount: Number(o.itemCount ?? o.item_count ?? 0),
+          createdAt: o.createdAt ?? o.created_at ?? '',
+          completedAt: o.completedAt ?? o.completed_at ?? null,
+        }));
+
         setOrders(prev => append ? [...prev, ...items] : items);
-        setTotalCount(res.pagination?.total || items.length);
-        setHasMore((res.pagination?.page || 1) < (res.pagination?.totalPages || 1));
+        setTotalCount(res.pagination?.total ?? items.length);
+
+        const perPage = res.pagination?.per_page ?? 15;
+        const totalPages = Math.max(1, Math.ceil((res.pagination?.total ?? items.length) / perPage));
+        setHasMore((res.pagination?.page ?? 1) < totalPages);
       }
     } catch {
       // silent

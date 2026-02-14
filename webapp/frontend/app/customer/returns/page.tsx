@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api-client";
+import { getErrorMessage } from '@/lib/utils';
 import Link from "next/link";
 import Image from "next/image";
 
@@ -180,9 +181,9 @@ export default function CustomerReturnsPage() {
         setRefundMethod('original_payment');
         await fetchReturns();
       }
-    } catch (error: any) {
-      console.error('Failed to submit return:', error);
-      alert(error.response?.data?.message || 'Failed to submit return request');
+    } catch (error: unknown) {
+      console.error('Failed to submit return:', getErrorMessage(error));
+      alert(getErrorMessage(error) || 'Failed to submit return request');
     } finally {
       setSubmitting(false);
     }

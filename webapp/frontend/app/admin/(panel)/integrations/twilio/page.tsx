@@ -2,15 +2,28 @@
 
 import { useState, useEffect } from 'react';
 import { api, endpoints } from '@/lib/api-client';
+import { getErrorMessage } from '@/lib/utils';
+
+type Log = {
+  id: string | number;
+  created_at: string | number | Date;
+  direction?: string;
+  to_number?: string;
+  from_number?: string;
+  status?: string;
+  body?: string;
+  metadata?: Record<string, unknown>;
+  [key: string]: unknown;
+};
 
 export default function TwilioIntegrationPage() {
   const [loading, setLoading] = useState(true);
-  const [settings, setSettings] = useState<any>({});
+  const [settings, setSettings] = useState<Record<string, unknown>>({});
   const [saving, setSaving] = useState(false);
   const [sendTo, setSendTo] = useState('');
   const [sendBody, setSendBody] = useState('');
   const [selectedProvider, setSelectedProvider] = useState('twilio');
-  const [logs, setLogs] = useState<any[]>([]);
+  const [logs, setLogs] = useState<Log[]>([]);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(50);
   const [total, setTotal] = useState(0);
@@ -19,10 +32,10 @@ export default function TwilioIntegrationPage() {
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [loadingLogs, setLoadingLogs] = useState(false);
-  const [selectedLog, setSelectedLog] = useState<any>(null);
+  const [selectedLog, setSelectedLog] = useState<Log | null>(null);
 
   // worker status & alerts
-  const [workerStatus, setWorkerStatus] = useState<any>(null);
+  const [workerStatus, setWorkerStatus] = useState<Record<string, unknown> | null>(null);
   const [workerLoading, setWorkerLoading] = useState(false);
 
   // provider settings UI
@@ -43,8 +56,9 @@ export default function TwilioIntegrationPage() {
   const fetchWorkerStatus = async () => {
     try {
       setWorkerLoading(true);
-      const res: any = await api.get(endpoints.integrations.twilio.workerStatus());
-      if (res.success) setWorkerStatus(res);
+      const res = await api.get<unknown>(endpoints.integrations.twilio.workerStatus());
+      const r = res as { success?: boolean; last_run?: string; summary?: Record<string, unknown> };
+      if (r.success) setWorkerStatus(r);
     } catch (e) {
       console.error('Failed fetching worker status', e);
     } finally {
@@ -56,57 +70,66 @@ export default function TwilioIntegrationPage() {
     if (!confirm('Run worker now?')) return;
     try {
       setWorkerLoading(true);
-      const res: any = await api.post(endpoints.integrations.twilio.runWorker());
-      alert('Worker run: ' + (res.success ? 'OK' : 'Failed'));
+      const res = await api.post<unknown>(endpoints.integrations.twilio.runWorker());
+      const r = res as { success?: boolean; message?: string };
+      alert('Worker run: ' + (r.success ? 'OK' : 'Failed'));
       fetchWorkerStatus();
-    } catch (e: any) {
-      alert('Run failed: ' + (e.message || ''));
+    } catch (e: unknown) {
+      alert('Run failed: ' + (getErrorMessage(e) || ''));
     } finally { setWorkerLoading(false); }
   };
 
   const sendTestAlert = async () => {
     if (!confirm('Send test security alert (Slack/email) now?')) return;
     try {
-      const res: any = await api.post(endpoints.integrations.twilio.testAlert());
-      alert(res.success ? 'Test alert sent' : 'Failed to send test alert');
-    } catch (e: any) {
-      alert('Failed: ' + (e.message || ''));
+      const res = await api.post<unknown>(endpoints.integrations.twilio.testAlert());
+      const r = res as { success?: boolean };
+      alert(r.success ? 'Test alert sent' : 'Failed to send test alert');
+    } catch (e: unknown) {
+      alert('Failed: ' + (getErrorMessage(e) || ''));
     }
   };
 
   const fetchProviderSettings = async (p = 'twilio') => {
     try {
       const url = endpoints.integrations.twilio.providerSettings() + '&provider=' + encodeURIComponent(p);
-      const res: any = await api.get(url);
-      if (res.success) {
+      const res = await api.get<unknown>(url);
+      const r = res as { success?: boolean; settings?: Record<string, unknown> };
+      if (r.success) {
         setProviderName(p);
-        setProviderSettings(res.settings || {});
+        const raw = r.settings || {};
+        const stringSettings = Object.fromEntries(
+          Object.entries(raw).map(([k, v]) => [k, v == null ? '' : (typeof v === 'object' ? JSON.stringify(v) : String(v))])
+        ) as Record<string, string>;
+        setProviderSettings(stringSettings);
       }
-    } catch (e) {
-      console.error('Failed fetching provider settings', e);
+    } catch (e: unknown) {
+      console.error('Failed fetching provider settings', getErrorMessage(e));
     }
   };
 
   const saveProviderSettings = async () => {
     try {
       setProviderSaving(true);
-      const payload = { provider: providerName, settings: providerSettings };
-      const res: any = await api.post(endpoints.integrations.twilio.providerSettings(), payload);
-      if (res.success) {
+      const payload = { provider: providerName, settings: providerSettings } as Record<string, unknown>;
+      const res = await api.post<unknown>(endpoints.integrations.twilio.providerSettings(), payload);
+      const r = res as { success?: boolean };
+      if (r.success) {
         alert('Provider settings saved');
       }
-    } catch (e: any) {
-      alert('Save failed: ' + (e.message || ''));
+    } catch (e: unknown) {
+      alert('Save failed: ' + (getErrorMessage(e) || ''));
     } finally { setProviderSaving(false); }
   };
 
   const fetchSettings = async () => {
     try {
       setLoading(true);
-      const res: any = await api.get(endpoints.integrations.twilio.settings());
-      if (res.success) setSettings(res.settings || {});
-    } catch (e) {
-      console.error('Failed fetching settings', e);
+      const res = await api.get<unknown>(endpoints.integrations.twilio.settings());
+      const r = res as { success?: boolean; settings?: Record<string, unknown> };
+      if (r.success) setSettings(r.settings || {});
+    } catch (e: unknown) {
+      console.error('Failed fetching settings', getErrorMessage(e));
     } finally {
       setLoading(false);
     }
@@ -118,8 +141,8 @@ export default function TwilioIntegrationPage() {
       await api.post(endpoints.integrations.twilio.saveSettings(), settings);
       alert('Settings saved');
       fetchSettings();
-    } catch (e: any) {
-      alert('Failed saving settings: ' + (e.message || e?.data?.message || ''));
+    } catch (e: unknown) {
+      alert('Failed saving settings: ' + (getErrorMessage(e) || ''));
     } finally {
       setSaving(false);
     }
@@ -128,21 +151,22 @@ export default function TwilioIntegrationPage() {
   const testCredentials = async () => {
     if (!confirm('Test Twilio credentials (will use env vars if set)?')) return;
     try {
-      const payload: any = {};
-      if (settings.twilio_account_sid) payload.account_sid = settings.twilio_account_sid;
-      if (settings.twilio_auth_token) payload.auth_token = settings.twilio_auth_token;
-      const res: any = await api.post('admin/credentials.php?action=test', payload);
-      if (res?.success && res?.result) {
-        if (res.result.success) {
-          alert('Credentials valid (provider: ' + (res.result.provider || 'twilio') + ')');
+      const payload: Record<string, unknown> = {};
+      if (settings.twilio_account_sid) payload['account_sid'] = settings.twilio_account_sid;
+      if (settings.twilio_auth_token) payload['auth_token'] = settings.twilio_auth_token;
+      const res = await api.post<unknown>('admin/credentials.php?action=test', payload);
+      const r = res as { success?: boolean; result?: { success?: boolean; provider?: string; error?: string } };
+      if (r?.success && r?.result) {
+        if (r.result.success) {
+          alert('Credentials valid (provider: ' + (r.result.provider || 'twilio') + ')');
         } else {
-          alert('Credentials test failed: ' + (res.result.error || JSON.stringify(res.result)));
+          alert('Credentials test failed: ' + (r.result.error || JSON.stringify(r.result)));
         }
       } else {
         alert('Test failed');
       }
-    } catch (e: any) {
-      alert('Test failed: ' + (e.message || ''));
+    } catch (e: unknown) {
+      alert('Test failed: ' + (getErrorMessage(e) || ''));
     }
   };
 
@@ -158,10 +182,11 @@ export default function TwilioIntegrationPage() {
       if (toDate) q.set('to', toDate);
 
       const url = endpoints.integrations.twilio.logs() + '&' + q.toString();
-      const res: any = await api.get(url);
-      if (res.success) {
-        setLogs(res.logs || []);
-        setTotal(res.total || 0);
+      const res = await api.get<unknown>(url);
+      const r = res as { success?: boolean; logs?: Log[]; total?: number };
+      if (r.success) {
+        setLogs(r.logs || []);
+        setTotal(r.total || 0);
       }
     } catch (e) {
       console.error('Failed fetching logs', e);
@@ -181,9 +206,10 @@ export default function TwilioIntegrationPage() {
       q.set('page', '1');
 
       const url = endpoints.integrations.twilio.logs() + '&' + q.toString();
-      const res: any = await api.get(url);
-      if (!res.success) { alert('Export failed'); return; }
-      const rows = res.logs || [];
+      const res = await api.get<unknown>(url);
+      const r = res as { success?: boolean; logs?: Log[] };
+      if (!r.success) { alert('Export failed'); return; }
+      const rows = r.logs || [];
       const csvRows = [];
       csvRows.push(['id','created_at','direction','to_number','from_number','status','body'].join(','));
       for (const r of rows) {
@@ -199,30 +225,31 @@ export default function TwilioIntegrationPage() {
       a.click();
       a.remove();
       URL.revokeObjectURL(urlBlob);
-    } catch (e) {
-      alert('Export failed: ' + (e as any).message);
+    } catch (e: unknown) {
+      alert('Export failed: ' + (getErrorMessage(e) || ''));
     }
   };
 
   const sendMessage = async () => {
     if (!sendTo || !sendBody) { alert('Fill to & body'); return; }
     try {
-      const payload: any = { provider: selectedProvider, to: sendTo, body: sendBody };
+      const payload: Record<string, unknown> = { provider: selectedProvider, to: sendTo, body: sendBody };
       if (selectedProvider === 'twilio') {
         // ensure whatsapp prefix
         if (!sendTo.startsWith('whatsapp:') && sendTo.match(/^[+0-9]/)) {
-          payload.to = 'whatsapp:' + sendTo;
+          (payload as any).to = 'whatsapp:' + sendTo;
         }
       }
 
-      const res: any = await api.post(endpoints.integrations.send.send(), payload);
-      if (res.success) {
+      const res = await api.post<unknown>(endpoints.integrations.send.send(), payload);
+      const r = res as { success?: boolean };
+      if (r.success) {
         alert('Message sent');
         setSendTo(''); setSendBody('');
         fetchLogs();
       }
-    } catch (e: any) {
-      alert('Send failed: ' + (e.message || e?.data?.message || ''));
+    } catch (e: unknown) {
+      alert('Send failed: ' + (getErrorMessage(e) || ''));
     }
   };
 
@@ -241,10 +268,10 @@ export default function TwilioIntegrationPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
-          <input className="p-2 border" placeholder="Account SID" value={settings.twilio_account_sid || ''} onChange={(e)=>setSettings({...settings, twilio_account_sid: e.target.value})} />
-          <input className="p-2 border" placeholder="Auth Token" value={settings.twilio_auth_token || ''} onChange={(e)=>setSettings({...settings, twilio_auth_token: e.target.value})} />
-          <input className="p-2 border" placeholder="WhatsApp From (e.g. whatsapp:+1415...)" value={settings.twilio_whatsapp_from || ''} onChange={(e)=>setSettings({...settings, twilio_whatsapp_from: e.target.value})} />
-          <input className="p-2 border" placeholder="Webhook Secret (optional)" value={settings.twilio_webhook_secret || ''} onChange={(e)=>setSettings({...settings, twilio_webhook_secret: e.target.value})} />
+          <input className="p-2 border" placeholder="Account SID" value={String(settings.twilio_account_sid || '')} onChange={(e)=>setSettings({...settings, twilio_account_sid: e.target.value})} />
+          <input className="p-2 border" placeholder="Auth Token" value={String(settings.twilio_auth_token || '')} onChange={(e)=>setSettings({...settings, twilio_auth_token: e.target.value})} />
+          <input className="p-2 border" placeholder="WhatsApp From (e.g. whatsapp:+1415...)" value={String(settings.twilio_whatsapp_from || '')} onChange={(e)=>setSettings({...settings, twilio_whatsapp_from: e.target.value})} />
+          <input className="p-2 border" placeholder="Webhook Secret (optional)" value={String(settings.twilio_webhook_secret || '')} onChange={(e)=>setSettings({...settings, twilio_webhook_secret: e.target.value})} />
         </div>
         <div className="mt-3 flex items-center gap-3">
           <button onClick={saveSettings} disabled={saving} className="px-4 py-2 bg-blue-600 text-white rounded">Save Settings</button>
@@ -253,7 +280,7 @@ export default function TwilioIntegrationPage() {
         </div>
 
         <div className="mt-3 p-3 bg-gray-50 rounded">
-          <div className="text-sm text-gray-700">Worker status: {workerLoading ? 'loading...' : (workerStatus?.last_run || 'never')}</div>
+          <div className="text-sm text-gray-700">Worker status: {workerLoading ? 'loading...' : (workerStatus?.last_run ? String(workerStatus.last_run) : 'never')}</div>
           <div className="text-xs text-gray-500 mt-1">Summary: {workerStatus?.summary ? JSON.stringify(workerStatus.summary) : 'n/a'}</div>
         </div>
       </section>
@@ -405,23 +432,24 @@ export default function TwilioIntegrationPage() {
                 <div className="text-sm bg-gray-50 p-3 rounded">{selectedLog.body}</div>
 
                 {(() => {
-                  let meta = selectedLog.metadata;
+                  let meta: any = selectedLog.metadata;
                   if (typeof meta === 'string' && meta) {
                     try { meta = JSON.parse(meta); } catch (e) { meta = null; }
                   }
-                  if (meta && meta.attachments && meta.attachments.length) {
+                  const attachments: any[] | null = Array.isArray(meta?.attachments) ? meta.attachments : null;
+                  if (attachments && attachments.length) {
                     return (
                       <div>
                         <h5 className="font-semibold mb-2">Attachments</h5>
                         <div className="grid grid-cols-3 gap-3">
-                          {meta.attachments.map((a: any, idx: number) => (
+                          {attachments.map((a: Record<string, unknown>, idx: number) => (
                             <div key={idx} className="border p-2 rounded">
-                              {a.content_type?.startsWith('image/') ? (
-                                <img src={a.path.startsWith('http') || a.path.startsWith('/') ? a.path : `/${a.path}`} alt={a.filename} className="w-full h-32 object-cover" />
+                              {String(a.content_type || '').startsWith('image/') ? (
+                                <img src={String(a.path || '').startsWith('http') || String(a.path || '').startsWith('/') ? String(a.path || '') : `/${String(a.path || '')}`} alt={String(a.filename || '')} className="w-full h-32 object-cover" />
                               ) : (
-                                <a href={a.path} target="_blank" rel="noreferrer" className="text-blue-600">{a.filename}</a>
+                                <a href={String(a.path || '')} target="_blank" rel="noreferrer" className="text-blue-600">{String(a.filename || '')}</a>
                               )}
-                              <div className="text-xs text-gray-500 mt-2">{a.content_type || ''}</div>
+                              <div className="text-xs text-gray-500 mt-2">{String(a.content_type || '')}</div>
                             </div>
                           ))}
                         </div>

@@ -12,9 +12,9 @@ test('complete checkout with mock payment', async ({ page }) => {
   await page.goto('/checkout', { waitUntil: 'networkidle' });
   
   // Ensure checkout form is visible before interacting
-  await page.waitForSelector('input[placeholder="Full name"]', { timeout: 10000 });
+  await page.waitForSelector('input[placeholder="Full Name"]', { timeout: 10000 });
   // Fill form with controlled inputs
-  await page.locator('input[placeholder="Full name"]').fill('Test User');
+  await page.locator('input[placeholder="Full Name"]').fill('Test User');
   await page.locator('input[placeholder="Phone number"]').fill('081234567890');
   await page.locator('input[placeholder="Email address"]').fill('test@example.com');
   await page.locator('textarea[placeholder="Delivery address"]').fill('Jl. Test 123');

@@ -1,5 +1,6 @@
 // Real-time notification client using Server-Sent Events (SSE)
 import { useNotificationStore } from '@/lib/stores/notification-store';
+import { getErrorMessage } from '@/lib/utils';
 
 export class NotificationClient {
   private eventSource: EventSource | null = null;
@@ -84,9 +85,9 @@ export class NotificationClient {
       };
 
       // Listen for specific event types
-      this.eventSource.addEventListener('order_update', (event: any) => {
+      this.eventSource.addEventListener('order_update', (event: MessageEvent) => {
         try {
-          const data = JSON.parse(event.data);
+          const data = JSON.parse(event.data as string);
           console.log('[SSE] Order update:', data);
           
           useNotificationStore.getState().addNotification({
@@ -101,14 +102,14 @@ export class NotificationClient {
             read_at: null,
             created_at: new Date().toISOString(),
           });
-        } catch (error) {
-          console.error('[SSE] Error handling order update:', error);
+        } catch (error: unknown) {
+          console.error('[SSE] Error handling order update:', getErrorMessage(error));
         }
       });
 
-      this.eventSource.addEventListener('payment_update', (event: any) => {
+      this.eventSource.addEventListener('payment_update', (event: MessageEvent) => {
         try {
-          const data = JSON.parse(event.data);
+          const data = JSON.parse(event.data as string);
           console.log('[SSE] Payment update:', data);
           
           useNotificationStore.getState().addNotification({
@@ -123,14 +124,14 @@ export class NotificationClient {
             read_at: null,
             created_at: new Date().toISOString(),
           });
-        } catch (error) {
-          console.error('[SSE] Error handling payment update:', error);
+        } catch (error: unknown) {
+          console.error('[SSE] Error handling payment update:', getErrorMessage(error));
         }
       });
 
-      this.eventSource.addEventListener('promo', (event: any) => {
+      this.eventSource.addEventListener('promo', (event: MessageEvent) => {
         try {
-          const data = JSON.parse(event.data);
+          const data = JSON.parse(event.data as string);
           console.log('[SSE] Promo notification:', data);
           
           useNotificationStore.getState().addNotification({
@@ -145,8 +146,8 @@ export class NotificationClient {
             read_at: null,
             created_at: new Date().toISOString(),
           });
-        } catch (error) {
-          console.error('[SSE] Error handling promo:', error);
+        } catch (error: unknown) {
+          console.error('[SSE] Error handling promo:', getErrorMessage(error));
         }
       });
 

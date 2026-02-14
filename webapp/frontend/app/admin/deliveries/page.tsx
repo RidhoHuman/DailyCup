@@ -6,9 +6,18 @@ import type { Order } from '@/types/delivery';
 import OrderStatusBadge from '@/components/admin/OrderStatusBadge';
 import Link from 'next/link';
 
+type DeliveryStats = {
+  total_active?: number;
+  confirmed?: number;
+  processing?: number;
+  ready?: number;
+  delivering?: number;
+  [key: string]: number | undefined;
+};
+
 export default function DeliveryMonitoringDashboard() {
   const [deliveries, setDeliveries] = useState<Order[]>([]);
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<DeliveryStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('');
   const [kurirFilter, setKurirFilter] = useState('');
@@ -26,10 +35,10 @@ export default function DeliveryMonitoringDashboard() {
       if (statusFilter) params.append('status', statusFilter);
       if (kurirFilter) params.append('kurir_id', kurirFilter);
       
-      const response: any = await api.get(`/get_delivery_tracking.php?${params.toString()}`);
-      if (response.success) {
-        setDeliveries(response.deliveries);
-        setStats(response.stats);
+      const response = await api.get<{ success?: boolean; deliveries?: Order[]; stats?: DeliveryStats }>(`/get_delivery_tracking.php?${params.toString()}`);
+      if (response && response.success) {
+        setDeliveries(response.deliveries || []);
+        setStats(response.stats ?? null);
       }
     } catch (error) {
       console.error('Failed to fetch deliveries:', error);
@@ -74,23 +83,23 @@ export default function DeliveryMonitoringDashboard() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
             <div className="bg-white rounded-lg shadow p-4">
               <div className="text-xs font-medium text-gray-600 uppercase">Total Active</div>
-              <div className="mt-2 text-2xl font-bold text-gray-900">{stats.total_active}</div>
+              <div className="mt-2 text-2xl font-bold text-gray-900">{stats.total_active ?? 0}</div>
             </div>
             <div className="bg-blue-50 rounded-lg shadow p-4">
               <div className="text-xs font-medium text-blue-600 uppercase">Confirmed</div>
-              <div className="mt-2 text-2xl font-bold text-blue-600">{stats.confirmed}</div>
+              <div className="mt-2 text-2xl font-bold text-blue-600">{stats.confirmed ?? 0}</div>
             </div>
             <div className="bg-purple-50 rounded-lg shadow p-4">
               <div className="text-xs font-medium text-purple-600 uppercase">Processing</div>
-              <div className="mt-2 text-2xl font-bold text-purple-600">{stats.processing}</div>
+              <div className="mt-2 text-2xl font-bold text-purple-600">{stats.processing ?? 0}</div>
             </div>
             <div className="bg-indigo-50 rounded-lg shadow p-4">
               <div className="text-xs font-medium text-indigo-600 uppercase">Ready</div>
-              <div className="mt-2 text-2xl font-bold text-indigo-600">{stats.ready}</div>
+              <div className="mt-2 text-2xl font-bold text-indigo-600">{stats.ready ?? 0}</div>
             </div>
             <div className="bg-orange-50 rounded-lg shadow p-4">
               <div className="text-xs font-medium text-orange-600 uppercase">Delivering</div>
-              <div className="mt-2 text-2xl font-bold text-orange-600">{stats.delivering}</div>
+              <div className="mt-2 text-2xl font-bold text-orange-600">{stats.delivering ?? 0}</div>
             </div>
           </div>
         )}

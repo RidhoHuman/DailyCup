@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api-client";
+import { getErrorMessage } from '@/lib/utils';
 import InvoiceButton from "@/components/InvoiceButton";
 
 interface OrderItem {
@@ -178,14 +179,10 @@ export default function AdminOrdersPage() {
         console.error('[Orders] Invalid API response:', response);
         alert('Failed to load order details: Invalid response format');
       }
-    } catch (error: any) {
-      console.error('[Orders] Error fetching order details:', error);
-      console.error('[Orders] Error details:', {
-        message: error.message,
-        stack: error.stack,
-        orderId: order.id
-      });
-      alert(`Failed to load order details: ${error.message || 'Unknown error'}`);
+    } catch (error: unknown) {
+      console.error('[Orders] Error fetching order details:', getErrorMessage(error));
+      console.error('[Orders] Error details:', { message: (error as any)?.message, stack: (error as any)?.stack, orderId: order.id });
+      alert(`Failed to load order details: ${getErrorMessage(error) || 'Unknown error'}`);
     }
   };
 

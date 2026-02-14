@@ -6,6 +6,7 @@ import { useKurirStore } from '@/lib/stores/kurir-store';
 import { kurirApi } from '@/lib/kurir-api';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '@/lib/utils';
 
 function KurirRegisterForm() {
   const router = useRouter();
@@ -99,8 +100,8 @@ function KurirRegisterForm() {
       } else {
         setErrors({ general: res.message || 'Pendaftaran gagal' });
       }
-    } catch (err: any) {
-      setErrors({ general: err.message || 'Pendaftaran gagal' });
+    } catch (err: unknown) {
+      setErrors({ general: getErrorMessage(err) || 'Pendaftaran gagal' });
     } finally {
       setIsLoading(false);
     }

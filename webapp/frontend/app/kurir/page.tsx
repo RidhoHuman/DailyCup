@@ -6,6 +6,8 @@ import { kurirApi } from '@/lib/kurir-api';
 import { useKurirLocationBroadcast } from '@/hooks/useKurirLocationBroadcast';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '@/lib';
+import type { Order } from '@/types/delivery';
 
 interface OrderItem {
   id: number;
@@ -57,8 +59,36 @@ export default function KurirDashboard() {
         kurirApi.getProfile(),
         kurirApi.getOrders('active'),
       ]);
-      if (profileRes.success) setStats(profileRes.data.stats);
-      if (ordersRes.success) setOrders(ordersRes.data);
+      if (profileRes.success) {
+        // normalize/guard stats so we always pass a complete ProfileStats object
+        setStats({
+          activeOrders: profileRes.data?.stats?.activeOrders ?? 0,
+          todayDeliveries: profileRes.data?.stats?.todayDeliveries ?? 0,
+          todayEarnings: profileRes.data?.stats?.todayEarnings ?? 0,
+        });
+      }
+
+      // Normalize incoming Order[] into our OrderItem[] shape to satisfy state typing
+      if (ordersRes.success && Array.isArray(ordersRes.data)) {
+        setOrders(
+          ordersRes.data.map((o: Order) => ({
+            id: (o.id ?? 0) as number,
+            orderNumber: o.order_number ?? String(o.id ?? ''),
+            status: o.status ?? '',
+            paymentMethod: o.payment_method ?? '',
+            paymentStatus: o.payment_status ?? '',
+            deliveryAddress: o.delivery_address ?? '',
+            customerNotes: o.customer_notes ?? null,
+            finalAmount: o.final_amount ?? o.total_amount ?? 0,
+            customer: { name: o.customer_name ?? 'Unknown', phone: o.customer_phone ?? '' },
+            itemCount: 1,
+            createdAt: o.created_at ?? '',
+            assignedAt: o.assigned_at ?? null,
+          } as OrderItem))
+        );
+      } else if (ordersRes.success) {
+        setOrders([]);
+      }
     } catch (err) {
       console.error('Dashboard fetch error:', err);
     } finally {
@@ -75,7 +105,23 @@ export default function KurirDashboard() {
     try {
       const res = await kurirApi.getAvailableOrders();
       if (res.success) {
-        setAvailableOrders(res.data);
+        // normalize API response into AvailableOrder[] so TypeScript and UI fields align
+        setAvailableOrders(
+          res.data.map((o: { id?: number; order_number?: string; orderNumber?: string; status?: string; payment_method?: string; paymentMethod?: string; delivery_address?: string; deliveryAddress?: string; customer_notes?: string | null; customerNotes?: string | null; total_amount?: number; totalAmount?: number; customer?: { name?: string; phone?: string } | null; customer_name?: string; customerName?: string; customer_phone?: string; customerPhone?: string; created_at?: string; createdAt?: string }) => ({
+            id: o.id as number,
+            order_number: o.order_number ?? o.orderNumber ?? '',
+            status: o.status ?? '',
+            payment_method: o.payment_method ?? o.paymentMethod ?? '',
+            delivery_address: o.delivery_address ?? o.deliveryAddress ?? '',
+            customer_notes: o.customer_notes ?? o.customerNotes ?? null,
+            total_amount: o.total_amount ?? o.totalAmount ?? 0,
+            customer: o.customer ?? {
+              name: o.customer_name ?? o.customerName ?? 'Unknown',
+              phone: o.customer_phone ?? o.customerPhone ?? '',
+            },
+            created_at: o.created_at ?? o.createdAt ?? '',
+          } as AvailableOrder))
+        );
       }
     } catch (err) {
       console.error('Available orders fetch error:', err);
@@ -113,8 +159,8 @@ export default function KurirDashboard() {
       } else {
         toast.error(res.error || 'Gagal mengambil pesanan');
       }
-    } catch (err: any) {
-      toast.error(err.message || 'Gagal mengambil pesanan');
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err) || 'Gagal mengambil pesanan');
     } finally {
       setClaimingOrder(null);
     }
@@ -144,8 +190,8 @@ export default function KurirDashboard() {
         setStatus(newStatus);
         toast.success(newStatus === 'available' ? 'Anda sekarang Online' : 'Anda sekarang Offline');
       }
-    } catch (err: any) {
-      toast.error(err.message || 'Gagal mengubah status');
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err) || 'Gagal mengubah status');
     } finally {
       setToggling(false);
     }

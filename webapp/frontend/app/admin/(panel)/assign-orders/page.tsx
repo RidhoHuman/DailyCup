@@ -49,7 +49,8 @@ export default function AssignOrdersPage() {
     try {
       setLoading(true);
       const [trackingRes, kurirRes] = await Promise.all([
-        api.get<{ success: boolean; deliveries: Order[]; stats: any }>(
+        // FIX 1: Mengganti 'any' pada stats dengan 'Record<string, unknown>' agar Linter senang
+        api.get<{ success: boolean; deliveries: Order[]; stats: Record<string, unknown> }>(
           '/get_delivery_tracking.php',
           { requiresAuth: true }
         ),
@@ -67,6 +68,7 @@ export default function AssignOrdersPage() {
       }
     } catch (error) {
       console.error('Error:', error);
+      toast.error('Gagal memuat data');
     } finally {
       setLoading(false);
     }
@@ -100,8 +102,10 @@ export default function AssignOrdersPage() {
         setShowKurirModal(null);
         fetchData();
       }
-    } catch (error: any) {
-      toast.error(error.message || 'Gagal assign kurir');
+    } catch (error: unknown) {
+      // FIX 2: Menangani error 'any' dengan cara yang aman (Type Narrowing)
+      const msg = error instanceof Error ? error.message : 'Gagal assign kurir';
+      toast.error(msg);
     } finally {
       setAssigning(null);
     }
@@ -130,8 +134,10 @@ export default function AssignOrdersPage() {
         toast.success(`Auto-assigned ke ${bestKurir.name}`);
         fetchData();
       }
-    } catch (error: any) {
-      toast.error(error.message || 'Gagal auto-assign');
+    } catch (error: unknown) {
+      // FIX 3: Menangani error 'any' lagi
+      const msg = error instanceof Error ? error.message : 'Gagal auto-assign';
+      toast.error(msg);
     } finally {
       setAssigning(null);
     }
@@ -333,9 +339,14 @@ export default function AssignOrdersPage() {
                   .map(kurir => (
                     <button
                       key={kurir.id}
-                      onClick={() => setSelectedKurir(prev => ({ ...prev, [showKurirModal!]: kurir.id }))}
+                      onClick={() => setShowKurirModal(current => {
+                         if(current !== null) {
+                            setSelectedKurir(prev => ({ ...prev, [current]: kurir.id }));
+                         }
+                         return current;
+                      })}
                       className={`w-full p-3 rounded-xl border-2 text-left transition-all ${
-                        selectedKurir[showKurirModal!] === kurir.id
+                        selectedKurir[showKurirModal] === kurir.id
                           ? 'border-[#a97456] bg-[#a97456]/5'
                           : 'border-gray-100 hover:border-gray-300'
                       }`}
@@ -367,7 +378,7 @@ export default function AssignOrdersPage() {
                 Batal
               </button>
               <button
-                onClick={() => handleManualAssign(showKurirModal!)}
+                onClick={() => showKurirModal !== null && handleManualAssign(showKurirModal)}
                 disabled={!selectedKurir[showKurirModal!] || assigning === showKurirModal}
                 className="flex-1 px-4 py-2.5 bg-[#a97456] text-white rounded-lg hover:bg-[#8b6043] font-medium text-sm disabled:opacity-50 transition-colors"
               >

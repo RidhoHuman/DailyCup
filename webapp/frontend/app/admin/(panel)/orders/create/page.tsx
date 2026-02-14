@@ -417,11 +417,12 @@ export default function CreateOrderPage() {
       };
 
       console.log('Sending order:', payload);
-      const res = await api.post<ApiResponse<{order_number?: string; invoice_url?: string; xendit?: any}>>("/create_order.php", payload, { requiresAuth: true });
+      const res = await api.post<ApiResponse<{order_number?: string; invoice_url?: string; xendit?: { invoice_url?: string; qr_code_url?: string } }>>("/create_order.php", payload, { requiresAuth: true });
+      const r = res as ApiResponse<{order_number?: string; invoice_url?: string; xendit?: { invoice_url?: string; qr_code_url?: string } }>;
       
-      if (res.success) {
-        const orderNum = (res as any).orderId || (res.data as any)?.order_number || (res as any).order_number || "NEW";
-        const invoiceUrl = (res as any).invoice_url || (res as any).xendit?.invoice_url;
+      if (r.success) {
+        const orderNum = r.data?.order_number || r.order_number || (r as any).orderId || "NEW";
+        const invoiceUrl = r.data?.invoice_url || r.order_number || r.data?.xendit?.invoice_url || r.order_number || (r as any).xendit?.invoice_url;
         
         // Show receipt modal for cash payments
         if (paymentMethod === 'cash') {
@@ -475,9 +476,9 @@ export default function CreateOrderPage() {
       } else {
         setError(res.message || "Failed to create order");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Order submission error:', err);
-      setError(err.message || "An error occurred");
+      setError((err as any)?.message || "An error occurred");
     } finally {
       setSubmitting(false);
     }

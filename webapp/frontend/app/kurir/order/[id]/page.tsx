@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { kurirApi } from '@/lib/kurir-api';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { getErrorMessage } from '@/lib/utils';
 
 interface OrderDetail {
   id: number;
@@ -55,9 +56,12 @@ export default function KurirOrderDetailPage() {
   const fetchOrder = useCallback(async () => {
     try {
       const res = await kurirApi.getOrderDetail(orderId);
-      if (res.success) setOrder(res.data);
-    } catch (err: any) {
-      toast.error(err.message || 'Gagal memuat detail pesanan');
+      if (res.success && res.data) {
+        // cast via unknown to acknowledge runtime shape mismatch and avoid unsafe direct cast
+        setOrder(res.data as unknown as OrderDetail);
+      }
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err) || 'Gagal memuat detail pesanan');
     } finally {
       setLoading(false);
     }
@@ -90,11 +94,14 @@ export default function KurirOrderDetailPage() {
     try {
       const res = await kurirApi.updateOrderStatus(order.orderNumber, order.nextAction.next);
       if (res.success) {
-        toast.success(`Status diperbarui: ${res.data.newStatus}`);
+        // res.data may be undefined or have a different shape; prefer known fallbacks
+        const payload = res.data as unknown as { newStatus?: string; status?: string } | undefined;
+        const newStatus = payload?.newStatus ?? payload?.status ?? order.nextAction.next;
+        toast.success(`Status diperbarui: ${newStatus}`);
         fetchOrder();
       }
-    } catch (err: any) {
-      toast.error(err.message || 'Gagal update status');
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err) || 'Gagal memperbarui status');
     } finally {
       setUpdating(false);
     }
@@ -160,8 +167,8 @@ export default function KurirOrderDetailPage() {
           fetchOrder();
         }
       }
-    } catch (err: any) {
-      toast.error(err.message || 'Gagal upload foto');
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err) || 'Gagal upload foto');
     } finally {
       setUploading(false);
     }

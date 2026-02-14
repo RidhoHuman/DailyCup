@@ -78,15 +78,13 @@ test('Analytics page shows integration KPIs', async ({ page }) => {
     } catch (e) { /* ignore */ }
   });
 
-  await page.goto('/admin/analytics');
+  // navigate using absolute URL (use BASE to avoid invalid relative navigation in some envs)
+  await page.goto(`${BASE}/admin/analytics`, { waitUntil: 'load' });
   // wait for analytics API to return (handle rewrites and rewrites-to-/api)
   await page.waitForResponse(resp => /analytics\.php/.test(resp.url()) && resp.status() === 200, { timeout: 15000 });
 
   // wait specifically for the admin summary API used by the integration cards
   await page.waitForResponse(resp => /admin\/analytics\.php/.test(resp.url()) && resp.status() === 200, { timeout: 10000 }).catch(()=>{});
-
-  // navigate using absolute URL and wait for the integration card (case-insensitive)
-  await page.goto(`${BASE}/admin/analytics`, { waitUntil: 'load' });
 
   // wait for analytics API to return (handle rewrites and rewrites-to-/api)
   await page.waitForResponse(resp => /analytics\.php/.test(resp.url()) && resp.status() === 200, { timeout: 15000 });

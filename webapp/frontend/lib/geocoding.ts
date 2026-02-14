@@ -47,12 +47,15 @@ export async function geocodeAddress(address: string): Promise<GeocodingResult[]
 
     const data = await response.json();
     
-    return data.map((result: any) => ({
-      lat: parseFloat(result.lat),
-      lon: parseFloat(result.lon),
-      display_name: result.display_name,
-      address: result.address,
-    }));
+    return data.map((result: unknown) => {
+      const r = result as Record<string, unknown>;
+      return {
+        lat: parseFloat(String(r.lat)),
+        lon: parseFloat(String(r.lon)),
+        display_name: String(r.display_name),
+        address: r.address as GeocodingResult['address'] | undefined,
+      } as GeocodingResult;
+    });
   } catch (error) {
     console.error('Geocoding error:', error);
     return [];
@@ -132,12 +135,15 @@ export async function searchPlaces(
 
     const data = await response.json();
     
-    return data.map((result: any) => ({
-      lat: parseFloat(result.lat),
-      lon: parseFloat(result.lon),
-      display_name: result.display_name,
-      address: result.address,
-    }));
+    return data.map((result: unknown) => {
+      const r = result as Record<string, unknown>;
+      return {
+        lat: parseFloat(String(r.lat)),
+        lon: parseFloat(String(r.lon)),
+        display_name: String(r.display_name),
+        address: r.address as GeocodingResult['address'] | undefined,
+      } as GeocodingResult;
+    });
   } catch (error) {
     console.error('Search error:', error);
     return [];

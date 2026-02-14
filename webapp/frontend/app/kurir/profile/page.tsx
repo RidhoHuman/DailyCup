@@ -5,6 +5,7 @@ import { useKurirStore } from '@/lib/stores/kurir-store';
 import { kurirApi } from '@/lib/kurir-api';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { getErrorMessage } from '@/lib/utils';
 
 interface ProfileData {
   name: string;
@@ -19,7 +20,7 @@ interface ProfileData {
 }
 
 export default function KurirProfilePage() {
-  const { user, updateUser, logout } = useKurirStore();
+  const { updateUser, logout } = useKurirStore();
   const router = useRouter();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -47,19 +48,28 @@ export default function KurirProfilePage() {
     try {
       const res = await kurirApi.getProfile();
       if (res.success) {
-        const d = res.data;
+        // API may return data directly or wrapped as { user: {...}, stats: {...} }
+        const raw: any = res.data;
+        const u = raw.user ?? raw;
+
         const p: ProfileData = {
-          name: d.name, phone: d.phone, email: d.email || '',
-          vehicleType: d.vehicle_type || '', vehicleNumber: d.vehicle_number || '',
-          rating: parseFloat(d.rating) || 0, totalDeliveries: parseInt(d.total_deliveries) || 0,
-          joinDate: d.created_at || d.joinDate || '', photo: d.photo,
+          name: u.name ?? '',
+          phone: u.phone ?? '',
+          email: u.email ?? '',
+          vehicleType: u.vehicle_type ?? u.vehicleType ?? '',
+          vehicleNumber: u.vehicle_number ?? u.vehicleNumber ?? '',
+          rating: Number(u.rating) || 0,
+          totalDeliveries: Number(u.total_deliveries ?? u.totalDeliveries ?? 0) || 0,
+          joinDate: u.created_at ?? u.joinDate ?? '',
+          photo: u.photo ?? null,
         };
+
         setProfile(p);
         setName(p.name); setPhone(p.phone); setEmail(p.email);
         setVehicleType(p.vehicleType); setVehicleNumber(p.vehicleNumber);
       }
-    } catch (err: any) {
-      toast.error('Gagal memuat profil');
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err) || 'Gagal memuat profil');
     } finally {
       setLoading(false);
     }
@@ -79,8 +89,8 @@ export default function KurirProfilePage() {
         setEditing(false);
         fetchProfile();
       }
-    } catch (err: any) {
-      toast.error(err.message || 'Gagal menyimpan');
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err) || 'Gagal menyimpan');
     } finally {
       setSaving(false);
     }
@@ -98,8 +108,8 @@ export default function KurirProfilePage() {
         setChangingPw(false);
         setOldPw(''); setNewPw(''); setConfirmPw('');
       }
-    } catch (err: any) {
-      toast.error(err.message || 'Gagal mengubah password');
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err) || 'Gagal mengganti password');
     } finally {
       setSaving(false);
     }

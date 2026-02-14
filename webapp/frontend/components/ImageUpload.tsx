@@ -3,6 +3,7 @@
 import { useState, useRef, DragEvent, useEffect } from 'react';
 import { Upload, X, Image as ImageIcon, CheckCircle, AlertCircle } from 'lucide-react';
 import { api } from '@/lib/api-client';
+import { getErrorMessage } from '@/lib/utils';
 
 interface ImageUploadProps {
   type: 'product' | 'category' | 'user' | 'general';
@@ -106,11 +107,12 @@ export default function ImageUpload({
         // Clear success message after 3 seconds
         setTimeout(() => setSuccess(''), 3000);
       } else {
-        throw new Error((response as any).message || 'Upload failed');
+        const msg = (response as { message?: string }).message ?? 'Upload failed';
+        throw new Error(msg);
       }
-    } catch (err: any) {
-      console.error('Upload error:', err);
-      const errorMsg = err.response?.data?.message || err.message || 'Failed to upload image';
+    } catch (err: unknown) {
+      console.error('Upload error:', getErrorMessage(err));
+      const errorMsg = getErrorMessage(err) || 'Failed to upload image';
       setError(errorMsg);
       if (onUploadError) onUploadError(errorMsg);
       setPreview(currentImage || null);
