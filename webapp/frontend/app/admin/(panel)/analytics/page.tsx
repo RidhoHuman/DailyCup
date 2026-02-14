@@ -57,8 +57,18 @@ export default function AdminAnalyticsPage() {
       setLoading(true);
       setError(null);
       try {
-        // Use centralized API client so Authorization and ngrok header are added automatically
-        const data = await api.get<ApiResponse>(`${endpoints.admin.analytics()}&period=${period}`);
+        // Use centralized API client — add explicit Authorization header as a safety-net in case token hydration is delayed
+        let explicitHeaders: Record<string,string> = {};
+        try {
+          const raw = typeof window !== 'undefined' ? localStorage.getItem('dailycup-auth') : null;
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            const t = parsed?.state?.token || parsed?.token || null;
+            if (t) explicitHeaders['Authorization'] = `Bearer ${t}`;
+          }
+        } catch (e) { /* ignore parsing errors */ }
+
+        const data = await api.get<ApiResponse>(`${endpoints.admin.analytics()}&period=${period}`, { headers: explicitHeaders });
 
         if (isMounted) {
             if (data.success) {
