@@ -11,9 +11,7 @@
 
 // Use Next.js rewrites to proxy API calls
 // Always use /api prefix for client-side calls (rewrites handle routing)
-const API_BASE_URL = typeof window !== 'undefined' 
-  ? '/api' // Client-side: always use Next.js rewrites
-  : (process.env.NEXT_PUBLIC_API_URL || 'https://decagonal-subpolygonally-brecken.ngrok-free.dev/DailyCup/webapp/backend/api');
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://decagonal-subpolygonally-brecken.ngrok-free.dev/DailyCup/webapp/backend/api';
 
 // Custom error class for API errors
 export class APIError extends Error {
