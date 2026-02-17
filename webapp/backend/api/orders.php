@@ -6,7 +6,8 @@
  * GET /api/orders.php?order_id=X - Get specific order
  */
 
-// CORS handled by .htaccess
+// Ensure central CORS logic runs for this endpoint (prevents missing Access-Control-Allow-Origin)
+require_once __DIR__ . '/../cors.php';
 
 header('Content-Type: application/json');
 
