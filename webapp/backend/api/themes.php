@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 header('Content-Type: application/json');
 // CORS handled centrally (cors.php / .htaccess)
 header('Access-Control-Allow-Credentials: true');

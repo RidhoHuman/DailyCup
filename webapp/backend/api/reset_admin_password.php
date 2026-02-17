@@ -2,6 +2,7 @@
 // Reset admin password
 // Usage: https://api.dailycup.com/reset_admin_password.php
 
+require_once __DIR__ . '/cors.php';
 header('Content-Type: application/json');
 require_once __DIR__ . '/config/database.php';
 

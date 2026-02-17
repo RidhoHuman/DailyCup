@@ -7,6 +7,7 @@
  */
 
 // CORS must be first!
+require_once __DIR__ . '/cors.php';
 // CORS handled by .htaccess
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/rate_limiter.php';

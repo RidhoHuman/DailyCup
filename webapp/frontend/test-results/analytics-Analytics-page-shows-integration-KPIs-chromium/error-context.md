@@ -1,0 +1,148 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - button "" [ref=e2]:
+    - generic [ref=e3]: 
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - generic [ref=e8]: DC
+          - generic [ref=e9]:
+            - heading "DailyCup" [level=1] [ref=e10]
+            - paragraph [ref=e11]: Admin Panel
+        - text: 
+      - navigation [ref=e12]:
+        - link " Dashboard" [ref=e13] [cursor=pointer]:
+          - /url: /admin/dashboard
+          - generic [ref=e14]: 
+          - generic [ref=e15]: Dashboard
+        - link " Orders" [ref=e16] [cursor=pointer]:
+          - /url: /admin/orders
+          - generic [ref=e17]: 
+          - generic [ref=e18]: Orders
+        - link " Products" [ref=e19] [cursor=pointer]:
+          - /url: /admin/products
+          - generic [ref=e20]: 
+          - generic [ref=e21]: Products
+        - link " Customers" [ref=e22] [cursor=pointer]:
+          - /url: /admin/customers
+          - generic [ref=e23]: 
+          - generic [ref=e24]: Customers
+        - link " Analytics" [ref=e25] [cursor=pointer]:
+          - /url: /admin/analytics
+          - generic [ref=e26]: 
+          - generic [ref=e27]: Analytics
+        - link " Kurir" [ref=e28] [cursor=pointer]:
+          - /url: /admin/kurir
+          - generic [ref=e29]: 
+          - generic [ref=e30]: Kurir
+        - link " Undangan Kurir" [ref=e31] [cursor=pointer]:
+          - /url: /admin/kurir-invitations
+          - generic [ref=e32]: 
+          - generic [ref=e33]: Undangan Kurir
+        - link " Assign Orders" [ref=e34] [cursor=pointer]:
+          - /url: /admin/assign-orders
+          - generic [ref=e35]: 
+          - generic [ref=e36]: Assign Orders
+        - link " Delivery Monitor" [ref=e37] [cursor=pointer]:
+          - /url: /admin/delivery-monitoring
+          - generic [ref=e38]: 
+          - generic [ref=e39]: Delivery Monitor
+        - link " Geocode Issues" [ref=e40] [cursor=pointer]:
+          - /url: /admin/delivery-monitoring/geocode-failures
+          - generic [ref=e41]: 
+          - generic [ref=e42]: Geocode Issues
+        - link " Delivery Recap" [ref=e43] [cursor=pointer]:
+          - /url: /admin/delivery-recap
+          - generic [ref=e44]: 
+          - generic [ref=e45]: Delivery Recap
+        - link " Integrations" [ref=e46] [cursor=pointer]:
+          - /url: /admin/integrations/twilio
+          - generic [ref=e47]: 
+          - generic [ref=e48]: Integrations
+        - link " Themes" [ref=e49] [cursor=pointer]:
+          - /url: /admin/themes
+          - generic [ref=e50]: 
+          - generic [ref=e51]: Themes
+        - link " Currencies" [ref=e52] [cursor=pointer]:
+          - /url: /admin/currencies
+          - generic [ref=e53]: 
+          - generic [ref=e54]: Currencies
+        - link " Settings" [ref=e55] [cursor=pointer]:
+          - /url: /admin/settings
+          - generic [ref=e56]: 
+          - generic [ref=e57]: Settings
+      - generic [ref=e59]:
+        - generic [ref=e61]: 
+        - generic [ref=e62]:
+          - paragraph [ref=e63]: Admin User
+          - paragraph [ref=e64]: admin@dailycup.com
+        - button "" [ref=e65]:
+          - generic [ref=e66]: 
+    - generic [ref=e67]:
+      - banner [ref=e68]:
+        - generic [ref=e70]:
+          - textbox "Search products, orders, customers..." [ref=e71]
+          - img [ref=e72]
+        - generic [ref=e74]:
+          - button "Notifications" [ref=e76]:
+            - generic [ref=e77]: 
+          - button "A" [ref=e79]:
+            - generic [ref=e80]: A
+            - img [ref=e81]
+      - main [ref=e83]:
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - generic [ref=e86]:
+              - heading "Analytics & Reports" [level=1] [ref=e87]
+              - paragraph [ref=e88]: Detailed analytics and business insights
+            - combobox [ref=e89]:
+              - option "Last 7 Days"
+              - option "Last 30 Days" [selected]
+              - option "Last 90 Days"
+              - option "Last Year"
+          - generic [ref=e90]:
+            - generic [ref=e91]:
+              - generic [ref=e92]: Total Revenue
+              - generic [ref=e93]: Rp 0
+              - generic [ref=e94]: 0% vs previous
+            - generic [ref=e95]:
+              - generic [ref=e96]: Total Orders
+              - generic [ref=e97]: "0"
+              - generic [ref=e98]: 0 paid
+            - generic [ref=e99]:
+              - generic [ref=e100]: Avg Order Value
+              - generic [ref=e101]: Rp 0
+            - generic [ref=e102]:
+              - generic [ref=e103]: Conversion Rate
+              - generic [ref=e104]: 0%
+          - heading "Best Selling Products" [level=2] [ref=e106]
+          - generic [ref=e107]:
+            - heading "Payment Methods" [level=2] [ref=e109]
+            - generic [ref=e110]:
+              - heading "Order Status" [level=2] [ref=e111]
+              - paragraph [ref=e112]: Distribusi status pesanan.
+              - generic [ref=e114]:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: "1"
+                      - generic: Orders
+  - region "Notifications alt+T"
+  - generic [ref=e119] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e120]:
+      - img [ref=e121]
+    - generic [ref=e124]:
+      - button "Open issues overlay" [ref=e125]:
+        - generic [ref=e126]:
+          - generic [ref=e127]: "1"
+          - generic [ref=e128]: "2"
+        - generic [ref=e129]:
+          - text: Issue
+          - generic [ref=e130]: s
+      - button "Collapse issues badge" [ref=e131]:
+        - img [ref=e132]
+  - alert [ref=e134]
+```

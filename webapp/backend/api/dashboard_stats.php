@@ -4,6 +4,7 @@
  * Returns general stats for admin dashboard
  */
 
+require_once __DIR__ . '/cors.php';
 // CORS handled centrally (cors.php / .htaccess)
 header('Access-Control-Allow-Credentials: true');
 header('Content-Type: application/json');

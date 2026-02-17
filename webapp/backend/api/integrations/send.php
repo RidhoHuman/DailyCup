@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../audit_log.php';
 require_once __DIR__ . '/../../lib/sms_providers.php';
 
+require_once __DIR__ . '/../cors.php';
 header('Content-Type: application/json');
 // CORS handled centrally (cors.php / .htaccess) — removed duplicate Access-Control-Allow-Origin
 

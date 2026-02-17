@@ -17,6 +17,7 @@ if (file_exists($envFile)) {
     }
 }
 
+require_once __DIR__ . '/cors.php';
 require_once __DIR__ . '/jwt.php';
 
 header('Content-Type: application/json');
