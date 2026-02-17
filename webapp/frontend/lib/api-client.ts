@@ -27,9 +27,9 @@ export class APIError extends Error {
 }
 
 // Get auth token from localStorage (client-side only)
-function getAuthToken(): string | null {
+export function getAuthToken(): string | null {
   if (typeof window === 'undefined') return null;
-  
+
   try {
     const authData = localStorage.getItem('dailycup-auth');
     if (authData) {
@@ -42,6 +42,11 @@ function getAuthToken(): string | null {
       }
       return token;
     }
+
+    // Backwards compatibility: check legacy top-level `token` key if present
+    const legacy = localStorage.getItem('token');
+    if (legacy) return legacy;
+
   } catch (error) {
     console.error('Error reading auth token:', error);
     return null;
