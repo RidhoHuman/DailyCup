@@ -22,9 +22,6 @@ require_once __DIR__ . '/jwt.php';
 
 header('Content-Type: application/json');
 
-$jwtSecret = getenv('JWT_SECRET') ?: 'default-secret-key';
-echo "JWT_SECRET loaded: " . $jwtSecret . "\n";
-
 // Generate fresh token
 $payload = [
     'user_id' => 1,

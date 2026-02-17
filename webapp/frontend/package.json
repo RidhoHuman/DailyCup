@@ -13,7 +13,7 @@
     "test:e2e": "playwright test --config=e2e/playwright.config.ts",
     "test:e2e:headed": "playwright test --config=e2e/playwright.config.ts --headed",
     "test:all": "npm run test && npm run test:e2e",
-    "check:cors": "bash -c \"missing=$(grep -L --exclude-dir=vendor --include='*.php' -R 'cors.php' webapp/backend/api || true); if [ -n \"$missing\" ]; then echo \"Missing cors.php in:\n$missing\"; exit 1; else echo 'OK: all API files include cors.php'; fi\""
+    "check:cors": "node ../../scripts/check-cors.js"
   },
   "dependencies": {
     "@auth/core": "^0.41.0",
