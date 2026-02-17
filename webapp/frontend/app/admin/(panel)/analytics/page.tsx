@@ -56,6 +56,10 @@ export default function AdminAnalyticsPage() {
     const fetchAnalytics = async () => {
       setLoading(true);
       setError(null);
+      // E2E DEBUG: signal that fetchAnalytics started (will appear in Playwright logs as console.error)
+      // Remove this debug after root-cause is confirmed
+      // eslint-disable-next-line no-console
+      console.error('[E2E DEBUG] fetchAnalytics start, period=' + period);
       try {
         // Use centralized API client — add explicit Authorization header as a safety-net in case token hydration is delayed
         let explicitHeaders: Record<string,string> = {};
