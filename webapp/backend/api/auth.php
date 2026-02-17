@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 // Lightweight auth helper used by API endpoints
 require_once __DIR__ . '/jwt.php';
 

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../cors.php';
 /**
  * Chat Messages API
  * Handles sending and retrieving chat messages

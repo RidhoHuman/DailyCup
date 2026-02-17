@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../cors.php';
 /**
  * Chat Conversations API
  * Manages chat conversations between customers and support

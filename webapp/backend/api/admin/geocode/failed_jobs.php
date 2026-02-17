@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../cors.php';
 /**
  * Admin API: List failed geocode jobs
  * Endpoint: GET /api/admin/geocode/failed_jobs.php

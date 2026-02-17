@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../cors.php';
 /**
  * Real-time All Kurirs Location Tracking - Server-Sent Events (SSE)
  * For Admin Dashboard to track all active deliveries

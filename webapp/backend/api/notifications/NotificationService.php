@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../cors.php';
 /**
  * NotificationService - Core notification management
  * Handles creating, fetching, and managing notifications

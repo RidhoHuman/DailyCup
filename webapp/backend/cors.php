@@ -40,18 +40,19 @@ if ($isAllowed) {
 // ----------------------------------------------------------------------
 // 3. HANDLE PREFLIGHT REQUEST (OPTIONS)
 // ----------------------------------------------------------------------
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     if ($isAllowed) {
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE, PATCH", true);
         
         // Izinkan semua header yang diminta browser, PLUS ngrok-skip-browser-warning
         $requestedHeaders = $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'] ?? 'Content-Type, Authorization, X-Requested-With, ngrok-skip-browser-warning';
         header("Access-Control-Allow-Headers: $requestedHeaders", true);
+        header("Access-Control-Max-Age: 86400", true);
     }
-    
-    // Stop eksekusi agar tidak lanjut memproses query database dsb
-    header("HTTP/1.1 200 OK");
-    exit(0);
+
+    // Hentikan eksekusi preflight tanpa body (204 No Content)
+    http_response_code(204);
+    exit;
 }
 
 // ----------------------------------------------------------------------

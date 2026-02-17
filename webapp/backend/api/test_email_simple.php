@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 /**
  * TEST EMAIL SEDERHANA - LANGSUNG KE GMAIL
  * Cek apakah SMTP Gmail bisa kirim email atau tidak

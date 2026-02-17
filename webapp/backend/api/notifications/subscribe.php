@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../cors.php';
 /**
  * Subscribe to Push Notifications
  * POST /api/notifications/subscribe.php

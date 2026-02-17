@@ -131,18 +131,7 @@
                       - generic: "1"
                       - generic: Orders
   - region "Notifications alt+T"
-  - generic [ref=e119] [cursor=pointer]:
-    - button "Open Next.js Dev Tools" [ref=e120]:
-      - img [ref=e121]
-    - generic [ref=e124]:
-      - button "Open issues overlay" [ref=e125]:
-        - generic [ref=e126]:
-          - generic [ref=e127]: "1"
-          - generic [ref=e128]: "2"
-        - generic [ref=e129]:
-          - text: Issue
-          - generic [ref=e130]: s
-      - button "Collapse issues badge" [ref=e131]:
-        - img [ref=e132]
-  - alert [ref=e134]
+  - button "Open Next.js Dev Tools" [ref=e120] [cursor=pointer]:
+    - img [ref=e121]
+  - alert [ref=e124]
 ```

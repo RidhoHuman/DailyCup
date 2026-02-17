@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 // Simple .env loader for local dev. Loads KEY=VALUE pairs into environment variables.
 function load_env($path = __DIR__ . '/.env') {
     if (!file_exists($path)) return;

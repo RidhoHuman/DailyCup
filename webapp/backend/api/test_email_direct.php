@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 /**
  * Test Email Sending Directly (Bypass Queue)
  */

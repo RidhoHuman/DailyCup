@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 /**
  * DOWNLOAD PHPMAILER MANUAL
  * Script ini akan download PHPMailer langsung dari GitHub

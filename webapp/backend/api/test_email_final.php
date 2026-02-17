@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 /**
  * TEST EMAIL FINAL
  * Test EmailService yang sudah menggunakan PHPMailer

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 /**
  * Direct SMTP Test with PHPMailer
  * Test SMTP connection and email sending with full error reporting

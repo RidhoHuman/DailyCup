@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../cors.php';
 /**
  * Admin API: Manually update order coordinates
  * Endpoint: POST /api/admin/geocode/manual_update.php

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 // Force clear OPcache
 if (function_exists('opcache_reset')) {
     opcache_reset();

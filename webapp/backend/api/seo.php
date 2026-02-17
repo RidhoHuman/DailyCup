@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 /**
  * SEO API Endpoint
  * Handles sitemap generation, robots.txt, meta tags retrieval, and SEO redirects

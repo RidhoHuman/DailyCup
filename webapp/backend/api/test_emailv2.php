@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 /**
  * TEST EMAIL SERVICE V2 (Dengan PHPMailer)
  * 

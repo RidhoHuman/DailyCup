@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 /**
  * Get Delivery Tracking API
  * Returns real-time tracking for all active deliveries

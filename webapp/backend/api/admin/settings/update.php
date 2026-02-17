@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../cors.php';
 /**
  * Admin Settings API - Update settings
  * POST /api/admin/settings/update.php

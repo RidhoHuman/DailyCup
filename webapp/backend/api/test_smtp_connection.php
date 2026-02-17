@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 /**
  * TEST GMAIL SMTP LANGSUNG
  * Test koneksi ke Gmail SMTP tanpa library

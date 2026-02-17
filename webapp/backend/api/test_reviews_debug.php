@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 // Simple test file to debug reviews API
 error_reporting(E_ALL);
 ini_set('display_errors', 1);

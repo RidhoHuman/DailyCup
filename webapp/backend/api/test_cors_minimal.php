@@ -1,6 +1,7 @@
 <?php
+require_once __DIR__ . '/cors.php';
 // Minimal CORS test with explicit origin
-$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : ''; 
 
 // Set CORS headers BEFORE any output
 if (!empty($origin)) {

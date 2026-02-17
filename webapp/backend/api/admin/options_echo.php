@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../cors.php';
 // Simple probe to check whether PHP executes for OPTIONS in admin folder
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     header('X-Method: OPTIONS');
