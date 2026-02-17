@@ -18,4 +18,17 @@
 - Low-risk change; only affects admin analytics client call and tests.
 - If CI shows failures, they will likely be related to environment variable wiring for `NEXT_PUBLIC_API_URL`.
 
-Please review and merge when green.
+## Verification performed
+- Status CORS: Verified manually via `curl` and Browser Network Tab for `orders.php` and `admin/analytics.php?action=summary` (preflight + GET include Access‑Control headers).
+- Auth Mirroring: Introduced shim in `webapp/frontend/lib/stores/auth-store.ts` to mirror legacy `localStorage.token`; unit test added (`auth-store.test.ts`).
+
+## Future task / technical debt
+- Replace per-file `require_once 'cors.php'` with a single `init.php` (or use `auto_prepend_file`) in a follow-up PR to prevent omissions.
+
+## Checklist before merge
+- [x] Ensure no BOM or output before `<?php` in `cors.php` (verified).
+- [x] Remove trailing `?>` from `cors.php` to avoid accidental whitespace/output (applied).
+- [ ] Ensure `JWT_SECRET` is set in all production/staging environments (do **not** use defaults).
+- [ ] Run full CI + e2e pipeline and address any flaky tests (analytics/phase7/phase8 are currently flaky in CI).
+
+Please review and merge when CI is green.
