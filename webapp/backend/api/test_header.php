@@ -1,4 +1,4 @@
 <?php
-header('Access-Control-Allow-Origin: *');
+// CORS handled centrally (cors.php / .htaccess)
 echo "Header set!";
 var_dump(headers_list());

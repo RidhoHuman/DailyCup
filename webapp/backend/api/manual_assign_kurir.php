@@ -8,9 +8,7 @@ require_once __DIR__ . '/../config/database.php';
 
 header('Content-Type: application/json');
 require_once __DIR__ . '/../cors.php';
-header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+// CORS handled centrally (cors.php / .htaccess)
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);

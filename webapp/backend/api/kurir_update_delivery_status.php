@@ -14,7 +14,7 @@
 require_once __DIR__ . '/../config/database.php';
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+// CORS handled centrally (cors.php / .htaccess)
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 

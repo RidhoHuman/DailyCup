@@ -1,6 +1,7 @@
 <?php
 // Direct CORS test - minimal file
-header('Access-Control-Allow-Origin: *');
+require_once __DIR__ . '/cors.php';
+// CORS handled centrally (cors.php / .htaccess)
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 

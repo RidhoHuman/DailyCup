@@ -10,7 +10,7 @@
  * - PHP: php backend/api/process_email_queue.php
  * - API: fetch('/api/process_email_queue.php')
  */
-
+require_once __DIR__ . '/cors.php';
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/email/EmailService.php';
 require_once __DIR__ . '/email/EmailQueue.php';

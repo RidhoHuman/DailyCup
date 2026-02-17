@@ -5,6 +5,7 @@
  * IMPORTANT: Remove or protect this file on production after testing.
  */
 
+require_once __DIR__ . '/cors.php';
 header('Content-Type: application/json');
 
 // Try getenv() first, then parse .env files as fallback

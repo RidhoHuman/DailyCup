@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import api, { endpoints } from '@/lib/api-client';
 
 // 1. Kita definisikan Interface agar tidak perlu pakai 'any'
 interface AnalyticsData {
@@ -55,24 +56,23 @@ export default function AdminAnalyticsPage() {
     const fetchAnalytics = async () => {
       setLoading(true);
       setError(null);
+      // E2E DEBUG: signal that fetchAnalytics started (will appear in Playwright logs as console.error)
+      // Remove this debug after root-cause is confirmed
+      // eslint-disable-next-line no-console
+      console.error('[E2E DEBUG] fetchAnalytics start, period=' + period);
       try {
-        const headers: Record<string, string> = {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
-        };
+        // Use centralized API client — add explicit Authorization header as a safety-net in case token hydration is delayed
+        let explicitHeaders: Record<string,string> = {};
+        try {
+          const raw = typeof window !== 'undefined' ? localStorage.getItem('dailycup-auth') : null;
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            const t = parsed?.state?.token || parsed?.token || null;
+            if (t) explicitHeaders['Authorization'] = `Bearer ${t}`;
+          }
+        } catch (e) { /* ignore parsing errors */ }
 
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
-        const res = await fetch(`${apiUrl}/admin/analytics.php?period=${period}`, {
-          headers,
-        });
-
-        const contentType = res.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new Error("Server response was not JSON");
-        }
-
-        // Kita casting result ke tipe ApiResponse agar aman
-        const data = (await res.json()) as ApiResponse;
+        const data = await api.get<ApiResponse>(`${endpoints.admin.analytics()}&period=${period}`, { headers: explicitHeaders });
 
         if (isMounted) {
             if (data.success) {

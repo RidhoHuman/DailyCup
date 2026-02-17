@@ -34,7 +34,9 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
 
   const loadCurrencies = async () => {
     try {
-      const response = await fetch('/webapp/backend/api/currencies.php?action=active');
+      const response = await fetch('/webapp/backend/api/currencies.php?action=active', {
+        headers: { 'ngrok-skip-browser-warning': '69420' }
+      });
       const data = await response.json();
       
       if (data.success) {
@@ -89,7 +91,8 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     
     try {
       const response = await fetch(
-        `/webapp/backend/api/currencies.php?action=convert&amount=${amount}&from=${from}&to=${to}`
+        `/webapp/backend/api/currencies.php?action=convert&amount=${amount}&from=${from}&to=${to}`,
+        { headers: { 'ngrok-skip-browser-warning': '69420' } }
       );
       const data = await response.json();
       

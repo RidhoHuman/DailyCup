@@ -51,6 +51,12 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: true,
           isLoading: false,
         });
+        // Backwards-compatibility: mirror token to top-level localStorage key `token`
+        if (typeof window !== 'undefined') {
+          try {
+            localStorage.setItem('token', String(token));
+          } catch (e) { /* ignore */ }
+        }
       },
 
       logout: () => {
@@ -61,6 +67,7 @@ export const useAuthStore = create<AuthState>()(
         });
         // Clear any other persisted data if needed
         if (typeof window !== "undefined") {
+          try { localStorage.removeItem('token'); } catch(e) {}
           localStorage.removeItem("dailycup-wishlist");
           localStorage.removeItem("dailycup-recently-viewed");
         }
@@ -114,8 +121,13 @@ export const useAuthStore = create<AuthState>()(
         isAuthenticated: state.isAuthenticated,
       }),
       onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true);
-      },
+        state?.setHasHydrated(true);        // Mirror token into legacy `token` key so older helpers/scripts still work
+        try {
+          const t = state?.token;
+          if (typeof window !== 'undefined' && t) {
+            localStorage.setItem('token', String(t));
+          }
+        } catch (e) { /* ignore */ }      },
     }
   )
 );
