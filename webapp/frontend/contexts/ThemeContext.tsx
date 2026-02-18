@@ -84,12 +84,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   };
 
   const fetchCurrentTheme = async () => {
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || '/api';
     try {
-      const response = await fetch(`${apiBase}/themes.php?action=current`, {
+      const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL || '/api'}/themes.php?action=current`, {
         headers: { 'ngrok-skip-browser-warning': '69420' }
-      });
-      const data = await response.json();
+      }).then(res => res.json());
 
       if (data.success && data.theme) {
         applyTheme(data.theme);
