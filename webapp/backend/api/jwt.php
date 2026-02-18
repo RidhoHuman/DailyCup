@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 /**
  * JWT Authentication Helper
  * 
@@ -8,15 +9,35 @@
 
 class JWT {
     private static $secret;
+    private static $secretSource = 'unknown';
     private static $algorithm = 'HS256';
     private static $expiry = 86400; // 24 hours
+    private static $debug = null;
 
     public static function init() {
+        // Determine debug mode (controlled by APP_DEBUG or JWT_DEBUG env vars)
+        if (self::$debug === null) {
+            self::$debug = (getenv('APP_DEBUG') === '1') || (getenv('JWT_DEBUG') === '1');
+        }
+
         // Try to get JWT_SECRET from constant (set by config/database.php) or environment
         if (defined('JWT_SECRET')) {
             self::$secret = JWT_SECRET;
+            self::$secretSource = 'constant';
         } else {
-            self::$secret = getenv('JWT_SECRET') ?: 'default-secret-key';
+            $envSecret = getenv('JWT_SECRET');
+            if ($envSecret) {
+                self::$secret = $envSecret;
+                self::$secretSource = 'env';
+            } else {
+                self::$secret = 'default-secret-key';
+                self::$secretSource = 'default';
+            }
+        }
+
+        // Debug hint (server log) — DO NOT expose secret value
+        if (self::$debug) {
+            error_log(sprintf('JWT:init secret_source=%s defined=%s', self::$secretSource, defined('JWT_SECRET') ? 'yes' : 'no'));
         }
     }
 
@@ -61,6 +82,10 @@ class JWT {
         $expectedSignature = hash_hmac('sha256', "$headerEncoded.$payloadEncoded", self::$secret, true);
 
         if (!hash_equals($expectedSignature, $signature)) {
+            if (self::$debug) {
+                $pref = substr($signatureEncoded ?? '', 0, 8);
+                error_log(sprintf('JWT:DEBUG verify - signature mismatch tokenPrefix=%s secret_source=%s', $pref, self::$secretSource));
+            }
             // Fallback dev mode dinonaktifkan: signature JWT harus valid di semua environment
             return null;
         }
@@ -68,11 +93,13 @@ class JWT {
         // Decode payload
         $payload = json_decode(self::base64UrlDecode($payloadEncoded), true);
         if (!$payload) {
+            if (self::$debug) error_log('JWT:DEBUG verify - payload decode failed');
             return null;
         }
 
         // Check expiry
         if (isset($payload['exp']) && $payload['exp'] < time()) {
+            if (self::$debug) error_log('JWT:DEBUG verify - token expired');
             return null;
         }
 
@@ -97,10 +124,16 @@ class JWT {
         $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? ($_SERVER['HTTP_AUTHORIZATION'] ?? '');
 
         if (empty($authHeader)) {
+            if (self::$debug) {
+                $uri = $_SERVER['REQUEST_URI'] ?? '[unknown]';
+                $method = $_SERVER['REQUEST_METHOD'] ?? '[unknown]';
+                error_log("JWT:DEBUG getUser - Authorization header missing (URI={$uri} method={$method})");
+            }
             return null;
         }
 
         if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+            if (self::$debug) error_log('JWT:DEBUG getUser - Authorization header present but not Bearer');
             return null;
         }
 
@@ -108,6 +141,7 @@ class JWT {
 
         // Support short test tokens used by Playwright/CI in dev environments
         if (in_array($raw, ['ci-admin-token', 'ci-user-token'])) {
+            if (self::$debug) error_log('JWT:DEBUG getUser - using CI test token: ' . $raw);
             if ($raw === 'ci-admin-token') return ['id' => 1, 'user_id' => 1, 'role' => 'admin', 'email' => 'admin@example.com'];
             if ($raw === 'ci-user-token') return ['id' => 2, 'user_id' => 2, 'role' => 'customer', 'email' => 'test@example.com'];
         }
@@ -115,6 +149,11 @@ class JWT {
         // Try full verification first
         $verified = self::verify($raw);
         if ($verified) return $verified;
+
+        if (self::$debug) {
+            $preview = substr($raw, 0, 8) . '...';
+            error_log(sprintf('JWT:DEBUG getUser - verification failed for token=%s secret_source=%s defined=%s', $preview, self::$secretSource, defined('JWT_SECRET') ? 'yes' : 'no'));
+        }
 
         // Fallback dev mode dinonaktifkan: payload JWT harus diverifikasi signature-nya
 

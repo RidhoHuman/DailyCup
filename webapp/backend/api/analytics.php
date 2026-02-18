@@ -1,42 +1,42 @@
 <?php
+// -----------------------------------------------------------------------------
+// 1. INCLUDE CENTRAL CORS (WAJIB PALING ATAS)
+// -----------------------------------------------------------------------------
+// Mundur 1 langkah (../) karena file ini ada di folder 'api', dan 'cors.php' di 'backend'
+require_once __DIR__ . '/../cors.php'; 
+
 /**
  * Analytics API endpoint - Order/Revenue analytics
- * Provides period-based analytics: revenue, orders, customers, products, trends, payment methods, reviews
  */
 
-// Global error handler: always return JSON on error, with CORS
-function analytics_send_cors_headers() {
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Methods: GET,POST,OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, Origin, Cache-Control, Pragma, ngrok-skip-browser-warning');
-    header('Access-Control-Allow-Credentials: true');
-}
+// -----------------------------------------------------------------------------
+// 2. ERROR HANDLER (Disederhanakan karena CORS sudah dihandle cors.php)
+// -----------------------------------------------------------------------------
 set_exception_handler(function($e){
-    analytics_send_cors_headers();
+    // Tidak perlu panggil fungsi cors lagi, karena sudah diset di atas
     http_response_code(500);
     echo json_encode(['success'=>false,'message'=>'Internal server error','error'=>$e->getMessage()]);
     exit;
 });
+
 set_error_handler(function($errno, $errstr, $errfile, $errline) {
-    analytics_send_cors_headers();
     http_response_code(500);
     echo json_encode(['success'=>false,'message'=>'Internal server error','error'=>"$errstr in $errfile:$errline"]);
     exit;
 });
 
+// -----------------------------------------------------------------------------
+// 3. LOGIKA UTAMA
+// -----------------------------------------------------------------------------
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/auth.php';
 
 $db = Database::getConnection();
 
-analytics_send_cors_headers();
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
+// (Hapus blok OPTIONS manual, karena sudah dihandle oleh cors.php)
 
 // Require admin auth
 $user = validateToken();

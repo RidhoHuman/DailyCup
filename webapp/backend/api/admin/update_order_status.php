@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../cors.php';
 /**
  * Update Order Status API (Admin Only)
  * 

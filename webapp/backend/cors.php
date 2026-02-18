@@ -1,22 +1,63 @@
 <?php
-// Izinkan akses dari mana saja (untuk development) atau spesifik dari Vercel
-if (isset($_SERVER['HTTP_ORIGIN'])) {
-    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-    header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Max-Age: 86400');    // Cache selama 1 hari
+// Mencegah output buffering agar header tidak tertahan
+if (ob_get_level()) ob_end_clean();
+
+// ----------------------------------------------------------------------
+// 1. BERSIHKAN HEADER LAMA (SOLUSI MULTIPLE VALUES)
+// ----------------------------------------------------------------------
+// Ini wajib ada untuk menghapus header bawaan Apache/.htaccess
+if (function_exists('header_remove')) {
+    header_remove('Access-Control-Allow-Origin');
+    header_remove('Access-Control-Allow-Headers');
+    header_remove('Access-Control-Allow-Methods');
+    header_remove('Access-Control-Allow-Credentials');
 }
 
-// Access-Control headers diterima selama preflight request
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
-        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE, PATCH");         
+// ----------------------------------------------------------------------
+// 2. VALIDASI ORIGIN
+// ----------------------------------------------------------------------
+$allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1',
+];
 
-    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
-        header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}, ngrok-skip-browser-warning"); // <--- PENTING: Izinkan header Ngrok
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-    exit(0);
+// Cek apakah origin ada di list statis ATAU sesuai pola regex (Vercel & Ngrok)
+$isAllowed = in_array($origin, $allowedOrigins) 
+             || preg_match('/\.vercel\.app$/', $origin) 
+             || preg_match('/\.ngrok-free\.dev$/', $origin);
+
+// Jika Origin valid, baru kita kirim Header CORS
+if ($isAllowed) {
+    header("Access-Control-Allow-Origin: $origin", true);
+    header("Access-Control-Allow-Credentials: true", true);
+    header("Access-Control-Max-Age: 86400", true); // Cache preflight 24 jam
 }
 
-// Pastikan header ini juga dikirim di request biasa (GET/POST)
-header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, ngrok-skip-browser-warning");
-?>
+// ----------------------------------------------------------------------
+// 3. HANDLE PREFLIGHT REQUEST (OPTIONS)
+// ----------------------------------------------------------------------
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    if ($isAllowed) {
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE, PATCH", true);
+        
+        // Izinkan semua header yang diminta browser, PLUS ngrok-skip-browser-warning
+        $requestedHeaders = $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'] ?? 'Content-Type, Authorization, X-Requested-With, ngrok-skip-browser-warning';
+        header("Access-Control-Allow-Headers: $requestedHeaders", true);
+        header("Access-Control-Max-Age: 86400", true);
+    }
+
+    // Hentikan eksekusi preflight tanpa body (204 No Content)
+    http_response_code(204);
+    exit;
+}
+
+// ----------------------------------------------------------------------
+// 4. HEADER TAMBAHAN UNTUK REQUEST BIASA (GET/POST)
+// ----------------------------------------------------------------------
+if ($isAllowed) {
+    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, ngrok-skip-browser-warning", true);
+}

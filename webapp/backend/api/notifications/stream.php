@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../cors.php';
 // SSE (Server-Sent Events) stream for real-time notifications
 
 // Set CORS headers first (before any output)

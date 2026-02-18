@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 // Debug: Check what origin is received
 $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : 'NO_ORIGIN';
 

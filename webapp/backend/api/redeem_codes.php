@@ -4,6 +4,7 @@
  * Handles CRUD operations for loyalty points redeem codes
  */
 
+require_once __DIR__ . '/cors.php';
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/input_sanitizer.php';
 

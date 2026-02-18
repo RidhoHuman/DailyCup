@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../cors.php';
 /**
  * Process Email Queue
  * Send all pending emails

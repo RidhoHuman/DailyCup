@@ -1,2 +1,2 @@
 <?php
-echo "PHP is working!";
+require_once __DIR__ . '/cors.php';echo "PHP is working!";

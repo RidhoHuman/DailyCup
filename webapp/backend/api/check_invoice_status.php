@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 // Quick check invoice status
 $key = 'xnd_development_SePxbPbTD5zpN2id2bcysjhdhUJbuqbU6HrxV28suzKKlrywvoKIpQwGGQr8j';
 $orderId = $_GET['order_id'] ?? 'ORD-1770743962-8035';

@@ -1,4 +1,5 @@
 /**
+ * 
  * Unit Tests for ProductCard Component
  * Tests: rendering, variants, add to cart, wishlist
  */

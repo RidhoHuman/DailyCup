@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../cors.php';
 /**
  * DailyCup WebSocket Server
  * Real-time order tracking updates

@@ -1,5 +1,4 @@
-<?php
-/**
+<?php require_once __DIR__ . '/cors.php';/**
  * Xendit Payment Webhook Handler
  * 
  * This endpoint receives payment notifications from Xendit

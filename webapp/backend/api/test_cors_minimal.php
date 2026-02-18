@@ -1,15 +1,18 @@
 <?php
+require_once __DIR__ . '/cors.php';
 // Minimal CORS test with explicit origin
-$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : ''; 
 
 // Set CORS headers BEFORE any output
 if (!empty($origin)) {
     header("Access-Control-Allow-Origin: $origin");
 } else {
-    header("Access-Control-Allow-Origin: *");
+    // Avoid wildcard here — rely on Apache/php central CORS in hosted envs
+    header("Access-Control-Allow-Origin: $origin");
 }
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS, PATCH');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+// Access-Control-Allow-Headers handled centrally if Apache sets CORS
+
 
 // Handle OPTIONS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

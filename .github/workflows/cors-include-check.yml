@@ -1,0 +1,29 @@
+name: 'CORS include check'
+
+on:
+  pull_request:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  cors-check:
+    name: Verify every API file includes cors.php
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Scan for missing cors.php includes
+        run: |
+          set -euo pipefail
+          echo "Scanning webapp/backend/api for PHP files missing 'cors.php'..."
+          # Find PHP files that do NOT contain the string 'cors.php'
+          missing=$(grep -L --recursive --exclude-dir=vendor --include='*.php' "cors.php" webapp/backend/api || true)
+          if [ -n "$missing" ]; then
+            echo "ERROR: The following files don't include 'cors.php':"
+            echo "$missing"
+            exit 1
+          fi
+          echo "OK — all API PHP files include cors.php"

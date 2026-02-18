@@ -2,11 +2,11 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './',
-  timeout: 60 * 1000, // Increased to 60 seconds for slower operations
+  timeout: 60 * 1000, // 60 detik untuk operasi yang lambat
   expect: {
-    timeout: 10000, // 10 seconds for expect assertions
+    timeout: 10000, // 10 detik untuk assertion
   },
-  // Use existing dev server on port 3000
+  // Menggunakan dev server yang sedang berjalan
   webServer: {
     command: 'npm run dev',
     url: 'http://127.0.0.1:3000',
@@ -15,19 +15,23 @@ export default defineConfig({
   },
   use: {
     baseURL: 'http://127.0.0.1:3000',
-    headless: true,
+    headless: true, // Ubah ke false jika ingin melihat browser saat test berjalan
     viewport: { width: 1280, height: 720 },
-    // Capture artifacts on failure for debugging
+    
+    // Capture log/video jika gagal
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'retain-on-failure',
-    // Navigation timeout
+    
     navigationTimeout: 30000,
     actionTimeout: 15000,
-    // Conditional launch options for Windows to avoid sandbox/spawn issues
+
+    // BAGIAN KRUSIAL: Launch Options untuk Bypass CORS & Sandbox issues
     launchOptions: {
       args: [
         '--no-sandbox',
+        '--disable-web-security', // Bypass CORS policy saat testing
+        '--disable-features=IsolateOrigins,site-per-process', // Bypass isolasi origin
         '--disable-dev-shm-usage',
         '--disable-hardware-acceleration',
         '--host-resolver-rules=MAP dailycup.test 127.0.0.1'
@@ -35,6 +39,12 @@ export default defineConfig({
     }
   },
   projects: [
-    { name: 'chromium' }
+    {
+      name: 'chromium',
+      use: {
+        // Memastikan browser menggunakan fitur yang diizinkan
+        permissions: ['clipboard-read', 'clipboard-write', 'notifications'],
+      },
+    }
   ]
 });

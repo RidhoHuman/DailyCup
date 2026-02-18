@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../cors.php';
 /**
  * Admin Settings API
  * GET: Fetch settings (auto-create defaults if not exists)

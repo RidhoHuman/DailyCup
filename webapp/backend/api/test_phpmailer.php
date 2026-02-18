@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 /**
  * TEST EMAIL DENGAN PHPMAILER
  * Script ini akan BENAR-BENAR mengirim email via Gmail SMTP

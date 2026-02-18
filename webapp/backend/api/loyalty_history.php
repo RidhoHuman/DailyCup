@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 /**
  * Loyalty History API
  * Get user's loyalty points transaction history

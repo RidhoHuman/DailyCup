@@ -2,6 +2,8 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
+
 interface Currency {
   id: number;
   code: string;
@@ -34,7 +36,9 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
 
   const loadCurrencies = async () => {
     try {
-      const response = await fetch('/webapp/backend/api/currencies.php?action=active');
+      const response = await fetch(`${API_BASE}/currencies.php?action=active`, {
+        headers: { 'ngrok-skip-browser-warning': '69420' }
+      });
       const data = await response.json();
       
       if (data.success) {
@@ -89,7 +93,8 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     
     try {
       const response = await fetch(
-        `/webapp/backend/api/currencies.php?action=convert&amount=${amount}&from=${from}&to=${to}`
+        `${API_BASE}/currencies.php?action=convert&amount=${amount}&from=${from}&to=${to}`,
+        { headers: { 'ngrok-skip-browser-warning': '69420' } }
       );
       const data = await response.json();
       

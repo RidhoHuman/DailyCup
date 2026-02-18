@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../cors.php';
 /**
  * Test notification endpoint
  * Visit: http://localhost/DailyCup/webapp/backend/api/notifications/test_get.php

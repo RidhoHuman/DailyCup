@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../cors.php';
 /**
  * WebSocket Broadcast Utility
  * Sends HTTP request to trigger WebSocket broadcast

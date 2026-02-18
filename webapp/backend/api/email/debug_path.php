@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../cors.php';
 echo "=== DEBUG PATH dari folder email/ ===\n\n";
 
 echo "Current file: " . __FILE__ . "\n";

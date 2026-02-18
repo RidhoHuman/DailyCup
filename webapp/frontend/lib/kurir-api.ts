@@ -22,6 +22,7 @@ async function kurirFetch<T>(endpoint: string, options: RequestInit = {}): Promi
   const token = getKurirToken();
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': '69420',
     ...(options.headers as Record<string, string> || {}),
   };
   if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -112,7 +113,7 @@ export const kurirApi = {
       formData.append('longitude', String(coords.longitude));
     }
 
-    const headers: Record<string, string> = {};
+    const headers: Record<string, string> = { 'ngrok-skip-browser-warning': '69420' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
     const res = await fetch(`${API_BASE}/upload_delivery_photo.php`, {
