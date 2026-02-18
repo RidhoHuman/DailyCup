@@ -45,12 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $method = $_SERVER['REQUEST_METHOD'];
 $user = validateToken(); // may be null for public webhook
 
-// Helper: fetch integration setting
+// Helper: fetch integration setting (PDO)
 function getIntegrationSetting($db, $key) {
     $stmt = $db->prepare("SELECT `value` FROM integration_settings WHERE `key` = ? LIMIT 1");
-    $stmt->bind_param('s', $key);
-    $stmt->execute();
-    $r = $stmt->get_result()->fetch_assoc();
+    $stmt->execute([$key]);
+    $r = $stmt->fetch(PDO::FETCH_ASSOC);
     return $r ? $r['value'] : null;
 }
 
@@ -83,11 +82,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'provider_settings') {
 
         $pfx = 'provider_' . $provider . '_%';
         $stmt = $db->prepare("SELECT `key`,`value` FROM integration_settings WHERE `key` LIKE ?");
-        $stmt->bind_param('s', $pfx);
-        $stmt->execute();
-        $res = $stmt->get_result();
+        $stmt->execute([$pfx]);
         $out = [];
-        while ($r = $res->fetch_assoc()) {
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $k = substr($r['key'], strlen('provider_' . $provider . '_'));
             $out[$k] = $r['value'];
         }
@@ -104,8 +101,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'provider_settings') {
         foreach ($settings as $k => $v) {
             $key = 'provider_' . $provider . '_' . $k;
             $stmt = $db->prepare("INSERT INTO integration_settings (`key`,`value`,`description`) VALUES (?, ?, NULL) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)");
-            $stmt->bind_param('ss', $key, $v);
-            $stmt->execute();
+            $stmt->execute([$key, $v]);
         }
 
         AuditLog::log('PROVIDER_SETTINGS_UPDATED', ['provider'=>$provider,'keys'=>array_keys($settings)], $user['id']);
@@ -153,10 +149,8 @@ if ($method === 'GET' && isset($_GET['action']) && $_GET['action'] === 'logs') {
         $keys = ['twilio_status_last_run','twilio_status_last_summary'];
         $res = [];
         $stmt = $db->prepare("SELECT `key`,`value` FROM integration_settings WHERE `key` IN (?, ?)");
-        $stmt->bind_param('ss', $keys[0], $keys[1]);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($r = $result->fetch_assoc()) { $res[$r['key']] = $r['value']; }
+        $stmt->execute([$keys[0], $keys[1]]);
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) { $res[$r['key']] = $r['value']; }
 
         $lastRun = $res['twilio_status_last_run'] ?? null;
         $summary = $res['twilio_status_last_summary'] ?? null;
@@ -165,7 +159,7 @@ if ($method === 'GET' && isset($_GET['action']) && $_GET['action'] === 'logs') {
         // Additional live checks
         $pendingStmt = $db->prepare("SELECT COUNT(*) as c FROM integration_messages WHERE provider='twilio' AND status='retry_scheduled'");
         $pendingStmt->execute();
-        $pending = intval($pendingStmt->get_result()->fetch_assoc()['c'] ?? 0);
+        $pending = intval($pendingStmt->fetchColumn() ?? 0);
 
         echo json_encode(['success'=>true,'last_run'=>$lastRun,'summary'=>$summary,'pending_retry'=>$pending]);
         exit;
@@ -175,9 +169,8 @@ if ($method === 'GET' && isset($_GET['action']) && $_GET['action'] === 'logs') {
     if (isset($_GET['id'])) {
         $id = intval($_GET['id']);
         $stmt = $db->prepare("SELECT * FROM integration_messages WHERE id = ? AND provider = 'twilio' LIMIT 1");
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $row = $stmt->get_result()->fetch_assoc();
+        $stmt->execute([$id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
         echo json_encode(['success' => true, 'log' => $row]);
         exit;
     }
@@ -192,52 +185,26 @@ if ($method === 'GET' && isset($_GET['action']) && $_GET['action'] === 'logs') {
     $toDate = $_GET['to'] ?? null; // YYYY-MM-DD
 
     $whereParts = ["provider = 'twilio'"];
-    $types = '';
     $params = [];
 
-    if ($status) { $whereParts[] = 'status = ?'; $types .= 's'; $params[] = $status; }
-    if ($direction) { $whereParts[] = 'direction = ?'; $types .= 's'; $params[] = $direction; }
-    if ($fromDate) { $whereParts[] = 'created_at >= ?'; $types .= 's'; $params[] = $fromDate . ' 00:00:00'; }
-    if ($toDate) { $whereParts[] = 'created_at <= ?'; $types .= 's'; $params[] = $toDate . ' 23:59:59'; }
+    if ($status) { $whereParts[] = 'status = ?'; $params[] = $status; }
+    if ($direction) { $whereParts[] = 'direction = ?'; $params[] = $direction; }
+    if ($fromDate) { $whereParts[] = 'created_at >= ?'; $params[] = $fromDate . ' 00:00:00'; }
+    if ($toDate) { $whereParts[] = 'created_at <= ?'; $params[] = $toDate . ' 23:59:59'; }
 
     $whereSql = implode(' AND ', $whereParts);
 
-    // count total
-    $countSql = "SELECT COUNT(*) as c FROM integration_messages WHERE $whereSql";
+    // count total (PDO)
+    $countSql = "SELECT COUNT(*) FROM integration_messages WHERE $whereSql";
     $countStmt = $db->prepare($countSql);
-    if ($types) {
-        $bindNames = array_merge([$types], $params);
-        $tmp = [];
-        foreach ($bindNames as $k => $v) { $tmp[$k] = &$bindNames[$k]; }
-        call_user_func_array([$countStmt, 'bind_param'], $tmp);
-    }
-    $countStmt->execute();
-    $total = $countStmt->get_result()->fetch_assoc()['c'] ?? 0;
+    $countStmt->execute($params);
+    $total = $countStmt->fetchColumn() ?? 0;
 
-    // fetch rows
+    // fetch rows (PDO)
     $sql = "SELECT * FROM integration_messages WHERE $whereSql ORDER BY created_at DESC LIMIT ? OFFSET ?";
     $stmt = $db->prepare($sql);
-
-    // build bind for filters + limit/offset
-    $bindParams = $params;
-    $bindTypes = $types . 'ii';
-    $bindParams[] = $limit;
-    $bindParams[] = $offset;
-
-    // mysqli bind_param requires references
-    $bindNames = [];
-    $bindNames[] = &$bindTypes;
-    foreach ($bindParams as $k => $v) {
-        $bindNames[] = &$bindParams[$k];
-    }
-    if (!empty($bindParams)) {
-        call_user_func_array([$stmt, 'bind_param'], $bindNames);
-    }
-
-    $stmt->execute();
-    $res = $stmt->get_result();
-    $rows = [];
-    while ($r = $res->fetch_assoc()) { $rows[] = $r; }
+    $stmt->execute(array_merge($params, [$limit, $offset]));
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode(['success' => true, 'logs' => $rows, 'total' => intval($total), 'page' => $page, 'limit' => $limit]);
     exit;
@@ -256,10 +223,9 @@ if ($method === 'POST' && isset($_GET['action']) && $_GET['action'] === 'setting
     foreach (['twilio_account_sid','twilio_auth_token','twilio_whatsapp_from','twilio_webhook_secret'] as $k) {
         if (isset($data[$k])) {
             $val = $data[$k];
-            // Upsert
+            // Upsert (PDO)
             $stmt = $db->prepare("INSERT INTO integration_settings (`key`,`value`,`description`) VALUES (?, ?, NULL) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)");
-            $stmt->bind_param('ss', $k, $val);
-            $stmt->execute();
+            $stmt->execute([$k, $val]);
         }
     }
 
@@ -296,11 +262,10 @@ if ($method === 'POST' && isset($_GET['action']) && $_GET['action'] === 'send') 
         exit;
     }
 
-    // Log message in DB
+    // Log message in DB (PDO)
     $stmt = $db->prepare("INSERT INTO integration_messages (provider, channel, direction, to_number, from_number, body, status) VALUES ('twilio','whatsapp','outbound', ?, ?, ?, 'queued')");
-    $stmt->bind_param('sss', $to, $from, $body);
-    $stmt->execute();
-    $messageId = $stmt->insert_id;
+    $stmt->execute([$to, $from, $body]);
+    $messageId = $db->lastInsertId();
 
     // Delegate sending via provider adapter
     require_once __DIR__ . '/../../lib/sms_providers.php';
@@ -318,8 +283,7 @@ if ($method === 'POST' && isset($_GET['action']) && $_GET['action'] === 'send') 
         $status = $providerResp['status'] ?? 'sent';
         $pp = is_string($providerResp['raw'] ?? '') ? ($providerResp['raw']) : json_encode($providerResp['payload'] ?? []);
         $stmt = $db->prepare("UPDATE integration_messages SET status = ?, provider_payload = ? WHERE id = ?");
-        $stmt->bind_param('ssi', $status, $pp, $messageId);
-        $stmt->execute();
+        $stmt->execute([$status, $pp, $messageId]);
 
         AuditLog::log('TWILIO_MESSAGE_SENT', ['message_id' => $messageId, 'sid' => $sid, 'to' => $to], $user['id']);
 
@@ -328,8 +292,7 @@ if ($method === 'POST' && isset($_GET['action']) && $_GET['action'] === 'send') 
     } else {
         $err = $providerResp['error'] ?? 'Unknown provider error';
         $stmt = $db->prepare("UPDATE integration_messages SET status = 'failed', error_message = ? WHERE id = ?");
-        $stmt->bind_param('si', $err, $messageId);
-        $stmt->execute();
+        $stmt->execute([$err, $messageId]);
 
         AuditLog::logApiError('/integrations/twilio.php?action=send', $err, $providerResp['http'] ?? 500);
 
@@ -390,10 +353,9 @@ if ($method === 'POST' && isset($_GET['action']) && $_GET['action'] === 'webhook
 
     // Log inbound message
     $payloadJson = json_encode($params);
-    $stmt = $db->prepare("INSERT INTO integration_messages (provider, channel, direction, to_number, from_number, body, status, provider_payload, metadata) VALUES ('twilio','whatsapp','inbound', ?, ?, ?, 'received', ?, NULL) ");
-    $stmt->bind_param('ssss', $to, $from, $body, $payloadJson);
-    $stmt->execute();
-    $msgId = $stmt->insert_id;
+    $stmt = $db->prepare("INSERT INTO integration_messages (provider, channel, direction, to_number, from_number, body, status, provider_payload, metadata) VALUES ('twilio','whatsapp','inbound', ?, ?, ?, 'received', ?, NULL)");
+    $stmt->execute([$to, $from, $body, $payloadJson]);
+    $msgId = $db->lastInsertId();
 
     // Handle media attachments (download and store under /uploads/integrations/twilio/{msgId}/)
     $attachments = [];
@@ -439,8 +401,7 @@ if ($method === 'POST' && isset($_GET['action']) && $_GET['action'] === 'webhook
         if (!empty($attachments)) {
             $metaJson = json_encode(['attachments'=>$attachments]);
             $u = $db->prepare("UPDATE integration_messages SET metadata = ? WHERE id = ?");
-            $u->bind_param('si', $metaJson, $msgId);
-            $u->execute();
+            $u->execute([$metaJson, $msgId]);
         }
     }
 
@@ -450,9 +411,8 @@ if ($method === 'POST' && isset($_GET['action']) && $_GET['action'] === 'webhook
     if ($body && stripos($body, 'help') !== false) {
         // try to find user by phone
         $stmt = $db->prepare("SELECT id FROM users WHERE phone = ? LIMIT 1");
-        $stmt->bind_param('s', $from);
-        $stmt->execute();
-        $u = $stmt->get_result()->fetch_assoc();
+        $stmt->execute([$from]);
+        $u = $stmt->fetch(PDO::FETCH_ASSOC);
         $userId = $u ? $u['id'] : null;
 
         $ticketSubject = 'WhatsApp Support: ' . ($userId ? "User #$userId" : $from);
@@ -460,12 +420,10 @@ if ($method === 'POST' && isset($_GET['action']) && $_GET['action'] === 'webhook
         if ($userId) {
             $stmt = $db->prepare("INSERT INTO tickets (ticket_number, user_id, order_id, subject, category, priority, status) VALUES (?, ?, NULL, ?, 'whatsapp', 'normal','open')");
             $ticketNumber = 'TKT-' . strtoupper(uniqid());
-            $stmt->bind_param('sis', $ticketNumber, $userId, $ticketSubject);
-            $stmt->execute();
-            $ticketId = $stmt->insert_id;
+            $stmt->execute([$ticketNumber, $userId, $ticketSubject]);
+            $ticketId = $db->lastInsertId();
             $stmt = $db->prepare("INSERT INTO ticket_messages (ticket_id, user_id, message, is_staff) VALUES (?, ?, ?, 0)");
-            $stmt->bind_param('iis', $ticketId, $userId, $ticketBody);
-            $stmt->execute();
+            $stmt->execute([$ticketId, $userId, $ticketBody]);
 
             AuditLog::log('TWILIO_WEBHOOK_CREATED_TICKET', ['ticket_id'=>$ticketId,'from'=>$from]);
         }

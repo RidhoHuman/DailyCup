@@ -8,8 +8,11 @@ const getAuthToken = (): string | null => {
     const authData = localStorage.getItem('dailycup-auth');
     if (authData) {
       const parsed = JSON.parse(authData);
-      return parsed?.state?.token || null;
+      if (parsed?.state?.token) return parsed.state.token;
     }
+    // Fallback to legacy key
+    const legacy = localStorage.getItem('token');
+    if (legacy) return legacy;
   } catch (error) {
     console.error('Error reading auth token:', error);
   }

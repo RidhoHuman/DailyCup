@@ -147,13 +147,15 @@ export default function CartPage() {
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300"
+                          aria-label="Decrease quantity"
                         >
                           -
                         </button>
-                        <span className="font-medium">{item.quantity}</span>
+                        <span data-testid="item-quantity" className="font-medium">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300"
+                          aria-label="Increase quantity"
                         >
                           +
                         </button>
@@ -166,6 +168,7 @@ export default function CartPage() {
                         <button
                           onClick={() => removeItem(item.id)}
                           className="text-red-500 text-sm hover:text-red-700"
+                          aria-label="Remove item"
                         >
                           Remove
                         </button>
@@ -197,7 +200,7 @@ export default function CartPage() {
               <hr />
               <div className="flex justify-between font-semibold text-lg">
                 <span>Total</span>
-                <span className="text-[#a97456]">Rp {finalTotal.toLocaleString()}</span>
+                <span data-testid="cart-total" className="text-[#a97456]">Rp {finalTotal.toLocaleString()}</span>
               </div>
             </div>
 

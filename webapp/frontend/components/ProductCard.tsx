@@ -82,6 +82,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <div
       key={product.id}
+      data-testid="product-card"
       className="bg-white dark:bg-[#2a2a2a] rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all flex flex-col border dark:border-gray-700"
     >
       <div className="relative h-48 bg-gradient-to-br from-[#f6efe9] to-[#e8d5c4] dark:from-gray-700 dark:to-gray-600">
@@ -201,7 +202,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-lg font-bold text-orange-600">
+                    <span data-testid="product-price" className="text-lg font-bold text-orange-600">
                       Rp {finalPrice.toLocaleString()}
                     </span>
                     <span className="text-xs text-gray-500">
@@ -210,7 +211,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                   </div>
                 </>
               ) : (
-                <span className="text-lg font-bold text-[#a97456]">
+                <span data-testid="product-price" className="text-lg font-bold text-[#a97456]">
                   Rp {finalPrice.toLocaleString()}
                 </span>
               )}

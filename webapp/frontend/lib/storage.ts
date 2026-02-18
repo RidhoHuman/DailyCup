@@ -19,6 +19,11 @@ export function getImageUrl(path?: string | null) {
     return root ? `${root}${path}` : path;
   }
 
-  // Otherwise treat as filename inside /uploads/products/
+  // If path already contains a folder prefix (e.g. "products/prod_x.jpg"), avoid doubling it
+  if (path.startsWith('products/') || path.startsWith('uploads/')) {
+    return root ? `${root}/uploads/${path}` : `/uploads/${path}`;
+  }
+
+  // Otherwise treat as plain filename inside /uploads/products/
   return root ? `${root}/uploads/products/${path}` : `/uploads/products/${path}`;
 }
